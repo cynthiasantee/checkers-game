@@ -1,13 +1,14 @@
 import { BoardSquare } from '../State/slices'
+import { Location } from './movePiece'
 
 export const findPiece = (pieceID:number, board: BoardSquare[][]) => {
-    let location: number[] = []
+    let location: Location  = [-1, -1];
     board.forEach((row ,i) => {
         row.forEach((square, j) => {
            if (square.piece && square.piece.id === pieceID) {
-            location.push(i, j)
+            location = [i, j]
            }
         })
     })
-    return [location[0], location[1]]
+    return location;
 };

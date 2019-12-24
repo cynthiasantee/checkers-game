@@ -1,5 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { findPiece as findPieceFn } from '../util/findPiece'
+import { movePiece as movePieceFn } from '../util/movePiece'
+
 type Color = 'white' | 'black';
+import { Location } from '../util/movePiece'
 
 interface Piece {
     id: number,
@@ -25,15 +29,15 @@ export const initialBoard: BoardSquare[][] = [
 
 interface MovePiecePayload {
     pieceId: number,
-    location: [number, number]
+    location: Location
 }
 
-export const adder = createSlice({
+export const board = createSlice({
     name: 'board',
     initialState: initialBoard,
     reducers: {
         movePiece: (state, newLocation: PayloadAction<MovePiecePayload>) => {
-            
+            movePieceFn(findPieceFn(newLocation.payload.pieceId, state), newLocation.payload.location, state)
         }
 }})
 
