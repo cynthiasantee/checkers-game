@@ -1,6 +1,18 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+type Color = 'white' | 'black';
 
-const initialBoard: BoardSquare[][] = [
+interface Piece {
+    id: number,
+    color: Color,
+    isDouble: boolean,
+}
+
+export interface BoardSquare {
+    squareColor: Color,
+    piece: Piece | null
+}
+
+export const initialBoard: BoardSquare[][] = [
     [{squareColor: 'white', piece: null}, {squareColor: 'black', piece: {id: 1, color: 'white', isDouble: false}}, {squareColor: 'white', piece: null}, {squareColor: 'black', piece: {id: 2, color: 'white', isDouble: false}}, {squareColor: 'white', piece: null}, {squareColor: 'black', piece: {id: 3, color: 'white', isDouble: false}}, {squareColor: 'white', piece: null}, {squareColor: 'black', piece: {id: 4, color: 'white', isDouble: false}}],
     [{squareColor: 'black', piece: {id: 5, color: 'white', isDouble: false}}, {squareColor: 'white', piece: null}, {squareColor: 'black', piece: {id: 6, color: 'white', isDouble: false}}, {squareColor: 'white', piece: null}, {squareColor: 'black', piece: {id: 7, color: 'white', isDouble: false}}, {squareColor: 'white', piece: null}, {squareColor: 'black', piece: {id: 8, color: 'white', isDouble: false}}, {squareColor: 'white', piece: null}],
     [{squareColor: 'white', piece: null}, {squareColor: 'black', piece: {id: 9, color: 'white', isDouble: false}}, {squareColor: 'white', piece: null}, {squareColor: 'black', piece: {id: 10, color: 'white', isDouble: false}}, {squareColor: 'white', piece: null}, {squareColor: 'black', piece: {id: 11, color: 'white', isDouble: false}}, {squareColor: 'white', piece: null}, {squareColor: 'black', piece: {id: 12, color: 'white', isDouble: false}}],
@@ -11,22 +23,17 @@ const initialBoard: BoardSquare[][] = [
     [{squareColor: 'black', piece: {id: 21, color: 'black', isDouble: false}}, {squareColor: 'white', piece: null}, {squareColor: 'black', piece: {id: 22, color: 'black', isDouble: false}}, {squareColor: 'white', piece: null}, {squareColor: 'black', piece: {id: 23, color: 'black', isDouble: false}}, {squareColor: 'white', piece: null}, {squareColor: 'black', piece: {id: 24, color: 'black', isDouble: false}}, {squareColor: 'white', piece: null}],
 ]
 
+interface MovePiecePayload {
+    pieceId: number,
+    location: [number, number]
+}
+
 export const adder = createSlice({
     name: 'board',
-    initialState: 0,
+    initialState: initialBoard,
     reducers: {
-        increment: state => state + 1
+        movePiece: (state, newLocation: PayloadAction<MovePiecePayload>) => {
+            
+        }
 }})
 
-type Color = 'white' | 'black';
-
-interface Piece {
-    id: number,
-    color: Color,
-    isDouble: boolean,
-}
-
-interface BoardSquare {
-    squareColor: Color,
-    piece: Piece | null
-}
