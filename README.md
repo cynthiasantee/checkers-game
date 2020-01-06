@@ -42,3 +42,15 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
+
+1. Function skeleton with types.
+2. Write a test case.
+    2a. Create calc function that sometimes return fraction (divide 2 numbers)
+3. Design algorithm (on whiteboard)
+4. Code
+5. Test.
+    5a. If tests fails:
+        5ai: Figure out where
+        5ai: Figure out how it computed the value it got
+        5ai. Fix bug
+6. If tests passes, Celebrate. Else, go back to step 5a.

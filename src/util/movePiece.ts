@@ -1,4 +1,4 @@
-import { BoardSquare, initialBoard } from '../State/slices'
+import { BoardSquare } from '../State/slices'
 
 export type Location = [number, number];
 
