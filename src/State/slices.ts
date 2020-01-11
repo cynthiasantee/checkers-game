@@ -37,7 +37,8 @@ export const board = createSlice({
     initialState: initialBoard,
     reducers: {
         movePiece: (state, newLocation: PayloadAction<MovePiecePayload>) => {
-            movePieceFn(findPieceFn(newLocation.payload.pieceId, state), newLocation.payload.location, state)
+            const findPiece = findPieceFn(newLocation.payload.pieceId, state)
+            movePieceFn(findPiece, newLocation.payload.location, state)
         }
 }})
 
