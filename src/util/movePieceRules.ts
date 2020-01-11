@@ -1,5 +1,5 @@
-import { movePiece } from './movePiece'
-import { BoardSquare, Piece, Color, initialBoard} from '../State/slices'
+import { removePiece } from './removePiece'
+import { BoardSquare } from '../State/slices'
 import { BOARD_SIZE } from './boardSize'
 import { Location } from './movePiece'
 
@@ -19,10 +19,8 @@ export const isDiagonalByOneOrTwo = ([currI, currJ]: Location, [destI, destJ]: L
     const piece = board[currI][currJ].piece
     const blackMovesByOne = [[currI-1, currJ-1], [currI-1, currJ+1]]
     const blackMovesByTwo =[[currI-2, currJ-2], [currI-2, currJ+2]]
-    const whitePiece = [[currI-1,currJ-1], [currI-1,currI+1]]
     const whiteMovesByOne = [[currI+1, currJ-1], [currI+1, currJ+1]]
     const whiteMovesByTwo = [[currI+2, currJ-2], [currI+2, currJ+2]]
-    const blackPiece = [[currI+1, currI-1], [currI+1, currI+1]]
 
     if (piece && piece.color === 'white' && whiteMovesByOne.some(arr => JSON.stringify(arr) === JSON.stringify([destI, destJ]))) {
         return 'byOne' 
@@ -43,7 +41,22 @@ export const isDiagonalByOneOrTwo = ([currI, currJ]: Location, [destI, destJ]: L
 //console.log(isDiagonalByOneOrTwo([1,2], [3, 0], initialBoard));
 
 // const movePieceRules = (curr: Location, to: Location, board: BoardSquare[][]) => {
-//     if (isOnBoard(to) && isEmpty(to, board) && isDiagonalByOneOrTwo(curr, to, board)) {
-//         movePiece(curr, to, board)
+//     if (isOnBoard(to) && isEmpty(to, board) {
+//         
+//
+//          toDouble(movePiece(curr, to, board))
 //     }
 // }
+
+
+
+//findPiece(PIECEID, board) Location
+//getValidMoves(curr, board) Location[]
+
+//toDouble(board) undefined
+
+//removePiece(piece, board) undefined
+//isOnBoard(to) boolean
+//isEmpty(to, board) boolean
+//isDiagonalByOneOrTwo(curr, to, board) byOne, byTwo, invalidMove
+//movePiece(curr, to, board) undefined (moves && removes)
