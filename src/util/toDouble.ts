@@ -1,35 +1,17 @@
 import { BoardSquare } from '../State/slices'
 
 export const toDouble = (board: BoardSquare[][]) => {
-    if (board[0][1].piece?.color === 'black') {
-        board[0][1].piece.isDouble = true;
+    const doubleBlackSpaces = [[0,1], [0,3], [0,5], [0,7]];
+    const doubleWhiteSpaces = [[7,0], [7,2], [7,4], [7,6]];
+
+    const toDoubleIfValid = (color: string) => (location: number[]) => {
+        const [x, y] = location;
+        const boardPiece = board[x][y].piece
+       if (boardPiece && boardPiece.color === color) {
+            boardPiece.isDouble = true;
+       }
     }
 
-    if (board[0][3].piece?.color === 'black') {
-        board[0][3].piece.isDouble = true;
-    }
-
-    if (board[0][5].piece?.color === 'black') {
-        board[0][5].piece.isDouble = true;
-    }
-
-    if (board[0][7].piece?.color === 'black') {
-        board[0][7].piece.isDouble = true;
-    }
-
-    if (board[7][0].piece?.color === 'white') {
-        board[7][0].piece.isDouble = true;
-    }
-
-    if (board[7][2].piece?.color === 'white') {
-        board[7][2].piece.isDouble = true;
-    }
-
-    if (board[7][4].piece?.color === 'white') {
-        board[7][4].piece.isDouble = true;
-    }
-
-    if (board[7][6].piece?.color === 'white') {
-        board[7][6].piece.isDouble = true;
-    }
+    doubleBlackSpaces.forEach(toDoubleIfValid('black'))
+    doubleWhiteSpaces.forEach(toDoubleIfValid('white'))
 }
