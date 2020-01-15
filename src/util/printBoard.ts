@@ -1,9 +1,8 @@
 import { BoardSquare } from '../State/slices'
 
 export const printBoard = (board:  BoardSquare[][]) => {
-    return board.forEach(row => {
-        
-        console.log(row.map(square => {
+    return console.log(board.map(row => {
+        return row.map(square => {
             if (square.piece === null) {
                 return 'O';
             } else if (square.piece.color === 'black') {
@@ -11,6 +10,6 @@ export const printBoard = (board:  BoardSquare[][]) => {
             } else if (square.piece.color === 'white') {
                 return 'W'
             }
-        }).join(''))
-    })
+        }).join('')
+    }).join('\n'))
 }
