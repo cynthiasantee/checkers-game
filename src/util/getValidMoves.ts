@@ -1,5 +1,5 @@
 import { BoardSquare } from '../State/slices'
-import { Location } from '../util/movePiece'
+import { Location } from '../util/move'
 import { isOnBoard } from './movePieceRules' 
 
 export const getValidMoves = (curr: Location, board: BoardSquare[][]): Location[] => {

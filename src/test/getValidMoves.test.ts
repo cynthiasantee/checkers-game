@@ -1,7 +1,5 @@
 import { getValidMoves } from '../util/getValidMoves'
-import { movePiece } from '../util/movePiece'
-import { printBoard } from '../util/printBoard';
-
+import { movePiece } from '../util/move'
 
 describe('getValidMoves function', () => {
   beforeEach(() => {

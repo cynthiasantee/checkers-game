@@ -1,5 +1,5 @@
 import { toDouble } from '../util/toDouble'
-import { movePiece } from '../util/movePiece'
+import { movePiece } from '../util/move'
 import { initialBoard } from '../State/slices'
 
 describe('toDouble function', () => {
