@@ -10,13 +10,13 @@ describe('board reducer', () => {
         expect(newBoard[2][1].piece).toEqual(null);
         expect(newBoard[3][2].piece && newBoard[3][2].piece.id).toEqual(9);
 
-          printBoard(newBoard)
+          // printBoard(newBoard)
 
         const newerBoard = board.reducer(
             newBoard, 
             board.actions.movePiece({ pieceId: 9,location: [4, 3]})
         );
-        printBoard(newerBoard)
+        // printBoard(newerBoard)
         expect(newerBoard[3][2].piece).toEqual(null);
         expect(newerBoard[4][3].piece && newerBoard[4][3].piece.id).toEqual(9);
   })
