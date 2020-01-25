@@ -19,7 +19,7 @@ describe('movePiece function', () => {
     movePiece([5, 4], [3, 2], initialBoard);
     expect(initialBoard[3][2].piece.color).toEqual('black');
     expect(initialBoard[4][3].piece).toStrictEqual(null)
-    printBoard(initialBoard)
+    // printBoard(initialBoard)
   });
 
   it('should move piece to the right location', () => {
