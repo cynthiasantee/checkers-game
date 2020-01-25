@@ -1,5 +1,6 @@
 import { getValidMoves } from '../util/getValidMoves'
 import { movePiece } from '../util/move'
+import { printBoard } from '../util/printBoard';
 
 describe('getValidMoves function', () => {
   beforeEach(() => {
@@ -33,6 +34,13 @@ describe('getValidMoves function', () => {
     it('should return 0 moves', () => {
       const { initialBoard } = require('../State/slices')
       expect(getValidMoves([6, 1], initialBoard)).toStrictEqual([]);
-
     });
+
+    it('should work for edge of board', () => {
+      const { initialBoard } = require('../State/slices');
+      initialBoard[1][6].piece = {color: 'black', isDouble: false, id: 5};
+      initialBoard[0][7].piece = null;
+      printBoard(initialBoard);
+      expect(getValidMoves([1, 6], initialBoard)).toStrictEqual([[0, 7]])
+    })
 })
