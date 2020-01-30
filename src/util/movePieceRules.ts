@@ -1,7 +1,7 @@
 import { removePiece } from './removePiece'
 import { BoardSquare } from '../State/slices'
 import { BOARD_SIZE } from './boardSize'
-import { Location } from './movePiece'
+import { Location } from './move'
 
 type TypeOfMove = 'byOne' | 'byTwo' | 'invalidMove'
 
