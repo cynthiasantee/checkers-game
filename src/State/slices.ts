@@ -1,9 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { findPiece as findPieceFn } from '../util/findPiece'
 import { movePiece as movePieceFn } from '../util/move'
+import { Location } from '../util/move'
 
 export type Color = 'white' | 'black';
-import { Location } from '../util/move'
+
 
 export interface Piece {
     id: number,
