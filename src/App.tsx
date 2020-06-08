@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 import { initialBoard } from '../src/State/slices'
 import WhiteSquare from './Components/WhiteSquare'
 import BlackSquare from './Components/BlackSquare'
@@ -7,7 +7,6 @@ import BlackPiece from './Components/BlackPiece'
 import WhitePiece from './Components/WhitePiece'
 import DoubleWhite from './Components/DoubleWhite'
 import DoubleBlack from './Components/DoubleBlack'
-import { Z_BLOCK } from 'zlib';
 
 const App: React.FC = () => {
   return (
@@ -54,11 +53,12 @@ const App: React.FC = () => {
 }
 
 const Container = styled.div`
-  height: 656px;
-  width: 656px;
+  height: 640px;
+  width: 640px;
   display: flex;
   flex: direction: row;
   flex-wrap: wrap;
+  border: 1px solid black
 `
 
 export default App;

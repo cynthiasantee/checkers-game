@@ -1,5 +1,5 @@
 import React, { Children } from 'react';
-import styled from 'styled-components'
+import styled from 'styled-components/macro';
 
 const BlackPiece: React.FC<{}> = ({children}) => {
     return (

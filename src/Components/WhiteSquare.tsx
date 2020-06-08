@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components'
+import styled from 'styled-components/macro';
 
 const WhiteSquare = () => {
     return (
@@ -10,10 +10,10 @@ const WhiteSquare = () => {
 }
 
 const Square = styled.div`
-    border: 1px solid black;
-    height: 80px;
-    width: 80px;
-    background-color: white;
+height: 80px;
+width: 80px;
+background-color: white;
 `
+
 
 export default WhiteSquare;

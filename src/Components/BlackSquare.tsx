@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components'
+import styled from 'styled-components/macro';
 
 
 
@@ -12,7 +12,6 @@ const BlackSquare: React.FC<{}> = ({children})=> {
 }
 
 const Square = styled.div`
-    border: 1px solid black;
     height: 80px;
     width: 80px;
     background-color: black;
@@ -20,5 +19,5 @@ const Square = styled.div`
     align-items: center;
     justify-content: center;
 `
-
+//    border: 1px solid black;
 export default BlackSquare;
