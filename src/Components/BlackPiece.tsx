@@ -1,9 +1,10 @@
 import React, { Children } from 'react';
 import styled from 'styled-components/macro';
+import { initialBoard } from '../State/slices'
 
 const BlackPiece: React.FC<{}> = ({children}) => {
     return (
-        <Piece>
+        <Piece onClick={() => {console.log(initialBoard[0][1].piece?.id)}}>
             {children}
         </Piece>
     )

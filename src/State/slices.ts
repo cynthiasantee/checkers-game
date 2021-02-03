@@ -5,7 +5,6 @@ import { Location } from '../util/move'
 
 export type Color = 'white' | 'black';
 
-
 export interface Piece {
     id: number,
     color: Color,
@@ -38,8 +37,14 @@ export const board = createSlice({
     initialState: initialBoard,
     reducers: {
         movePiece: (state, newLocation: PayloadAction<MovePiecePayload>) => {
-            const findPiece = findPieceFn(newLocation.payload.pieceId, state)
-            movePieceFn(findPiece, newLocation.payload.location, state)
+            const newBoard = [];
+            for (let i = 0; i < state.length; i++) {
+                newBoard[i] = state[i].slice()
+            }
+            console.log(newBoard)
+            const findPiece = findPieceFn(newLocation.payload.pieceId, newBoard)
+            movePieceFn(findPiece, newLocation.payload.location, newBoard)
+            return newBoard
         }
 }})
 
