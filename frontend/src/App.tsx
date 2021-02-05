@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components/macro'
-import { initialBoard } from '../src/State/slices'
+import { initialBoard } from './State/slices'
 import WhiteSquare from './Components/WhiteSquare'
 import BlackSquare from './Components/BlackSquare'
 import BlackPiece from './Components/BlackPiece'
