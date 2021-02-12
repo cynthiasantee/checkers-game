@@ -26,5 +26,5 @@ CREATE TABLE piece_move (
     FOREIGN KEY(game_id) REFERENCES game(id)
 );
 
-INSERT INTO player VALUES (DEFAULT, 'cynthia@gmail.com', 'password');
-INSERT INTO player VALUES(DEFAULT, 'mark@gmail.com', 'password');
+INSERT INTO player VALUES (DEFAULT, 'kai@gmail.com', 'password');
+INSERT INTO player VALUES(DEFAULT, 'pixie@gmail.com', 'password');

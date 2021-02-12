@@ -1,6 +1,7 @@
-export const { Client } = require("pg");
+import PG from 'pg';
+const Pool = PG.Pool;
 
-export const client = new Client({
+export const pool = new Pool({
   user: "postgres",
   password: "checkers",
   host: "localhost",
