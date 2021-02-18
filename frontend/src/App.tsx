@@ -1,15 +1,44 @@
 import React from 'react';
-import styled from 'styled-components/macro'
-import { initialBoard } from './State/slices'
-import WhiteSquare from './Components/WhiteSquare'
-import BlackSquare from './Components/BlackSquare'
-import BlackPiece from './Components/BlackPiece'
-import WhitePiece from './Components/WhitePiece'
-import DoubleWhite from './Components/DoubleWhite'
-import DoubleBlack from './Components/DoubleBlack'
+import styled from 'styled-components/macro';
+import { initialBoard } from './State/slices';
+import WhiteSquare from './Components/WhiteSquare';
+import BlackSquare from './Components/BlackSquare';
+import BlackPiece from './Components/BlackPiece';
+import WhitePiece from './Components/WhitePiece';
+import DoubleWhite from './Components/DoubleWhite';
+import DoubleBlack from './Components/DoubleBlack';
 
 const App: React.FC = () => {
+  const [players, setPlayers] = React.useState([]);
+
+  React.useEffect(() => {
+    const getPlayers = async () => {
+      const response = await fetch(
+        `${process.env.REACT_APP_CHECKERS_GAME_API}/players`
+      );
+    const playerList = await response.json();
+      if (playerList && Array.isArray(playerList) && playerList.length) {
+        // @ts-ignore
+        setPlayers(playerList);
+      }
+    };
+    getPlayers();
+  }, []);
+
   return (
+    <div>
+      <div>
+      {players && players.length
+        ? players.map((p: any, i: number) => {
+            return (
+              <div key={i}>
+                {`${p}`}
+                <br />
+              </div>
+            );
+          })
+        : 'No player to display'}
+    </div>
     <Container>
       {initialBoard.map(row => row.map(square => {
         if (square.squareColor === 'black') {
@@ -49,6 +78,7 @@ const App: React.FC = () => {
         }
       }))}
     </Container>
+    </div>
   );
 }
 
