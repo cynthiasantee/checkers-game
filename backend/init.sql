@@ -1,12 +1,12 @@
 CREATE TABLE player (
-    id SERIAL NOT NULL,
+    id SERIAL,
     email VARCHAR (320) UNIQUE NOT NULL,
     password VARCHAR (20) NOT NULL,
     PRIMARY KEY(id)
 );
 
 CREATE TABLE game (
-    id SERIAL NOT NULL,
+    id SERIAL,
     player_one_id INT NOT NULL,
     player_two_id INT NOT NULL,
     winner_id INT,
@@ -25,3 +25,6 @@ CREATE TABLE piece_move (
     moved_at timestamp without time zone default now(),
     FOREIGN KEY(game_id) REFERENCES game(id)
 );
+
+INSERT INTO player VALUES (DEFAULT, 'kai@gmail.com', 'password');
+INSERT INTO player VALUES(DEFAULT, 'pixie@gmail.com', 'password');

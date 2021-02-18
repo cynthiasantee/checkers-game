@@ -1,0 +1,36 @@
+version: "3"
+services: # Each service is a new container
+  postgres: # Container name
+    image: postgres:latest # What image the container will be built from
+    environment: # Environmental variables
+      - POSTGRES_PASSWORD=checkers
+  web-app: # Container name
+    stdin_open: true
+    tty: true
+    build:
+      context: ./frontend # Where to find the dockerfile
+      dockerfile: Dockerfile.dev # Name of file
+    volumes: # Used for data persistance
+      - /app/node_modules
+      - ./frontend:/app
+    ports:
+      - "3000:3000" # Host:Container
+    restart: on-failure
+    container_name: web-app
+  checkers-game-api: # Container name
+    build:
+      context: ./backend # Where to find the dockerfile
+      dockerfile: Dockerfile.dev # Name of file
+    ports:
+      - "3001:3001" # Host:Container
+    restart: on-failure
+    container_name: checkers-game-api
+    volumes: # Used for data persistance
+      - /app/node_modules # Inside the container, don't try to override this folder, just leave as is
+      - ./backend:/app # Look at the server directory and copy everything into the app folder in the container
+    environment: # Environmental variables
+      - PGUSER=postgres
+      - PGHOST=postgres
+      - PGDATABASE=postgres
+      - PGPASSWORD=checkers
+      - PGPORT=5432

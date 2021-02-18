@@ -1,0 +1,14 @@
+# Specify a base image
+FROM node:12.18.0
+
+# This folder will be created inside of the container
+WORKDIR /app 
+
+# Install dependencies
+# COPY will be executed on the HOST machine
+COPY package.json .
+RUN npm install 
+COPY . .
+
+# Default command, executes them in the container
+CMD ["npm", "run", "dev"]

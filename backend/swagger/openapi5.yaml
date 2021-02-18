@@ -1,161 +1,159 @@
-openapi: "3.0.0"
-info:
-  description: "Checkers Game!"
-  version: 0.0.1
-  title: Checkers Game
-servers:
-  - url: localhost:8080
-paths:
-  /board:
-    get:
-      security:
-        - basicAuth: []
-      summary: Physical board
-      tags:
-        - board
-      responses:
-        '200':
-          description: Found Board
-        '401':
-          $ref: '#/components/responses/UnauthorizedError'
-  /game:
-    put:
-      security:
-        - basicAuth: []
-      summary: Rules and movments
-      requestBody:
-        content:
-          application/json:
-            schema:
-                $ref: "#/components/schemas/Move"
-      tags:
-        - game
-      responses:
-        '200':
-          description: Ok
-        '401':
-          $ref: '#/components/responses/UnauthorizedError'
-    delete:
-      security:
-        - basicAuth: []
-      summary: Restart game 
-      tags:
-        - game
-      responses:
-        '200':
-          description: Ok
-        '401':
-          $ref: '#/components/responses/UnauthorizedError'
-  /player/{name}:
-    get:
-      security:
-        - basicAuth: []
-      summary: Player info
-      tags:
-        - player
-      parameters:
-        - name: name
-          in: path
-          required: true
-          description: The name of the player
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Ok
-        '401':
-          $ref: '#/components/responses/UnauthorizedError'
-  /player/register:
-    post:
-      summary: Register player
-      tags:
-        - player
-      responses:
-        '200':
-          description: Ok
-        '401':
-          $ref: '#/components/responses/UnauthorizedError'
-  /player/login:
-    post:
-      summary: Player login
-      tags:
-        - player
-      responses:
-        '200':
-          description: Ok
-        '401':
-          $ref: '#/components/responses/UnauthorizedError'
-    delete:
-      summary: Delete player
-      tags:
-        - player
-      responses:
-        '200':
-          description: Ok
-        '401':
-          $ref: '#/components/responses/UnauthorizedError'
-          
+# openapi: "3.0.0"
+# info:
+#   description: "Checkers Game!"
+#   version: 0.0.1
+#   title: Checkers Game
+# servers:
+#   - url: localhost:8080
+# paths:
+#   /board:
+#     get:
+#       security:
+#         - basicAuth: []
+#       summary: Physical board
+#       tags:
+#         - board
+#       responses:
+#         '200':
+#           description: Found Board
+#         '401':
+#           $ref: '#/components/responses/UnauthorizedError'
+#   /game:
+#     put:
+#       security:
+#         - basicAuth: []
+#       summary: Rules and movments
+#       requestBody:
+#         content:
+#           application/json:
+#             schema:
+#                 $ref: "#/components/schemas/Move"
+#       tags:
+#         - game
+#       responses:
+#         '200':
+#           description: Ok
+#         '401':
+#           $ref: '#/components/responses/UnauthorizedError'
+#     delete:
+#       security:
+#         - basicAuth: []
+#       summary: Restart game
+#       tags:
+#         - game
+#       responses:
+#         '200':
+#           description: Ok
+#         '401':
+#           $ref: '#/components/responses/UnauthorizedError'
+#   /player/{name}:
+#     get:
+#       security:
+#         - basicAuth: []
+#       summary: Player info
+#       tags:
+#         - player
+#       parameters:
+#         - name: name
+#           in: path
+#           required: true
+#           description: The name of the player
+#           schema:
+#             type: string
+#       responses:
+#         '200':
+#           description: Ok
+#         '401':
+#           $ref: '#/components/responses/UnauthorizedError'
+#   /player/register:
+#     post:
+#       summary: Register player
+#       tags:
+#         - player
+#       responses:
+#         '200':
+#           description: Ok
+#         '401':
+#           $ref: '#/components/responses/UnauthorizedError'
+#   /player/login:
+#     post:
+#       summary: Player login
+#       tags:
+#         - player
+#       responses:
+#         '200':
+#           description: Ok
+#         '401':
+#           $ref: '#/components/responses/UnauthorizedError'
+#     delete:
+#       summary: Delete player
+#       tags:
+#         - player
+#       responses:
+#         '200':
+#           description: Ok
+#         '401':
+#           $ref: '#/components/responses/UnauthorizedError'
 
-components:
-  securitySchemes:
-      basicAuth:     # <-- arbitrary name for the security scheme
-        type: http
-        scheme: basic
-  responses:
-    UnauthorizedError:
-      description: Authentication information is missing or invalid
-      headers:
-        WWW_Authenticate:
-          schema:
-            type: string
-  schemas:
-    Color:
-      type: string
-      enum:
-        - white
-        - black
-    Piece:
-      type: object
-      required:
-        - id
-        - color
-        - isDouble
-      properties:
-        id:
-          type: number
-        color:
-          $ref: "#/components/schemas/Color"
-        isDouble:
-          type: boolean
-    BoardSquare:
-      type: "object"
-      required:
-        - squareColor
-        - piece
-      properties:
-        squareColor:
-          $ref: "#/components/schemas/Color"
-        piece:
-          $ref: "#/components/schemas/Piece"
-          nullable: true
-    Location:
-      type: object
-      required:
-        - row
-        - column
-      properties:
-        row:
-          type: number
-        column:
-          type: number
-    Move:
-      type: object
-      required:
-        - from
-        - to
-      properties:
-        from:
-          $ref: "#/components/schemas/Location"
-        to:
-          $ref: "#/components/schemas/Location"
-      
+# components:
+#   securitySchemes:
+#       basicAuth:     # <-- arbitrary name for the security scheme
+#         type: http
+#         scheme: basic
+#   responses:
+#     UnauthorizedError:
+#       description: Authentication information is missing or invalid
+#       headers:
+#         WWW_Authenticate:
+#           schema:
+#             type: string
+#   schemas:
+#     Color:
+#       type: string
+#       enum:
+#         - white
+#         - black
+#     Piece:
+#       type: object
+#       required:
+#         - id
+#         - color
+#         - isDouble
+#       properties:
+#         id:
+#           type: number
+#         color:
+#           $ref: "#/components/schemas/Color"
+#         isDouble:
+#           type: boolean
+#     BoardSquare:
+#       type: "object"
+#       required:
+#         - squareColor
+#         - piece
+#       properties:
+#         squareColor:
+#           $ref: "#/components/schemas/Color"
+#         piece:
+#           $ref: "#/components/schemas/Piece"
+#           nullable: true
+#     Location:
+#       type: object
+#       required:
+#         - row
+#         - column
+#       properties:
+#         row:
+#           type: number
+#         column:
+#           type: number
+#     Move:
+#       type: object
+#       required:
+#         - from
+#         - to
+#       properties:
+#         from:
+#           $ref: "#/components/schemas/Location"
+#         to:
+#           $ref: "#/components/schemas/Location"
