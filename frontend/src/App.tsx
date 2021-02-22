@@ -1,12 +1,12 @@
 import React from 'react';
 import styled from 'styled-components/macro';
 import { initialBoard } from './State/slices';
-import WhiteSquare from './Components/WhiteSquare';
-import BlackSquare from './Components/BlackSquare';
-import BlackPiece from './Components/BlackPiece';
-import WhitePiece from './Components/WhitePiece';
-import DoubleWhite from './Components/DoubleWhite';
-import DoubleBlack from './Components/DoubleBlack';
+import WhiteSquare from './components/WhiteSquare';
+import BlackSquare from './components/BlackSquare';
+import BlackPiece from './components/BlackPiece';
+import WhitePiece from './components/WhitePiece';
+import DoubleWhite from './components/DoubleWhite';
+import DoubleBlack from './components/DoubleBlack';
 
 const App: React.FC = () => {
   const [players, setPlayers] = React.useState([]);
