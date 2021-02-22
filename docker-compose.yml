@@ -23,6 +23,8 @@ services: # Each service is a new container
       dockerfile: Dockerfile.dev # Name of file
     ports:
       - "3001:3001" # Host:Container
+    depends_on:
+      - "postgres"
     restart: on-failure
     container_name: checkers-game-api
     volumes: # Used for data persistance
