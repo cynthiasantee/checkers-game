@@ -1,6 +1,6 @@
 import React, { Children } from 'react';
 import styled from 'styled-components/macro';
-import { initialBoard } from '../State/slices'
+import { initialBoard } from '../redux/reducer/board'
 
 const BlackPiece: React.FC<{}> = ({children}) => {
     return (

@@ -32,11 +32,11 @@ const getGames = async (_, res) => {
   const createGame = async (req, res) => {
     const { player_one_id } = req.body;
       try {
-        await pgClient.query(
-          `INSERT INTO game (player_one_id) VALUES ($1)`,
+        const game = await pgClient.query(
+          `INSERT INTO game (player_one_id) VALUES ($1) RETURNING id as new_game_id`,
           [player_one_id])
     
-          res.status(201).send(`Game created`);
+          res.status(201).send(game.rows[0]);
       } catch (err) {
         console.log(err);
         res
