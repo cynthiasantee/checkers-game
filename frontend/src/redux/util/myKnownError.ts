@@ -1,1 +1,1 @@
-export type MyKnownError = "500";
+export type MyKnownError = "500" | string | Error;

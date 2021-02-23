@@ -1,3 +1,4 @@
+import { serializeError } from "serialize-error";
 import { PlayerWinsApi } from "../api/getPlayerWinsApi";
 import {
   getPlayerWinsFailed,
@@ -14,7 +15,7 @@ export function fetchPlayerWins(id: number): CGThunkAction<void> {
       dispatch(getPlayerWinsSuccess(data));
     } catch (err) {
       const error = err?.response?.status === 400 ? "400" : err;
-      dispatch(getPlayerWinsFailed(error));
+      dispatch(getPlayerWinsFailed(JSON.stringify(serializeError(error))));
     }
   };
 }

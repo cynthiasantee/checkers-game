@@ -1,3 +1,4 @@
+import { serializeError } from "serialize-error";
 import { PlayerTotalGamesApi } from "../api/getPlayerTotalGamesApi";
 import {
   getPlayerTotalGamesFailed,
@@ -14,7 +15,9 @@ export function fetchPlayerTotalGames(id: number): CGThunkAction<void> {
       dispatch(getPlayerTotalGamesSuccess(data));
     } catch (err) {
       const error = err?.response?.status === 400 ? "400" : err;
-      dispatch(getPlayerTotalGamesFailed(error));
+      dispatch(
+        getPlayerTotalGamesFailed(JSON.stringify(serializeError(error)))
+      );
     }
   };
 }

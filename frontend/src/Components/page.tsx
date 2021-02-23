@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { RootState } from "../redux/store";
 import styled from "styled-components/macro";
@@ -23,7 +23,12 @@ interface DispatchProps {
 
 const page = (page: Page) => (Comp: React.ComponentType) => {
   const NewComponent = (props: StateProps & DispatchProps) => {
-    props.changePage(page);
+
+    const { changePage } = props;
+
+    useEffect(() => {
+      changePage(page);
+    }, [changePage]);
 
     // if the "page" being loaded shows a nav bar, add margin to the page, so the navbar does not overlap the page's content
     return page === "register" || page === "login" || page === "reset-password" ? (

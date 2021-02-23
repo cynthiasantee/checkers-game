@@ -1,3 +1,4 @@
+import { serializeError } from "serialize-error";
 import { CreateGameApi } from "../api/createGameApi";
 import {
   createGameFailed,
@@ -14,7 +15,7 @@ export function createGame(id: number): CGThunkAction<void> {
       dispatch(createGameSuccess(data));
     } catch (err) {
       const error = err?.response?.status === 400 ? "400" : err;
-      dispatch(createGameFailed(error));
+      dispatch(createGameFailed(JSON.stringify(serializeError(error))));
     }
   };
 }
