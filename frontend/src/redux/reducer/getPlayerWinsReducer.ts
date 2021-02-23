@@ -1,27 +1,26 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Player } from "../api/playerApi";
 import { MyKnownError } from "../util/myKnownError";
 import { defaultState } from "../util/defaultState";
 
-const playerSlice = createSlice({
-  name: "player",
-  initialState: defaultState<Player>(),
+const playerWinsSlice = createSlice({
+  name: "player-wins",
+  initialState: defaultState<number>(),
   reducers: {
-    getPlayerLoading: (state) => {
+    getPlayerWinsLoading: (state) => {
       state.fetchStatus = "pending";
       return state;
     },
-    getPlayerSuccess: (state, action: PayloadAction<Player>) => {
+    getPlayerWinsSuccess: (state, action: PayloadAction<number>) => {
       state.fetchStatus = "success";
       state.data = action.payload;
       return state;
     },
-    getPlayerFailed: (state, action: PayloadAction<MyKnownError>) => {
+    getPlayerWinsFailed: (state, action: PayloadAction<MyKnownError>) => {
       state.fetchStatus = "failed";
       state.error = action.payload;
       return state;
     },
-    getPlayerReset: (state) => {
+    getPlayerWinsReset: (state) => {
       state = defaultState();
       return state;
     },
@@ -29,9 +28,9 @@ const playerSlice = createSlice({
 });
 
 export const {
-  getPlayerLoading,
-  getPlayerSuccess,
-  getPlayerFailed,
-  getPlayerReset,
-} = playerSlice.actions;
-export default playerSlice.reducer;
+  getPlayerWinsLoading,
+  getPlayerWinsSuccess,
+  getPlayerWinsFailed,
+  getPlayerWinsReset,
+} = playerWinsSlice.actions;
+export default playerWinsSlice.reducer;

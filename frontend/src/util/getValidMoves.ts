@@ -1,4 +1,4 @@
-import { BoardSquare } from "../State/slices";
+import { BoardSquare } from "../redux/reducer/board";
 import { Location } from "./move";
 import { isOnBoard } from "./movePieceRules";
 import { printBoard } from "./printBoard";

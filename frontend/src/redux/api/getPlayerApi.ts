@@ -1,4 +1,4 @@
-import { api } from "../../../axios.config";
+import { api } from "../../axios.config";
 
 export interface Player {
   id: number;
@@ -6,7 +6,7 @@ export interface Player {
   password: string;
 }
 
-const getPlayer = async (id: number) => {
+const getPlayer = (id: number) => {
   return api.get<Player>(`/player/${id}`);
 };
 

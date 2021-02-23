@@ -1,9 +1,9 @@
-import { toDouble } from '../util/toDouble'
-import { movePiece } from '../util/move'
-import { initialBoard } from '../State/slices'
+import { toDouble } from "../util/toDouble";
+import { movePiece } from "../util/move";
+import { initialBoard } from "../redux/reducer/board";
 
-describe('toDouble function', () => {
-  it('should make the right piece double', () => {
+describe("toDouble function", () => {
+  it("should make the right piece double", () => {
     movePiece([2, 5], [3, 4], initialBoard);
     movePiece([3, 4], [4, 3], initialBoard);
     movePiece([1, 6], [2, 5], initialBoard);
@@ -17,9 +17,8 @@ describe('toDouble function', () => {
     movePiece([3, 6], [2, 7], initialBoard);
     movePiece([2, 7], [1, 6], initialBoard);
     movePiece([1, 6], [0, 7], initialBoard);
-    expect(initialBoard[0][7].piece?.isDouble).toBeFalsy()
-    toDouble(initialBoard)
-    expect(initialBoard[0][7].piece?.isDouble).toBeTruthy()
-
-  })
-})
+    expect(initialBoard[0][7].piece?.isDouble).toBeFalsy();
+    toDouble(initialBoard);
+    expect(initialBoard[0][7].piece?.isDouble).toBeTruthy();
+  });
+});

@@ -12,7 +12,7 @@ const getPlayers = async (_, res) => {
   }
 };
 
-const getPlayerById = async (req, res) => {
+const getPlayer = async (req, res) => {
   const id = parseInt(req.params.id)
 
   try {
@@ -20,7 +20,7 @@ const getPlayerById = async (req, res) => {
       `SELECT * FROM player WHERE id = $1`,
       [id])
 
-    res.status(200).send(player.rows);
+    res.status(200).send(player.rows[0]);
   } catch (err) {
     console.log(err)
       res
@@ -88,7 +88,7 @@ const getPlayerWins = async (req, res) => {
       `SELECT COUNT(winner_id) FROM game WHERE winner_id = $1`,
       [id])
 
-    res.status(200).send(player.rows);
+    res.status(200).send(player.rows[0].count);
   } catch (err) {
     console.log(err)
       res
@@ -105,7 +105,7 @@ const getPlayerTotalGames = async (req, res) => {
       `SELECT COUNT(id) FROM game WHERE player_one_id = $1 OR player_two_id = $1`,
       [id])
 
-    res.status(200).send(player.rows);
+    res.status(200).send(player.rows[0].count);
   } catch (err) {
     console.log(err)
       res
@@ -116,7 +116,7 @@ const getPlayerTotalGames = async (req, res) => {
 
 export const playerDAO = {
   getPlayers,
-  getPlayerById,
+  getPlayer,
   createPlayer,
   updatePassword,
   deletePlayer,

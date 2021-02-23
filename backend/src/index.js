@@ -58,7 +58,7 @@ pgClient
 
 //DAO player
 app.get("/players", playerDAO.getPlayers);
-app.get("/player/:id", playerDAO.getPlayerById);
+app.get("/player/:id", playerDAO.getPlayer);
 app.get("/player/:id/wins", playerDAO.getPlayerWins);
 app.get("/player/:id/total", playerDAO.getPlayerTotalGames);
 app.post("/player", playerDAO.createPlayer);
