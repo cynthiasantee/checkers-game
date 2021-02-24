@@ -1,12 +1,9 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components/macro';
 import { initialBoard } from '../redux/reducer/board';
-import WhiteSquare from '../components/WhiteSquare';
-import BlackSquare from '../components/BlackSquare';
-import BlackPiece from '../components/BlackPiece';
-import WhitePiece from '../components/WhitePiece';
-import DoubleWhite from '../components/DoubleWhite';
-import DoubleBlack from '../components/DoubleBlack';
+import Square from '../components/Square';
+import Piece from '../components/Piece';
+import Double from '../components/Double';
 import { Player } from '../redux/api/getPlayerApi';
 import { MyKnownError } from '../redux/util/myKnownError';
 import { FetchStatus } from '../redux/util/fetchStatus';
@@ -14,7 +11,7 @@ import { AppDispatch, RootState } from '../redux/store';
 import { SelectPlayer } from '../redux/selector/getPlayerSelector';
 import { fetchPlayer } from "../redux/thunk/getPlayerThunk";
 import { connect } from 'react-redux';
-import page from '../components/page';
+import page from '../pages/page';
 import { useParams } from "react-router-dom";
 
 interface StateProps {
@@ -50,38 +47,38 @@ const Game = (props: StateProps & DispatchProps) => {
       {initialBoard.map(row => row.map(square => {
         if (square.squareColor === 'black') {
           if (square.piece === null) {
-            return <BlackSquare></BlackSquare>
+            return <Square color="black"></Square>
           } else if (square.piece.color === 'white' && square.piece.isDouble === false) {
             return(
-            <BlackSquare>
-              <WhitePiece></WhitePiece>
-            </BlackSquare>
+            <Square color="black">
+              <Piece color="white"></Piece>
+            </Square>
             )
           } else if (square.piece.color === 'black' && square.piece.isDouble === false) {
             return(
-            <BlackSquare>
-              <BlackPiece></BlackPiece>
-            </BlackSquare>
+            <Square color="black">
+              <Piece color="black"></Piece>
+            </Square>
             )
           } else if (square.piece.color === 'white' && square.piece.isDouble === true) {
             return(
-            <BlackSquare>
-              <WhitePiece>
-                <DoubleWhite></DoubleWhite>
-              </WhitePiece>
-            </BlackSquare>
+            <Square color="black">
+              <Piece color="white">
+                <Double color="white"></Double>
+              </Piece>
+            </Square>
             )
           } else if (square.piece.color === 'black' && square.piece.isDouble === true) {
             return(
-            <BlackSquare>
-              <BlackPiece>
-                <DoubleBlack></DoubleBlack>
-              </BlackPiece>
-            </BlackSquare>
+            <Square color="black">
+              <Piece color="black">
+                <Double color="black"></Double>
+              </Piece>
+            </Square>
             )
           }
         } else if (square.squareColor === 'white') {
-          return <WhiteSquare></WhiteSquare>
+          return <Square color="white"></Square>
         }
       }))}
     </Container>
