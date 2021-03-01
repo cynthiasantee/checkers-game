@@ -11,7 +11,7 @@ export const getValidMoves = (
   board: BoardSquare[][]
 ): Location[] => {
   const [i, j] = curr;
-  printBoard(board);
+  // printBoard(board);
   // jl(curr);
   const piece = board[i][j].piece;
   // jl(piece);

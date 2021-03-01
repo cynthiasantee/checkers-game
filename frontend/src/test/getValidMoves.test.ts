@@ -46,7 +46,7 @@ describe("getValidMoves function", () => {
     const { initialBoard } = require("../redux/reducer/board");
     initialBoard[1][6].piece = { color: "black", isDouble: false, id: 5 };
     initialBoard[0][7].piece = null;
-    printBoard(initialBoard);
+    // printBoard(initialBoard);
     expect(getValidMoves([1, 6], initialBoard)).toStrictEqual([[0, 7]]);
   });
 });

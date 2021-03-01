@@ -4,7 +4,7 @@ import { MyKnownError } from '../redux/util/myKnownError';
 import { FetchStatus } from '../redux/util/fetchStatus';
 import { AppDispatch, RootState } from '../redux/store';
 import { connect } from 'react-redux';
-import page from '../components/page';
+import page from './page';
 import { useParams, Redirect } from "react-router-dom";
 //Player info
 import { Player } from '../redux/api/getPlayerApi';

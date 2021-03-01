@@ -1,30 +1,40 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components/macro';
-import { initialBoard } from '../redux/reducer/board';
-import WhiteSquare from '../components/WhiteSquare';
-import BlackSquare from '../components/BlackSquare';
-import BlackPiece from '../components/BlackPiece';
-import WhitePiece from '../components/WhitePiece';
-import DoubleWhite from '../components/DoubleWhite';
-import DoubleBlack from '../components/DoubleBlack';
+// import { initialBoard } from '../redux/reducer/board';
+import Square from '../components/Square';
+import Piece from '../components/Piece';
+import Double from '../components/Double';
 import { Player } from '../redux/api/getPlayerApi';
 import { MyKnownError } from '../redux/util/myKnownError';
 import { FetchStatus } from '../redux/util/fetchStatus';
 import { AppDispatch, RootState } from '../redux/store';
 import { SelectPlayer } from '../redux/selector/getPlayerSelector';
 import { fetchPlayer } from "../redux/thunk/getPlayerThunk";
+import { addMove } from "../redux/thunk/addMoveThunk";
 import { connect } from 'react-redux';
-import page from '../components/page';
+import page from '../pages/page';
 import { useParams } from "react-router-dom";
+import { BoardSquare, movePiece, MovePiecePayload } from '../redux/reducer/board';
+
+import { Move } from '../redux/api/addMoveApi';
+import { SelectAddMove } from '../redux/selector/addMoveSelector';
 
 interface StateProps {
   player?: Player;
-  error?: MyKnownError;
-  fetchStatus: FetchStatus;
+  playerError?: MyKnownError;
+  playerFetchStatus: FetchStatus;
+  board: BoardSquare[][];
+
+  //move
+  move?: Move;
+  moveError?: MyKnownError;
+  moveFetchStatus: FetchStatus;
 }
 
 interface DispatchProps {
   getPlayer: (id: number) => void;
+  movePiece: (move: MovePiecePayload) => void;
+  addMove: (id: number, move: Move) => void;
 }
 
 const Game = (props: StateProps & DispatchProps) => {
@@ -46,42 +56,44 @@ const Game = (props: StateProps & DispatchProps) => {
   return (
     <div>
         {props.player.email}
+        <button onClick={() => props.movePiece({pieceId: 9, location: [7, 7]})}>Move piece</button>
+        {/* <button onClick={() => props.addMove(parseInt(id), {"from_x": 1, "from_y": 2, "to_x": 0, "to_y": 3})}>Move piece</button> */}
     <Container>
-      {initialBoard.map(row => row.map(square => {
+      {props.board.map(row => row.map(square => {
         if (square.squareColor === 'black') {
           if (square.piece === null) {
-            return <BlackSquare></BlackSquare>
+            return <Square color="black"></Square>
           } else if (square.piece.color === 'white' && square.piece.isDouble === false) {
             return(
-            <BlackSquare>
-              <WhitePiece></WhitePiece>
-            </BlackSquare>
+            <Square color="black">
+              <Piece color="white"></Piece>
+            </Square>
             )
           } else if (square.piece.color === 'black' && square.piece.isDouble === false) {
             return(
-            <BlackSquare>
-              <BlackPiece></BlackPiece>
-            </BlackSquare>
+            <Square color="black">
+              <Piece color="black"></Piece>
+            </Square>
             )
           } else if (square.piece.color === 'white' && square.piece.isDouble === true) {
             return(
-            <BlackSquare>
-              <WhitePiece>
-                <DoubleWhite></DoubleWhite>
-              </WhitePiece>
-            </BlackSquare>
+            <Square color="black">
+              <Piece color="white">
+                <Double color="white"></Double>
+              </Piece>
+            </Square>
             )
           } else if (square.piece.color === 'black' && square.piece.isDouble === true) {
             return(
-            <BlackSquare>
-              <BlackPiece>
-                <DoubleBlack></DoubleBlack>
-              </BlackPiece>
-            </BlackSquare>
+            <Square color="black">
+              <Piece color="black">
+                <Double color="black"></Double>
+              </Piece>
+            </Square>
             )
           }
         } else if (square.squareColor === 'white') {
-          return <WhiteSquare></WhiteSquare>
+          return <Square color="white"></Square>
         }
       }))}
     </Container>
@@ -91,14 +103,19 @@ const Game = (props: StateProps & DispatchProps) => {
 
 const mapStateToProps = (state: RootState): StateProps => ({
   player: SelectPlayer.data(state),
-  error: SelectPlayer.error(state),
-  fetchStatus: SelectPlayer.status(state),
+  playerError: SelectPlayer.error(state),
+  playerFetchStatus: SelectPlayer.status(state),
+  board: state.board,
+  move: SelectAddMove.data(state),
+  moveError: SelectAddMove.error(state),
+  moveFetchStatus: SelectAddMove.status(state)
 });
 
 const mapDispatchToProps = (dispatch: AppDispatch): DispatchProps => ({
   getPlayer: (id) => dispatch(fetchPlayer(id)),
+  movePiece: (move) => dispatch(movePiece(move)),
+  addMove: (id, move) => dispatch(addMove(id, move))
 });
-
 export default page("game")(connect(mapStateToProps, mapDispatchToProps)(Game));
 
 const Container = styled.div`

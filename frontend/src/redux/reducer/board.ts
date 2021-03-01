@@ -16,7 +16,7 @@ export interface BoardSquare {
   piece: Piece | null;
 }
 
-export const initialBoard: BoardSquare[][] = [
+const initialBoard: BoardSquare[][] = [
   [
     { squareColor: "white", piece: null },
     { squareColor: "black", piece: { id: 1, color: "white", isDouble: false } },
@@ -144,12 +144,12 @@ export const initialBoard: BoardSquare[][] = [
   ],
 ];
 
-interface MovePiecePayload {
+export interface MovePiecePayload {
   pieceId: number;
   location: Location;
 }
 
-export const board = createSlice({
+const board = createSlice({
   name: "board",
   initialState: initialBoard,
   reducers: {
@@ -158,10 +158,17 @@ export const board = createSlice({
       for (let i = 0; i < state.length; i++) {
         newBoard[i] = state[i].slice();
       }
-      console.log(newBoard);
+
       const findPiece = findPieceFn(newLocation.payload.pieceId, newBoard);
+      // console.log(findPiece);
       movePieceFn(findPiece, newLocation.payload.location, newBoard);
-      return newBoard;
+
+      state = newBoard;
+
+      // console.log("piece moved");
     },
   },
 });
+
+export const { movePiece } = board.actions;
+export default board.reducer;
