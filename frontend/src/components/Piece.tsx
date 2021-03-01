@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components/macro';
-import { initialBoard } from '../redux/reducer/board'
 import { Color } from '../util/color';
 
 interface OwnProps {
@@ -9,11 +8,13 @@ interface OwnProps {
 
 const Piece: React.FC<OwnProps> = (props) => {
     return (
-        <Container onClick={() => {console.log(initialBoard[0][1].piece?.id)}} color={props.color}>
+        <Container color={props.color}>
             {props.children}
         </Container>
     )
 }
+
+//onClick={() => {console.log(initialBoard[0][1].piece?.id)}}
 
 const Container = styled.div<{color: Color}>`
     border: 1px solid white;

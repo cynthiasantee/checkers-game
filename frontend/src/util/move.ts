@@ -49,5 +49,8 @@ export const movePiece = (
     ) {
       move();
     }
+  } else {
+    console.log("move not made");
+    return;
   }
 };
