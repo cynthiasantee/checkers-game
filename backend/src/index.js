@@ -1,4 +1,3 @@
-import playerController from "./controller/playerController.js"
 import * as errorHandler from './errorHandler.js';
 
 import dotenv from 'dotenv';
@@ -19,10 +18,10 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-// Dao imports
-import {playerDao} from "./dao/playerDao.js";
-import {gameDao} from "./dao/gameDao.js";
-import {moveDao} from "./dao/moveDao.js";
+// Controller imports
+import playerController from "./controller/playerController.js"
+import gameController from "./controller/gameController.js"
+import moveController from "./controller/moveController.js"
 
 app.use((req, res, next) => {
   const allowedOrigins = [
@@ -82,17 +81,11 @@ pgClient
 
 //Player subroute
 app.use("/player", playerController);
+//Game subroute
+app.use("/game", gameController);
+//Move subroute
+app.use("/move", moveController);
 
-//Dao game
-app.get("/games", gameDao.getGames);
-app.get("/game/:id", gameDao.getGameById);
-app.post("/game", gameDao.createGame);
-app.put("/game/:id/player", gameDao.setSecondPlayer);
-app.put("/game/:id/winner", gameDao.setWinner);
-
-//Dao move
-app.get("/moves/:id", moveDao.getMoves);
-app.post("/move/:id", moveDao.makeMove);
 
 // Server
 const port = process.env.PORT || 3001;

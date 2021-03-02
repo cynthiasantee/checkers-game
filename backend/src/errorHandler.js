@@ -8,6 +8,15 @@ export const Errors = {
     PLAYER_DELETION_FAILED: 'PLAYER_DELETION_FAILED',
     PLAYER_WINS_FAILED: 'PLAYER_WINS_FAILED',
     PLAYER_TOTAL_FAILED: 'PLAYER_TOTAL_FAILED',
+    // Game
+    NO_GAMES: 'NO_GAMES',
+    GAME_NOT_FOUND: 'GAME_NOT_FOUND',
+    GAME_INSERT_FAILED: 'GAME_INSERT_FAILED',
+    SET_SECOND_PLAYER_FAILED: 'SET_SECOND_PLAYER_FAILED',
+    SET_WINNER_FAILED: 'SET_WINNER_FAILED',
+    // Move
+    NO_MOVES: 'NO_MOVES',
+    MOVE_INSERT_FAILED:'MOVE_INSERT_FAILED',
 
     // 401 incorrect credentials
     INCORRECT_CREDENTIALS: 'INCORRECT_CREDENTIALS',
@@ -29,7 +38,15 @@ export const handle = (res) => (err) => {
             Errors.PASSWORD_RESET_FAILED,
             Errors.PLAYER_DELETION_FAILED,
             Errors.PLAYER_WINS_FAILED,
-            Errors.PLAYER_TOTAL_FAILED
+            Errors.PLAYER_TOTAL_FAILED,
+            Errors.NO_GAMES,
+            Errors.GAME_NOT_FOUND,
+            Errors.GAME_INSERT_FAILED,
+            Errors.SET_SECOND_PLAYER_FAILED,
+            Errors.SET_WINNER_FAILED,
+            Errors.NO_MOVES,
+            Errors.MOVE_INSERT_FAILED,
+
         ],
         401: [Errors.INCORRECT_CREDENTIALS],
         403: [Errors.FORBIDDEN],

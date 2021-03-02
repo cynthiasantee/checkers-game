@@ -5,7 +5,7 @@ const getPlayers = async () => {
     const players = await playerDao.getPlayers();
     if (!players.rows || !players.rows.length) throw Errors.NO_PLAYERS;
     return players;
-   };
+};
    
 const getPlayer = async (id) => {
     const player = await playerDao.getPlayer(id);
@@ -17,9 +17,12 @@ const createPlayer = async (email, password) => {
     const isValidEmail = await playerDao.emailCheck(email);
     if (isValidEmail.rows && isValidEmail.rows.length > 0) throw Errors.EMAIL_IN_USE;
 
-    const playerInsert = await playerDao.createPlayer(email, password)
+    const playerInsert = await playerDao.createPlayer(email, password);
+
     // We need this if since errors return undefined.
     if (!playerInsert) throw Errors.PLAYER_INSERT_FAILED;
+    
+    return playerInsert;
 };
 
 const updatePassword = async (id, email, password) => {
@@ -27,7 +30,7 @@ const updatePassword = async (id, email, password) => {
 
     if (passwordUpdate.rowCount === 0) {
         throw Errors.PASSWORD_RESET_FAILED;
-    }
+    };
 };
 
 const getPlayerWins = async (id) => {
