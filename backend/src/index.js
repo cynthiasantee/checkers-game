@@ -1,3 +1,6 @@
+import playerController from "./controller/playerController.js"
+import * as errorHandler from './errorHandler.js';
+
 import dotenv from 'dotenv';
 dotenv.config()
 
@@ -16,10 +19,31 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-// DAO imports
-import {playerDAO} from "./dao/player.js";
-import {gameDAO} from "./dao/game.js";
-import {moveDAO} from "./dao/move.js";
+// Dao imports
+import {playerDao} from "./dao/playerDao.js";
+import {gameDao} from "./dao/gameDao.js";
+import {moveDao} from "./dao/moveDao.js";
+
+app.use((req, res, next) => {
+  const allowedOrigins = [
+      'http://localhost:3001',
+  ];
+
+  if (allowedOrigins.includes(req.headers.origin)) {
+      res.header('Access-Control-Allow-Origin', req.headers.origin);
+  }
+
+  res.header('Vary', 'Origin');
+  res.header('Access-Control-Allow-Credentials', true);
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  res.header('Access-Control-Expose-Headers', 'Location');
+  res.header('Access-Control-Allow-Methods', 'DELETE, POST, PUT, GET');
+
+  // Self built error handler
+  res.errorHandler = errorHandler.handle(res);
+
+  next();
+});
 
 // Create tables
 pgClient
@@ -56,25 +80,19 @@ pgClient
   )
   .catch(err => console.log(err));
 
-//DAO player
-app.get("/players", playerDAO.getPlayers);
-app.get("/player/:id", playerDAO.getPlayer);
-app.get("/player/:id/wins", playerDAO.getPlayerWins);
-app.get("/player/:id/total", playerDAO.getPlayerTotalGames);
-app.post("/player", playerDAO.createPlayer);
-app.put("/player/:id", playerDAO.updatePassword);
-app.delete("/player/:id", playerDAO.deletePlayer);
+//Player subroute
+app.use("/player", playerController);
 
-//DAO game
-app.get("/games", gameDAO.getGames);
-app.get("/game/:id", gameDAO.getGameById);
-app.post("/game", gameDAO.createGame);
-app.put("/game/:id/player", gameDAO.setSecondPlayer);
-app.put("/game/:id/winner", gameDAO.setWinner);
+//Dao game
+app.get("/games", gameDao.getGames);
+app.get("/game/:id", gameDao.getGameById);
+app.post("/game", gameDao.createGame);
+app.put("/game/:id/player", gameDao.setSecondPlayer);
+app.put("/game/:id/winner", gameDao.setWinner);
 
-//DAO move
-app.get("/moves/:id", moveDAO.getMoves);
-app.post("/move/:id", moveDAO.makeMove);
+//Dao move
+app.get("/moves/:id", moveDao.getMoves);
+app.post("/move/:id", moveDao.makeMove);
 
 // Server
 const port = process.env.PORT || 3001;

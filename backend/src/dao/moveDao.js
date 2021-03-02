@@ -36,7 +36,7 @@ const makeMove = async (req, res) => {
 
 };
 
-export const moveDAO = {
+export const moveDao = {
   getMoves,
   makeMove
 };

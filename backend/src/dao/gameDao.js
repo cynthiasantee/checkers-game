@@ -79,7 +79,7 @@ const getGames = async (_, res) => {
     }
   };
   
-  export const gameDAO = {
+  export const gameDao = {
     getGames,
     getGameById,
     createGame,
