@@ -68,10 +68,10 @@ pgClient
 
   CREATE TABLE IF NOT EXISTS move (
     game_id INT NOT NULL,
-    from_x SMALLINT NOT NULL,
-    from_y SMALLINT NOT NULL,
-    to_x SMALLINT NOT NULL,
-    to_y SMALLINT NOT NULL,
+    from_i SMALLINT NOT NULL,
+    from_j SMALLINT NOT NULL,
+    to_i SMALLINT NOT NULL,
+    to_j SMALLINT NOT NULL,
     moved_at timestamp without time zone default now(),
     FOREIGN KEY(game_id) REFERENCES game(id)
   );

@@ -19,7 +19,7 @@ router.get('/:id', async (req, res) => {
 //make move
 router.post('/:id', async (req, res) => {
     try {
-        const move = await moveService.makeMove(req.params.id, req.body.from_x, req.body.from_y, req.body.to_x, req.body.to_y);
+        const move = await moveService.makeMove(req.params.id, req.body.from_i, req.body.from_j, req.body.to_i, req.body.to_j);
         res.status(201).send(move.rows).end();
     } catch(err) {
         return res.errorHandler(err);

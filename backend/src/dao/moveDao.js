@@ -7,10 +7,10 @@ const getMoves = async (id) => {
   );
 };
 
-const makeMove = async (id,from_x, from_y, to_x, to_y) => {
+const makeMove = async (id,from_i, from_j, to_i, to_j) => {
   return await pgClient.query(
-    `INSERT INTO move (game_id, from_x, from_y, to_x, to_y) VALUES ($1, $2, $3, $4, $5)`,
-      [id, from_x, from_y, to_x, to_y]
+    `INSERT INTO move (game_id, from_i, from_j, to_i, to_j) VALUES ($1, $2, $3, $4, $5)`,
+      [id, from_i, from_j, to_i, to_j]
   );
 };
 
