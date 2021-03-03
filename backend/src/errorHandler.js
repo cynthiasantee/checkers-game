@@ -16,7 +16,8 @@ export const Errors = {
     SET_WINNER_FAILED: 'SET_WINNER_FAILED',
     // Move
     NO_MOVES: 'NO_MOVES',
-    MOVE_INSERT_FAILED:'MOVE_INSERT_FAILED',
+    MOVE_INSERT_FAILED: 'MOVE_INSERT_FAILED',
+    INVALID_MOVE: 'INVALID_MOVE',
 
     // 401 incorrect credentials
     INCORRECT_CREDENTIALS: 'INCORRECT_CREDENTIALS',
@@ -46,6 +47,7 @@ export const handle = (res) => (err) => {
             Errors.SET_WINNER_FAILED,
             Errors.NO_MOVES,
             Errors.MOVE_INSERT_FAILED,
+            Errors.INVALID_MOVE,
 
         ],
         401: [Errors.INCORRECT_CREDENTIALS],

@@ -1,6 +1,8 @@
 import { moveDao } from "../dao/moveDao.js";
 import { Errors } from '../errorHandler.js';
-
+import { INITIAL_BOARD } from "../util/initialBoard.js";
+import {movePiece} from "../util/move.js"
+import _ from "lodash";
 
 const getMoves = async (id) => {
     const moves = await moveDao.getMoves(id);
@@ -8,16 +10,28 @@ const getMoves = async (id) => {
     return moves;
 };
 
-const makeMove = async (id,from_x, from_y, to_x, to_y) => {
-    // const isValidEmail = await playerDao.emailCheck(email);
-    // if (isValidEmail.rows && isValidEmail.rows.length > 0) throw Errors.EMAIL_IN_USE;
+const makeMove = async (id,from_i, from_j, to_i, to_j) => {
+    let board = _.cloneDeep(INITIAL_BOARD);
+    const existingMoves = await moveDao.getMoves(id);
+    if (!existingMoves.rows) throw Errors.NO_MOVES;
 
-    const moveInsert = await moveDao.makeMove(id,from_x, from_y, to_x, to_y);
+    existingMoves.rows.forEach(move => {
+        movePiece([move.from_i, move.from_j], [move.to_i, move.to_j], board);
+    })
 
-    // We need this if since errors return undefined.
-    if (!moveInsert) throw Errors.MOVE_INSERT_FAILED;
+    const newMove = movePiece([from_i, from_j], [to_i, to_j], board)
+
+    if (newMove !== "move not made") {
+        const moveInsert = await moveDao.makeMove(id,from_i, from_j, to_i, to_j);
+        if (moveInsert.rowCount !== 1) throw Errors.MOVE_INSERT_FAILED;
+
+        return board;
+
+    } else {
+        // We need this if since errors return undefined.
+        throw Errors.INVALID_MOVE;
+    }
     
-    return moveInsert;
 };
 
 export const moveService = {
