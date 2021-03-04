@@ -5,8 +5,7 @@ import { BoardSquare } from "../api/addMoveApi";
 
 //this info is duplicate
 export interface PieceInfo {
-  pieceId: number;
-  board: BoardSquare[][];
+  location: Location;
 }
 
 type SelectedPiece = Location | null;
@@ -15,8 +14,8 @@ const selectedPieceLocation = createSlice({
   name: "selected-piece-location",
   initialState: null as SelectedPiece,
   reducers: {
-    selectPiece: (state, location: PayloadAction<PieceInfo>) => {
-      state = findPieceFn(location.payload.pieceId, location.payload.board);
+    selectPiece: (state, location: PayloadAction<Location>) => {
+      state = location.payload;
       return state;
     },
     deselectPiece: (state) => {

@@ -11,6 +11,7 @@ interface OwnProps {
     color: Color;
     id: number;
     isDouble: boolean;
+    squareLocation: Location;
     children?: any;
 }
 
@@ -20,7 +21,7 @@ interface StateProps {
 }
 
 interface DispatchProps {
-    selectPiece: (id: number, board: BoardSquare[][]) => void;
+    selectPiece: (location: Location) => void;
 }
 
 
@@ -30,18 +31,20 @@ const Piece: React.FC<OwnProps & StateProps & DispatchProps> = (props) => {
     if (!board) {
         return <>{props.children}</>;
     }
+
+    const onPieceSelect = () => {
+        props.selectPiece(props.squareLocation);
+    }
     
     return (
-        <Container color={props.color}  onClick={() => props.selectPiece(props.id, board)}>
+        <Container color={props.color}  onClick={onPieceSelect} squareLocation={props.squareLocation} selectedPiece={props.selectedPiece}>
             {props.children}
         </Container>
     )
 }
 
-//onClick={() => {console.log(initialBoard[0][1].piece?.id)}}
-
-const Container = styled.div<{color: Color}>`
-    border: 1px solid white;
+const Container = styled.div<{color: Color; squareLocation: Location; selectedPiece: Location | null}>`
+    border: ${((props) => props.squareLocation === props.selectedPiece ? "3px solid yellow" : "3px solid white")};
     border-radius: 50%;
     height: 60px;
     width: 60px;
@@ -51,16 +54,13 @@ const Container = styled.div<{color: Color}>`
     justify-content: center;
 `
 const mapStateToProps = (state: RootState): StateProps => ({
-    // player: SelectPlayer.data(state),
     selectedPiece: state.selectPiece,
     board: SelectAddMove.data(state),
 
 });
   
   const mapDispatchToProps = (dispatch: AppDispatch): DispatchProps => ({
-    // getPlayer: (id) => dispatch(fetchPlayer(id)),
-    selectPiece: (id, board) => dispatch(selectPiece({pieceId: id, board}))
-
+    selectPiece: (location) => dispatch(selectPiece(location))
   });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Piece);

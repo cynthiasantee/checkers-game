@@ -9,16 +9,17 @@ import { FetchStatus } from '../redux/util/fetchStatus';
 import { SelectAddMove } from '../redux/selector/addMoveSelector';
 import { addMove } from '../redux/thunk/addMoveThunk';
 import { useParams } from "react-router-dom";
+import { deselectPiece } from "../redux/reducer/selectPiece"
 
 interface OwnProps {
     color: Color;
     location: Location;
+    hasPiece: boolean;
     children?: any;
 }
 
 interface StateProps {
     selectedPiece: Location| null;
-    //copied from Game
     move?: BoardSquare[][];
     moveError?: MyKnownError;
     moveFetchStatus: FetchStatus;
@@ -26,21 +27,21 @@ interface StateProps {
 
 interface DispatchProps {
     addMove: (id: number, move: Move) => void;
+    deselectPiece: () => void;
 }
-
-
 
 const Square: React.FC<OwnProps & StateProps & DispatchProps> = (props) => {
     const { id } = useParams<{ id: string }>();
 
     const onSquareClick = () => {
-        if (props.selectedPiece !== null) {
+        if (props.selectedPiece !== null && !props.hasPiece) {
             props.addMove(parseInt(id), {
                 from_i: props.selectedPiece[0],
                 from_j: props.selectedPiece[1],
                 to_i: props.location[0],
                 to_j: props.location[1],
             });
+            props.deselectPiece();
         }
     }
 
@@ -70,6 +71,7 @@ const mapStateToProps = (state: RootState): StateProps => ({
   
 const mapDispatchToProps = (dispatch: AppDispatch): DispatchProps => ({
     addMove: (id, move) => dispatch(addMove(id, move)),
+    deselectPiece: () => dispatch(deselectPiece())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Square);
