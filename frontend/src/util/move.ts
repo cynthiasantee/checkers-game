@@ -1,4 +1,4 @@
-import { BoardSquare } from "../redux/reducer/board";
+import { BoardSquare } from "../redux/api/addMoveApi";
 import { isDiagonalByOneOrTwo } from "./movePieceRules";
 import { removePiece } from "./removePiece";
 import { compArr } from "./compArr";

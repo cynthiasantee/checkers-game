@@ -1,4 +1,4 @@
-import { board } from "../redux/reducer/board";
+import { board } from "../redux/reducer/selectPiece";
 import { printBoard } from "../util/printBoard";
 
 describe("board reducer", () => {

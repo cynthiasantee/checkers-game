@@ -1,4 +1,4 @@
-import { BoardSquare } from "../redux/reducer/board";
+import { BoardSquare } from "../redux/api/addMoveApi";
 
 export const printBoard = (board: BoardSquare[][]) => {
   return console.log(

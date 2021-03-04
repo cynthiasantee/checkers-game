@@ -1,4 +1,4 @@
-import { BoardSquare } from "../redux/reducer/board";
+import { BoardSquare } from "../redux/api/addMoveApi";
 import { Location } from "./move";
 
 export const removePiece = (piece: Location, board: BoardSquare[][]) => {

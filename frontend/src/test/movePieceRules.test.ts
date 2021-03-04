@@ -3,7 +3,7 @@ import {
   isEmpty,
   isOnBoard,
 } from "../util/movePieceRules";
-import { initialBoard } from "../redux/reducer/board";
+import { initialBoard } from "../redux/reducer/selectPiece";
 
 describe("isOnBoard function", () => {
   it("should check if move is within the board", () => {

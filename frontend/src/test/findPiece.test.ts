@@ -1,5 +1,5 @@
 import { findPiece } from "../util/findPiece";
-import { initialBoard } from "../redux/reducer/board";
+import { initialBoard } from "../redux/reducer/selectPiece";
 
 describe("findPiece function", () => {
   it("should find the right piece", () => {
