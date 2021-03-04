@@ -8,9 +8,11 @@ import { MyKnownError } from '../redux/util/myKnownError';
 import { FetchStatus } from '../redux/util/fetchStatus';
 import { SelectAddMove } from '../redux/selector/addMoveSelector';
 import { addMove } from '../redux/thunk/addMoveThunk';
+import { useParams } from "react-router-dom";
 
 interface OwnProps {
     color: Color;
+    location: Location;
     children?: any;
 }
 
@@ -26,15 +28,30 @@ interface DispatchProps {
     addMove: (id: number, move: Move) => void;
 }
 
+
+
 const Square: React.FC<OwnProps & StateProps & DispatchProps> = (props) => {
+    const { id } = useParams<{ id: string }>();
+
+    const onSquareClick = () => {
+        if (props.selectedPiece !== null) {
+            props.addMove(parseInt(id), {
+                from_i: props.selectedPiece[0],
+                from_j: props.selectedPiece[1],
+                to_i: props.location[0],
+                to_j: props.location[1],
+            });
+        }
+    }
+
     return (
-        <Container color={props.color}>
+        <Container color={props.color} location={props.location} onClick={onSquareClick}>
             {props.children}
         </Container>
     )
 }
 
-const Container = styled.div<{color: Color}>`
+const Container = styled.div<{color: Color; location: Location}>`
     height: 80px;
     width: 80px;
     background-color: ${(props) => props.color};

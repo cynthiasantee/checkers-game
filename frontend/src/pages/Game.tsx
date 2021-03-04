@@ -64,22 +64,22 @@ const Game = (props: StateProps & DispatchProps) => {
       {props.move.map(row => row.map(square => {
         if (square.squareColor === 'black') {
           if (square.piece === null) {
-            return <Square color="black"></Square>
+            return <Square color="black" location={square.location}></Square>
           } else if (square.piece.color === 'white' && square.piece.isDouble === false) {
             return(
-            <Square color="black">
+            <Square color="black" location={square.location}>
               <Piece color="white" id={square.piece.id} isDouble={square.piece.isDouble}></Piece>
             </Square>
             )
           } else if (square.piece.color === 'black' && square.piece.isDouble === false) {
             return(
-            <Square color="black">
+            <Square color="black" location={square.location}>
               <Piece color="black" id={square.piece.id} isDouble={square.piece.isDouble}></Piece>
             </Square>
             )
           } else if (square.piece.color === 'white' && square.piece.isDouble === true) {
             return(
-            <Square color="black">
+            <Square color="black" location={square.location}>
               <Piece color="white" id={square.piece.id} isDouble={square.piece.isDouble}>
                 <Double color="white"></Double>
               </Piece>
@@ -87,7 +87,7 @@ const Game = (props: StateProps & DispatchProps) => {
             )
           } else if (square.piece.color === 'black' && square.piece.isDouble === true) {
             return(
-            <Square color="black">
+            <Square color="black" location={square.location}>
               <Piece color="black" id={square.piece.id} isDouble={square.piece.isDouble}>
                 <Double color="black"></Double>
               </Piece>
@@ -95,7 +95,7 @@ const Game = (props: StateProps & DispatchProps) => {
             )
           }
         } else if (square.squareColor === 'white') {
-          return <Square color="white"></Square>
+          return <Square color="white" location={square.location}></Square>
         }
       }))}
     </Container>

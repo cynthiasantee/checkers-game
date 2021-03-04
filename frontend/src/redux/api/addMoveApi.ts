@@ -1,4 +1,5 @@
 import { api } from "../../axios.config";
+import { Location } from "../../util/move";
 
 export type Color = "white" | "black";
 
@@ -11,6 +12,7 @@ export interface Piece {
 export interface BoardSquare {
   squareColor: Color | string;
   piece: Piece | null;
+  location: Location;
 }
 
 export interface Move {
