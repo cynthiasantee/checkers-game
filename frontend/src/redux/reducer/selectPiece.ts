@@ -1,9 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { findPiece as findPieceFn } from "../../util/findPiece";
 import { Location } from "../../util/move";
-import { BoardSquare } from "../api/addMoveApi";
 
-//this info is duplicate
 export interface PieceInfo {
   location: Location;
 }

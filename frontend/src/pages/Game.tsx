@@ -39,7 +39,6 @@ interface StateProps {
 
   // move fetch
   moveFetchStatus: FetchStatus;
-
 }
 
 interface DispatchProps {
@@ -64,12 +63,6 @@ const Game = (props: StateProps & DispatchProps) => {
   if ( !game || !player || !props.currBoard){
     return <></>;
   }
-
-    if (props.moveFetchStatus === "success") {
-      alert("this happened")
-        props.getCurrBoard(parseInt(id));
-        props.moveReset();
-    }
 
   return (
     <div>

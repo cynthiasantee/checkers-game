@@ -1,9 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { BoardSquare, Move } from "../api/addMoveApi";
 import { MyKnownError } from "../util/myKnownError";
 import { defaultState } from "../util/defaultState";
-import _ from "lodash";
-import { INITIAL_BOARD } from "../../util/initialBoard";
 
 const addMoveSlice = createSlice({
   name: "move",
