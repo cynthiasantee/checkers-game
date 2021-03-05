@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components/macro';
-import { Color } from '../util/color';
+import { Color } from '../redux/api/addMoveApi';
 
 interface OwnProps {
     color: Color;

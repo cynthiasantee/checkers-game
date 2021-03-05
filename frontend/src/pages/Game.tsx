@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components/macro';
-// import { initialBoard } from '../redux/reducer/board';
 import Square from '../components/Square';
 import Piece from '../components/Piece';
 import Double from '../components/Double';
@@ -10,90 +9,102 @@ import { FetchStatus } from '../redux/util/fetchStatus';
 import { AppDispatch, RootState } from '../redux/store';
 import { SelectPlayer } from '../redux/selector/getPlayerSelector';
 import { fetchPlayer } from "../redux/thunk/getPlayerThunk";
-import { addMove } from "../redux/thunk/addMoveThunk";
+import { SelectGame } from '../redux/selector/getGameSelector';
+import { fetchGame } from "../redux/thunk/getGameThunk";
+import { fetchCurrBoard } from "../redux/thunk/getCurrBoardThunk";
 import { connect } from 'react-redux';
 import page from '../pages/page';
 import { useParams } from "react-router-dom";
-import { BoardSquare, movePiece, MovePiecePayload } from '../redux/reducer/board';
-
-import { Move } from '../redux/api/addMoveApi';
+import { BoardSquare } from '../redux/api/addMoveApi';
+import { SelectCurrBoard  } from '../redux/selector/getCurrBoardSelector';
+import { Game as GameInterface } from '../redux/api/getGameApi';
 import { SelectAddMove } from '../redux/selector/addMoveSelector';
+import {addMoveReset} from "../redux/reducer/addMoveReducer"
 
 interface StateProps {
+  //player info
   player?: Player;
   playerError?: MyKnownError;
   playerFetchStatus: FetchStatus;
-  board: BoardSquare[][];
 
-  //move
-  move?: Move;
-  moveError?: MyKnownError;
+  // game info
+  game?: GameInterface;
+  gameError?: MyKnownError;
+  gameFetchStatus: FetchStatus;
+
+  //get board
+  currBoard?: BoardSquare[][];
+  currBoardError?: MyKnownError;
+  currBoardFetchStatus: FetchStatus;
+
+  // move fetch
   moveFetchStatus: FetchStatus;
 }
 
 interface DispatchProps {
   getPlayer: (id: number) => void;
-  movePiece: (move: MovePiecePayload) => void;
-  addMove: (id: number, move: Move) => void;
+  getGame: (id: number) => void;
+  getCurrBoard: (id: number) => void;
+  moveReset: () => void;
 }
 
 const Game = (props: StateProps & DispatchProps) => {
     const { id } = useParams<{ id: string }>();
-    const { getPlayer } = props;
+    const { getGame, getPlayer, getCurrBoard, game, player } = props;
 
-  useEffect(() => {
-    getPlayer(parseInt(id));
-  }, [id, getPlayer]);
+    useEffect(() => {
+      debugger;
+      getCurrBoard(parseInt(id))
+      getGame(parseInt(id));
+      getPlayer(game?.player_one_id || 1);
+    
+  }, [id, getGame, getPlayer, getCurrBoard]);
 
-//   if (props.error === "400") {
-//     return <Redirect to="/bad-request" />;
-//   }
-
-  if (!props.player) {
+  if ( !game || !player || !props.currBoard){
     return <></>;
   }
 
   return (
     <div>
-        {props.player.email}
-        <button onClick={() => props.movePiece({pieceId: 9, location: [7, 7]})}>Move piece</button>
-        {/* <button onClick={() => props.addMove(parseInt(id), {"from_x": 1, "from_y": 2, "to_x": 0, "to_y": 3})}>Move piece</button> */}
+        Player one ID: {game.player_one_id}
+        Player one Email: {player.email}
+        Player two ID: 
     <Container>
-      {props.board.map(row => row.map(square => {
+      {props.currBoard.map(row => row.map(square => {
         if (square.squareColor === 'black') {
           if (square.piece === null) {
-            return <Square color="black"></Square>
+            return <Square color="black" location={square.location} hasPiece={square.piece === null ? false : true}></Square>
           } else if (square.piece.color === 'white' && square.piece.isDouble === false) {
             return(
-            <Square color="black">
-              <Piece color="white"></Piece>
+            <Square color="black" location={square.location} hasPiece={square.piece === null ? false : true}>
+              <Piece color="white" id={square.piece.id} isDouble={square.piece.isDouble} squareLocation={square.location}></Piece>
             </Square>
             )
           } else if (square.piece.color === 'black' && square.piece.isDouble === false) {
             return(
-            <Square color="black">
-              <Piece color="black"></Piece>
+            <Square color="black" location={square.location} hasPiece={square.piece === null ? false : true}>
+              <Piece color="black" id={square.piece.id} isDouble={square.piece.isDouble} squareLocation={square.location}></Piece>
             </Square>
             )
           } else if (square.piece.color === 'white' && square.piece.isDouble === true) {
             return(
-            <Square color="black">
-              <Piece color="white">
+            <Square color="black" location={square.location} hasPiece={square.piece === null ? false : true}>
+              <Piece color="white" id={square.piece.id} isDouble={square.piece.isDouble} squareLocation={square.location}>
                 <Double color="white"></Double>
               </Piece>
             </Square>
             )
           } else if (square.piece.color === 'black' && square.piece.isDouble === true) {
             return(
-            <Square color="black">
-              <Piece color="black">
+            <Square color="black" location={square.location} hasPiece={square.piece === null ? false : true}>
+              <Piece color="black" id={square.piece.id} isDouble={square.piece.isDouble} squareLocation={square.location}>
                 <Double color="black"></Double>
               </Piece>
             </Square>
             )
           }
         } else if (square.squareColor === 'white') {
-          return <Square color="white"></Square>
+          return <Square color="white" location={square.location} hasPiece={square.piece === null ? false : true}></Square>
         }
       }))}
     </Container>
@@ -105,16 +116,24 @@ const mapStateToProps = (state: RootState): StateProps => ({
   player: SelectPlayer.data(state),
   playerError: SelectPlayer.error(state),
   playerFetchStatus: SelectPlayer.status(state),
-  board: state.board,
-  move: SelectAddMove.data(state),
-  moveError: SelectAddMove.error(state),
-  moveFetchStatus: SelectAddMove.status(state)
+
+  game: SelectGame.data(state),
+  gameError: SelectGame.error(state),
+  gameFetchStatus: SelectGame.status(state),
+
+  currBoard: SelectCurrBoard.data(state),
+  currBoardError: SelectCurrBoard.error(state),
+  currBoardFetchStatus: SelectCurrBoard.status(state),
+
+  moveFetchStatus: SelectAddMove.status(state),
 });
 
 const mapDispatchToProps = (dispatch: AppDispatch): DispatchProps => ({
   getPlayer: (id) => dispatch(fetchPlayer(id)),
-  movePiece: (move) => dispatch(movePiece(move)),
-  addMove: (id, move) => dispatch(addMove(id, move))
+  getGame: (id) => dispatch(fetchGame(id)),
+  getCurrBoard: (id) => dispatch(fetchCurrBoard(id)),
+  moveReset: () => dispatch(addMoveReset()),
+
 });
 export default page("game")(connect(mapStateToProps, mapDispatchToProps)(Game));
 

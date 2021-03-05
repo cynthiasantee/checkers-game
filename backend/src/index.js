@@ -27,10 +27,11 @@ app.use((req, res, next) => {
   const allowedOrigins = [
       'http://localhost:3001',
   ];
+  
 
   if (allowedOrigins.includes(req.headers.origin)) {
       res.header('Access-Control-Allow-Origin', req.headers.origin);
-  }
+  }    
 
   res.header('Vary', 'Origin');
   res.header('Access-Control-Allow-Credentials', true);

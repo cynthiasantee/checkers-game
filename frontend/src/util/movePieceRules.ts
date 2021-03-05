@@ -1,5 +1,5 @@
 import { removePiece } from "./removePiece";
-import { BoardSquare } from "../redux/reducer/board";
+import { BoardSquare } from "../redux/api/addMoveApi";
 import { BOARD_SIZE } from "./boardSize";
 import { Location } from "./move";
 

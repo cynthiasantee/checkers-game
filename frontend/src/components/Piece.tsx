@@ -1,23 +1,42 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import styled from 'styled-components/macro';
-import { Color } from '../util/color';
+import { Color } from '../redux/api/addMoveApi';
+import { AppDispatch, RootState } from '../redux/store';
+import { Location } from '../util/move';
+import {selectPiece} from "../redux/reducer/selectPiece"
 
 interface OwnProps {
     color: Color;
+    id: number;
+    isDouble: boolean;
+    squareLocation: Location;
+    children?: any;
 }
 
-const Piece: React.FC<OwnProps> = (props) => {
+interface StateProps {
+    selectedPiece: Location| null;
+}
+
+interface DispatchProps {
+    selectPiece: (location: Location) => void;
+}
+
+
+const Piece: React.FC<OwnProps & StateProps & DispatchProps> = (props) => {
+    const onPieceSelect = () => {
+        props.selectPiece(props.squareLocation);
+    }
+    
     return (
-        <Container color={props.color}>
+        <Container color={props.color}  onClick={onPieceSelect} squareLocation={props.squareLocation} selectedPiece={props.selectedPiece}>
             {props.children}
         </Container>
     )
-}
+};
 
-//onClick={() => {console.log(initialBoard[0][1].piece?.id)}}
-
-const Container = styled.div<{color: Color}>`
-    border: 1px solid white;
+const Container = styled.div<{color: Color; squareLocation: Location; selectedPiece: Location | null}>`
+    border: ${((props) => props.squareLocation === props.selectedPiece ? "3px solid yellow" : "3px solid white")};
     border-radius: 50%;
     height: 60px;
     width: 60px;
@@ -26,5 +45,13 @@ const Container = styled.div<{color: Color}>`
     align-items: center;
     justify-content: center;
 `
+const mapStateToProps = (state: RootState): StateProps => ({
+    selectedPiece: state.selectPiece,
 
-export default Piece;
+});
+  
+  const mapDispatchToProps = (dispatch: AppDispatch): DispatchProps => ({
+    selectPiece: (location) => dispatch(selectPiece(location))
+  });
+
+export default connect(mapStateToProps, mapDispatchToProps)(Piece);

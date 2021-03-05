@@ -1,6 +1,6 @@
 import { toDouble } from "../util/toDouble";
 import { movePiece } from "../util/move";
-import { initialBoard } from "../redux/reducer/board";
+import { initialBoard } from "../redux/reducer/selectPiece";
 
 describe("toDouble function", () => {
   it("should make the right piece double", () => {

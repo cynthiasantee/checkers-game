@@ -1,4 +1,4 @@
-import { BoardSquare } from "../redux/reducer/board";
+import { BoardSquare } from "../redux/api/addMoveApi";
 
 export const toDouble = (board: BoardSquare[][]) => {
   const doubleBlackSpaces = [

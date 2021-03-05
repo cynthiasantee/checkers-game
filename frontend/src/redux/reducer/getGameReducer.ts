@@ -1,26 +1,27 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { Game } from "../api/getGameApi";
 import { MyKnownError } from "../util/myKnownError";
 import { defaultState } from "../util/defaultState";
 
-const addMoveSlice = createSlice({
-  name: "move",
-  initialState: defaultState<string>(),
+const gameSlice = createSlice({
+  name: "game",
+  initialState: defaultState<Game>(),
   reducers: {
-    addMoveLoading: (state) => {
+    getGameLoading: (state) => {
       state.fetchStatus = "pending";
       return state;
     },
-    addMoveSuccess: (state, action: PayloadAction<string>) => {
+    getGameSuccess: (state, action: PayloadAction<Game>) => {
       state.fetchStatus = "success";
       state.data = action.payload;
       return state;
     },
-    addMoveFailed: (state, action: PayloadAction<MyKnownError>) => {
+    getGameFailed: (state, action: PayloadAction<MyKnownError>) => {
       state.fetchStatus = "failed";
       state.error = action.payload;
       return state;
     },
-    addMoveReset: (state) => {
+    getGameReset: (state) => {
       state = defaultState();
       return state;
     },
@@ -28,9 +29,9 @@ const addMoveSlice = createSlice({
 });
 
 export const {
-  addMoveLoading,
-  addMoveSuccess,
-  addMoveFailed,
-  addMoveReset,
-} = addMoveSlice.actions;
-export default addMoveSlice.reducer;
+  getGameLoading,
+  getGameSuccess,
+  getGameFailed,
+  getGameReset,
+} = gameSlice.actions;
+export default gameSlice.reducer;
