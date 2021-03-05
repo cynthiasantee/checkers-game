@@ -7,7 +7,7 @@ import _ from "lodash";
 const getMoves = async (id) => {
     const moves = await moveDao.getMoves(id);
     if (!moves.rows) throw Errors.NO_MOVES;
-    return moves;
+    return moves.rows;
 };
 
 const makeMove = async (id,from_i, from_j, to_i, to_j) => {
@@ -25,7 +25,7 @@ const makeMove = async (id,from_i, from_j, to_i, to_j) => {
         const moveInsert = await moveDao.makeMove(id,from_i, from_j, to_i, to_j);
         if (moveInsert.rowCount !== 1) throw Errors.MOVE_INSERT_FAILED;
 
-        return board;
+        return "MOVE_MADE";
 
     } else {
         // We need this if since errors return undefined.
@@ -34,7 +34,20 @@ const makeMove = async (id,from_i, from_j, to_i, to_j) => {
     
 };
 
+const getCurrBoard = async (id) => {
+    let board = _.cloneDeep(INITIAL_BOARD);
+    const existingMoves = await moveDao.getMoves(id);
+    if (!existingMoves.rows) throw Errors.NO_MOVES;
+
+    existingMoves.rows.forEach(move => {
+        movePiece([move.from_i, move.from_j], [move.to_i, move.to_j], board);
+    })
+
+    return board;
+}
+
 export const moveService = {
     getMoves,
-    makeMove
+    makeMove,
+    getCurrBoard
 };

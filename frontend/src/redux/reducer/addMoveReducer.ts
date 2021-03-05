@@ -6,18 +6,14 @@ import _ from "lodash";
 import { INITIAL_BOARD } from "../../util/initialBoard";
 
 const addMoveSlice = createSlice({
-  name: "board",
-  initialState: defaultState<BoardSquare[][]>(),
+  name: "move",
+  initialState: defaultState<string>(),
   reducers: {
-    getInitialBoard: (state) => {
-      state.data = _.cloneDeep(INITIAL_BOARD);
-      return state;
-    },
     addMoveLoading: (state) => {
       state.fetchStatus = "pending";
       return state;
     },
-    addMoveSuccess: (state, action: PayloadAction<BoardSquare[][]>) => {
+    addMoveSuccess: (state, action: PayloadAction<string>) => {
       state.fetchStatus = "success";
       state.data = action.payload;
       return state;
@@ -35,7 +31,6 @@ const addMoveSlice = createSlice({
 });
 
 export const {
-  getInitialBoard,
   addMoveLoading,
   addMoveSuccess,
   addMoveFailed,

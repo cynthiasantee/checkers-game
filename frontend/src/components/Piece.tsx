@@ -1,8 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components/macro';
-import { BoardSquare, Color } from '../redux/api/addMoveApi';
-import { SelectAddMove } from '../redux/selector/addMoveSelector';
+import { Color } from '../redux/api/addMoveApi';
 import { AppDispatch, RootState } from '../redux/store';
 import { Location } from '../util/move';
 import {selectPiece} from "../redux/reducer/selectPiece"
@@ -17,7 +16,6 @@ interface OwnProps {
 
 interface StateProps {
     selectedPiece: Location| null;
-    board: BoardSquare[][] | undefined;
 }
 
 interface DispatchProps {
@@ -26,12 +24,6 @@ interface DispatchProps {
 
 
 const Piece: React.FC<OwnProps & StateProps & DispatchProps> = (props) => {
-    const {board} = props;
-
-    if (!board) {
-        return <>{props.children}</>;
-    }
-
     const onPieceSelect = () => {
         props.selectPiece(props.squareLocation);
     }
@@ -41,7 +33,7 @@ const Piece: React.FC<OwnProps & StateProps & DispatchProps> = (props) => {
             {props.children}
         </Container>
     )
-}
+};
 
 const Container = styled.div<{color: Color; squareLocation: Location; selectedPiece: Location | null}>`
     border: ${((props) => props.squareLocation === props.selectedPiece ? "3px solid yellow" : "3px solid white")};
@@ -55,7 +47,6 @@ const Container = styled.div<{color: Color; squareLocation: Location; selectedPi
 `
 const mapStateToProps = (state: RootState): StateProps => ({
     selectedPiece: state.selectPiece,
-    board: SelectAddMove.data(state),
 
 });
   

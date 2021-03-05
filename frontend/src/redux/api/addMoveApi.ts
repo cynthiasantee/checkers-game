@@ -23,7 +23,7 @@ export interface Move {
 }
 
 const addMove = (id: number, move: Move) => {
-  return api.request<BoardSquare[][]>({
+  return api.request<string>({
     method: "post",
     headers: { "Content-Type": "application/json" },
     url: `/move/${id}`,
