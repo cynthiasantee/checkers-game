@@ -26,7 +26,7 @@ const addMove = (id: number, move: Move) => {
   return api.request<string>({
     method: "post",
     headers: { "Content-Type": "application/json" },
-    url: `/move/${id}`,
+    url: `/move/id/${id}`,
     data: move,
   });
 };

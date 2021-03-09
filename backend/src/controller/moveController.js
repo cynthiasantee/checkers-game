@@ -4,7 +4,7 @@ import express from 'express';
 const router = express.Router();
 
 //get game moves
-router.get('/:id', async (req, res) => {
+router.get('/id/:id', async (req, res) => {
     try {
         const moves = await moveService.getMoves(req.params.id);
         res.status(200).send(moves).end();
@@ -14,7 +14,7 @@ router.get('/:id', async (req, res) => {
 });
 
 //make move
-router.post('/:id', async (req, res) => {
+router.post('/id/:id', async (req, res) => {
     try {
         const move = await moveService.makeMove(req.params.id, req.body.from_i, req.body.from_j, req.body.to_i, req.body.to_j);
         res.status(201).send(move).end();
@@ -24,7 +24,7 @@ router.post('/:id', async (req, res) => {
 });
 
 //get curr board with existing moves
-router.get('/:id/curr', async (req, res) => {
+router.get('/curr/:id', async (req, res) => {
     try {
         const board = await moveService.getCurrBoard(req.params.id);
         res.status(201).send(board).end();

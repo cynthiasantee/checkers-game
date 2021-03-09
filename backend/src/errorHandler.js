@@ -14,6 +14,9 @@ export const Errors = {
     GAME_INSERT_FAILED: 'GAME_INSERT_FAILED',
     SET_SECOND_PLAYER_FAILED: 'SET_SECOND_PLAYER_FAILED',
     SET_WINNER_FAILED: 'SET_WINNER_FAILED',
+    OPEN_GAMES_NOT_FOUND: 'OPEN_GAMES_NOT_FOUND',
+    MY_CURR_GAMES_NOT_FOUND: 'MY_CURR_GAMES_NOT_FOUND',
+    MY_EMPTY_GAMES_NOT_FOUND: 'MY_EMPTY_GAMES_NOT_FOUND',
     // Move
     NO_MOVES: 'NO_MOVES',
     MOVE_INSERT_FAILED: 'MOVE_INSERT_FAILED',
@@ -48,6 +51,9 @@ export const handle = (res) => (err) => {
             Errors.NO_MOVES,
             Errors.MOVE_INSERT_FAILED,
             Errors.INVALID_MOVE,
+            Errors.OPEN_GAMES_NOT_FOUND,
+            Errors.MY_CURR_GAMES_NOT_FOUND,
+            Errors.MY_EMPTY_GAMES_NOT_FOUND,
 
         ],
         401: [Errors.INCORRECT_CREDENTIALS],

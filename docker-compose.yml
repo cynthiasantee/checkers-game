@@ -4,6 +4,8 @@ services: # Each service is a new container
     image: postgres:latest # What image the container will be built from
     environment: # Environmental variables
       - POSTGRES_PASSWORD=checkers
+    ports:
+      - "5432:5432"
   web-app: # Container name
     stdin_open: true
     tty: true

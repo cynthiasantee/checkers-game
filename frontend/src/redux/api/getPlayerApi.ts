@@ -7,7 +7,7 @@ export interface Player {
 }
 
 const getPlayer = (id: number) => {
-  return api.get<Player>(`/player/${id}`);
+  return api.get<Player>(`/player/id/${id}`);
 };
 
 export const PlayerApi = {

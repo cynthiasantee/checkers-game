@@ -53,7 +53,6 @@ const Game = (props: StateProps & DispatchProps) => {
     const { getGame, getPlayer, getCurrBoard, game, player } = props;
 
     useEffect(() => {
-      debugger;
       getCurrBoard(parseInt(id))
       getGame(parseInt(id));
       getPlayer(game?.player_one_id || 1);
@@ -66,9 +65,10 @@ const Game = (props: StateProps & DispatchProps) => {
 
   return (
     <div>
-        Player one ID: {game.player_one_id}
-        Player one Email: {player.email}
-        Player two ID: 
+      <p>Player one ID: {game.player_one_id}</p>
+      <p>Player one Email: {player.email}</p>
+      <p>Player two ID: {game.player_two_id}</p>
+        
     <Container>
       {props.currBoard.map(row => row.map(square => {
         if (square.squareColor === 'black') {
