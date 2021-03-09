@@ -7,7 +7,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node src/index.js",
-    "dev": "nodemon src/index.js"
+    "dev": "ndb nodemon src/index.js"
   },
   "author": "Cynthia Santee",
   "license": "ISC",
@@ -22,6 +22,7 @@
     "winston": "^3.3.3"
   },
   "devDependencies": {
+    "ndb": "^1.1.5",
     "nodemon": "^2.0.7"
   }
 }
