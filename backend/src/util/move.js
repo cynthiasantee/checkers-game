@@ -2,6 +2,7 @@ import { isDiagonalByOneOrTwo } from "./movePieceRules.js";
 import { removePiece } from "./removePiece.js";
 import { compArr } from "./compArr.js";
 import { getValidMoves } from "./getValidMoves.js";
+import { toDouble } from "./toDouble.js";
 
 export const movePiece = ([currI, currJ],[destI, destJ],board) => {
   const currentLocation = board[currI][currJ];
@@ -24,8 +25,6 @@ export const movePiece = ([currI, currJ],[destI, destJ],board) => {
     currentLocation.piece = null;
   };
 
-  // console.log(`currentLocation: ${JSON.stringify(currentLocation)}, moveTo: ${JSON.stringify(moveTo)}, validMoves: ${getValidMoves([currI, currJ], board)}`)
-
   if (
     getValidMoves([currI, currJ], board).some(
       (location) => JSON.stringify(location) === JSON.stringify([destI, destJ])
@@ -38,15 +37,16 @@ export const movePiece = ([currI, currJ],[destI, destJ],board) => {
         if (compArr([destI, destJ], [piece[0], piece[1]])) {
           move();
           removePiece(pieceToRemove[i], board);
+          toDouble(board);
         }
       });
     } else if (
       isDiagonalByOneOrTwo([currI, currJ], [destI, destJ], board) === "byOne"
     ) {
       move();
+      toDouble(board);
     }
   } else {
-    console.log("move not made");
     return "move not made";
   }
 };
