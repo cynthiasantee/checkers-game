@@ -8,7 +8,7 @@ export interface Game {
 }
 
 const getGame = (id: number) => {
-  return api.get<Game>(`/game/${id}`);
+  return api.get<Game>(`/game/id/${id}`);
 };
 
 export const GameApi = {

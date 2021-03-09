@@ -22,8 +22,8 @@ const createGame = async (player_one_id) => {
     return gameInsert;
 };
 
-const setSecondPlayer = async (id, player_two_id) => {
-    const secondPlayerUpdate = await gameDao.setSecondPlayer(id, player_two_id);
+const setSecondPlayer = async (player_two_id, id) => {
+    const secondPlayerUpdate = await gameDao.setSecondPlayer(player_two_id, id);
 
     if (secondPlayerUpdate.rowCount === 0) {
         throw Errors.SET_SECOND_PLAYER_FAILED;
@@ -38,10 +38,31 @@ const setWinner = async (id, winner_id) => {
     };
 };
 
+const getOpenGames = async (myId) => {
+    const openGames = await gameDao.getOpenGames(myId);
+    if (!openGames.rows ) throw Errors.OPEN_GAMES_NOT_FOUND;
+    return openGames;
+};
+
+const getMyCurrGames = async (myId) => {
+    const currGames = await gameDao.getMyCurrGames(myId);
+    if (!currGames.rows ) throw Errors.MY_CURR_GAMES_NOT_FOUND;
+    return currGames;
+};
+
+const getMyEmptyGames = async (myId) => {
+    const emptyGames = await gameDao.getMyEmptyGames(myId);
+    if (!emptyGames.rows ) throw Errors.MY_EMPTY_GAMES_NOT_FOUND;
+    return emptyGames;
+};
+
 export const gameService = {
     getGames,
     getGameById,
     createGame,
     setSecondPlayer,
-    setWinner
+    setWinner,
+    getOpenGames,
+    getMyCurrGames,
+    getMyEmptyGames
 };

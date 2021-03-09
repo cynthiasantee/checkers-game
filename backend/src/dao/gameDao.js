@@ -18,7 +18,7 @@ const createGame = async (player_one_id) => {
   );
 };
 
-const setSecondPlayer = async (id, player_two_id) => {
+const setSecondPlayer = async (player_two_id, id) => {
   return await pgClient.query(
     "UPDATE game SET player_two_id = $1 WHERE id = $2",
       [player_two_id, id]
@@ -32,10 +32,37 @@ const setWinner = async (id, winner_id) => {
   );
 };
 
+// games that someone else started and I can join
+const getOpenGames = async (myId) => {
+  return await pgClient.query(
+    "SELECT * FROM game WHERE player_two_id IS NULL AND player_one_id != $1", 
+      [myId]
+  );
+};
+
+// games that I am a participant, but haven't ended
+const getMyCurrGames = async (myId) => {
+  return await pgClient.query(
+    "SELECT * FROM game WHERE (player_two_id = $1 OR player_one_id = $2) AND player_two_id IS NOT NULL AND player_one_id IS NOT NULL AND winner_id IS NULL", 
+      [myId, myId]
+  );
+};
+
+// games that I created, but no one joined
+const getMyEmptyGames = async (myId) => {
+  return await pgClient.query(
+    "SELECT * FROM game WHERE player_one_id = $1 AND player_two_id IS NULL AND winner_id IS NULL", 
+      [myId]
+  );
+};
+
 export const gameDao = {
   getGames,
   getGameById,
   createGame,
   setSecondPlayer,
   setWinner,
+  getOpenGames,
+  getMyCurrGames,
+  getMyEmptyGames
 };

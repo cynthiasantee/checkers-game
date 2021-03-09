@@ -59,8 +59,8 @@ pgClient
   CREATE TABLE IF NOT EXISTS game (
     id SERIAL,
     player_one_id INT NOT NULL,
-    player_two_id INT,
-    winner_id INT,
+    player_two_id INT NULL,
+    winner_id INT NULL,
     PRIMARY KEY(id),
     FOREIGN KEY(player_one_id) REFERENCES player(id),
     FOREIGN KEY(player_two_id) REFERENCES player(id),

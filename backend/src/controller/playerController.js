@@ -14,8 +14,28 @@ router.get('/all', async (_, res) => {
     }
 });
 
-//get player by id
-router.get('/:id', async (req, res) => {
+//get player wins **
+router.get('/wins/:id', async (req, res) => {
+    try {
+        const wins = await playerService.getPlayerWins(req.body.id);
+        res.status(200).send(wins.rows[0].count).end();
+    } catch(err) {
+        return res.errorHandler(err);
+    }
+});
+
+//get player total **
+router.get('/total/:id', async (req, res) => {
+    try {
+        const total = await playerService.getPlayerTotalGames(req.body.id);
+        res.status(200).send(total.rows[0].count).end();
+    } catch(err) {
+        return res.errorHandler(err);
+    }
+});
+
+//get player by id **
+router.get('/id/:id', async (req, res) => {
     try {
         const player = await playerService.getPlayer(req.params.id);
         res.status(200).send(player.rows[0]).end();
@@ -34,31 +54,11 @@ router.post('/', async (req, res) => {
     }
 });
 
-//update password
-router.put('/:id', async (req, res) => {
+//update password **
+router.put('/id/:id', async (req, res) => {
     try {
         await playerService.updatePassword(req.params.id, req.body.email, req.body.password);
         res.status(200).send("PASSWORD_UPDATED").end();
-    } catch(err) {
-        return res.errorHandler(err);
-    }
-});
-
-//get player wins
-router.get('/:id/wins', async (req, res) => {
-    try {
-        const wins = await playerService.getPlayerWins(req.body.id);
-        res.status(200).send(wins.rows[0].count).end();
-    } catch(err) {
-        return res.errorHandler(err);
-    }
-});
-
-//get player total
-router.get('/:id/total', async (req, res) => {
-    try {
-        const total = await playerService.getPlayerTotalGames(req.body.id);
-        res.status(200).send(total.rows[0].count).end();
     } catch(err) {
         return res.errorHandler(err);
     }
