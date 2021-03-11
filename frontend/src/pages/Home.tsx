@@ -17,19 +17,13 @@ import { fetchPlayerWins } from "../redux/thunk/getPlayerWinsThunk";
 import { SelectPlayerTotalGames } from '../redux/selector/getPlayerTotalGamesSelector';
 import { fetchPlayerTotalGames } from "../redux/thunk/getPlayerTotalGamesThunk";
 //Create game
-import { PlayerOne, NewGameId } from '../redux/api/createGameApi';
+import { NewGameId } from '../redux/api/createGameApi';
 import { SelectCreateGame } from '../redux/selector/createGameSelector';
 import { createGame } from "../redux/thunk/createGameThunk";
 import { Game } from '../redux/api/getGameApi';
-//Open games
-import { SelectOpenGames } from '../redux/selector/getOpenGamesSelector';
-import { fetchOpenGames } from "../redux/thunk/getOpenGamesThunk";
-//Curr games
-import { SelectMyCurrGames } from '../redux/selector/getMyCurrGamesSelector';
-import { fetchMyCurrGames } from "../redux/thunk/getMyCurrGamesThunk";
-//Empty games
-import { SelectEmptyGames } from '../redux/selector/getEmptyGamesSelector';
-import { fetchEmptyGames } from "../redux/thunk/getEmptyGamesThunk";
+//All games
+import { SelectGames } from '../redux/selector/getGamesSelector';
+import {fetchGames } from "../redux/thunk/getGamesThunk";
 //Add second player
 import { SelectAddSecondPlayer } from '../redux/selector/addSecondPlayerSelector';
 import { addSecondPlayer } from "../redux/thunk/addSecondPlayerThunk";
@@ -52,18 +46,10 @@ interface StateProps {
   newGame?: NewGameId;
   errorCreateGame?: MyKnownError;
   fetchStatusCreateGame: FetchStatus;
-  //Open games
-  openGames?: Game[];
-  errorOpenGames?: MyKnownError;
-  fetchStatusOpenGames: FetchStatus;
-  //Curr games
-  myCurrGames?: Game[];
-  errorMyCurrGames?: MyKnownError;
-  fetchStatusMyCurrGames: FetchStatus;
-  //Empty games
-  emptyGames?: Game[];
-  errorEmptyGames?: MyKnownError;
-  fetchStatusEmptyGames: FetchStatus;
+  //All games
+  allGames?: Game[];
+  errorAllGames?: MyKnownError;
+  fetchStatusAllGames: FetchStatus;
   //Add second player
   secondPlayer?: SecondPlayer;
   errorSecondPlayer?: MyKnownError;
@@ -75,24 +61,20 @@ interface DispatchProps {
   getPlayerWins: (id: number) => void;
   getPlayerTotalGames: (id: number) => void;
   createGame: (id: number) => void;
-  getOpenGames: (myId: number) => void;
-  getMyCurrGames: (myId: number) => void;
-  getEmptyGames: (myId: number) => void;
+  getGames: () => void;
   addSecondPlayer: (player: SecondPlayer, id: number) => void;
 }
 
 const Home = (props: StateProps & DispatchProps) => {
     const { id } = useParams<{ id: string }>();
-    const { getPlayer, getPlayerWins, getPlayerTotalGames,getOpenGames, getMyCurrGames, getEmptyGames } = props;
+    const { getPlayer, getPlayerWins, getPlayerTotalGames, getGames } = props;
 
   useEffect(() => {
     getPlayer(parseInt(id));
     getPlayerWins(parseInt(id));
     getPlayerTotalGames(parseInt(id));
-    getOpenGames(parseInt(id));
-    getMyCurrGames(parseInt(id));
-    getEmptyGames(parseInt(id));
-  }, [id, getPlayer, getPlayerWins, getPlayerTotalGames, getOpenGames, getMyCurrGames, getEmptyGames]);
+    getGames();
+  }, [id, getPlayer, getPlayerWins, getPlayerTotalGames, getGames]);
 
   const [gameId, setGameId] = useState(undefined as undefined | number);
   const [goToGame, setGoToGame] = useState(undefined as undefined | number);
@@ -101,17 +83,23 @@ const Home = (props: StateProps & DispatchProps) => {
 //     return <Redirect to="/bad-request" />;
 //   }
 
-  if (!props.player || !props.openGames || !props.myCurrGames || !props.emptyGames) {
+  if (!props.player || !props.allGames) {
     return <></>;
   }
 
+  const player = props.player;
+
+  const openGames = props.allGames.filter(g => g.player_two_id === null && g.player_one_id !== player.id);
+  const myGames = props.allGames.filter(g => (g.player_one_id === player.id || g.player_two_id === player.id) && g.player_two_id !== null && g.winner_id === null);
+  const emptyGames = props.allGames.filter(g => g.player_one_id === player.id && g.player_two_id === null && g.winner_id === null)
+
   return (
     <div>
-      <p>Welcome, {props.player.email}!</p>
+      <p>Welcomes, {props.player.username}!</p>
       <p>Wins: {props.playerWins || 0}</p>
       <p>Losses: {(props.playerTotalGames || 0) - (props.playerWins || 0)}</p>
       <button onClick={() => props.createGame(props.player?.id || 0)}>Start a new game?</button>
-      <p>Open Games:{props.openGames.map(game => {
+      <p>Open Games:{openGames.map(game => {
         
         const onGameClick = () => {
           setGameId(game.id);
@@ -119,22 +107,22 @@ const Home = (props: StateProps & DispatchProps) => {
         }
 
         return(
-          <button onClick={onGameClick}>Game started by {game.player_one_id}</button>
+          <button onClick={onGameClick}>Game started by {game.player_one_username}</button>
         )
       })}</p>
 
-      <p>My Games:{props.myCurrGames.map(game => {
+      <p>My Games:{myGames.map(game => {
         
         const onGameClick = () => {
           setGoToGame(game.id);
         }
 
         return(
-          <button onClick={onGameClick}>Game against {game.player_one_id === parseInt(id) ? game.player_two_id : game.player_one_id}</button>
+          <button onClick={onGameClick}>Game against {game.player_one_id === parseInt(id) ? game.player_two_username : game.player_one_username}</button>
         )
       })}</p>
 
-      <p>My Empty Games:{props.emptyGames.map((game, i) => {
+      <p>My Empty Games:{emptyGames.map((game, i) => {
         
         const onGameClick = () => {
           setGoToGame(game.id);
@@ -169,18 +157,10 @@ const mapStateToProps = (state: RootState): StateProps => ({
   newGame: SelectCreateGame.data(state),
   errorCreateGame: SelectCreateGame.error(state),
   fetchStatusCreateGame: SelectCreateGame.status(state),
-  //Open games
-  openGames: SelectOpenGames.data(state),
-  errorOpenGames: SelectOpenGames.error(state),
-  fetchStatusOpenGames: SelectOpenGames.status(state),
-  //Curr games
-  myCurrGames: SelectMyCurrGames.data(state),
-  errorMyCurrGames: SelectMyCurrGames.error(state),
-  fetchStatusMyCurrGames: SelectMyCurrGames.status(state),
-  //Curr games
-  emptyGames: SelectEmptyGames.data(state),
-  errorEmptyGames: SelectEmptyGames.error(state),
-  fetchStatusEmptyGames: SelectEmptyGames.status(state),
+  //All games
+  allGames: SelectGames.data(state),
+  errorAllGames: SelectGames.error(state),
+  fetchStatusAllGames: SelectGames.status(state),
   //Add second player
   secondPlayer: SelectAddSecondPlayer.data(state),
   errorSecondPlayer: SelectAddSecondPlayer.error(state),
@@ -192,9 +172,7 @@ const mapDispatchToProps = (dispatch: AppDispatch): DispatchProps => ({
   getPlayerWins: (id) => dispatch(fetchPlayerWins(id)),
   getPlayerTotalGames: (id) => dispatch(fetchPlayerTotalGames(id)),
   createGame: (id) => dispatch(createGame(id)),
-  getOpenGames: (myId) => dispatch(fetchOpenGames(myId)),
-  getMyCurrGames: (myId) => dispatch(fetchMyCurrGames(myId)),
-  getEmptyGames: (myId) => dispatch(fetchEmptyGames(myId)),
+  getGames: () => dispatch(fetchGames()),
   addSecondPlayer: (player, id) => dispatch(addSecondPlayer({player_two_id: player.player_two_id}, id))
 });
 

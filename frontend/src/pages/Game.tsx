@@ -66,8 +66,9 @@ const Game = (props: StateProps & DispatchProps) => {
   return (
     <div>
       <p>Player one ID: {game.player_one_id}</p>
-      <p>Player one Email: {player.email}</p>
+      <p>Player one username: {game.player_one_username}</p>
       <p>Player two ID: {game.player_two_id}</p>
+      <p>Player two username: {game.player_two_username}</p>
         
     <Container>
       {props.currBoard.map(row => row.map(square => {

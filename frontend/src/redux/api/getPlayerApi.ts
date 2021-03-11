@@ -3,6 +3,7 @@ import { api } from "../../axios.config";
 export interface Player {
   id: number;
   email: string;
+  username: string;
   password: string;
 }
 

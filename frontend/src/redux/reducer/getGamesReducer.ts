@@ -3,25 +3,25 @@ import { Game } from "../api/getGameApi";
 import { MyKnownError } from "../util/myKnownError";
 import { defaultState } from "../util/defaultState";
 
-const openGamesSlice = createSlice({
-  name: "open-games",
+const gamesSlice = createSlice({
+  name: "all games",
   initialState: defaultState<Game[]>(),
   reducers: {
-    getOpenGamesLoading: (state) => {
+    getGamesLoading: (state) => {
       state.fetchStatus = "pending";
       return state;
     },
-    getOpenGamesSuccess: (state, action: PayloadAction<Game[]>) => {
+    getGamesSuccess: (state, action: PayloadAction<Game[]>) => {
       state.fetchStatus = "success";
       state.data = action.payload;
       return state;
     },
-    getOpenGamesFailed: (state, action: PayloadAction<MyKnownError>) => {
+    getGamesFailed: (state, action: PayloadAction<MyKnownError>) => {
       state.fetchStatus = "failed";
       state.error = action.payload;
       return state;
     },
-    getOpenGamesReset: (state) => {
+    getGamesReset: (state) => {
       state = defaultState();
       return state;
     },
@@ -29,9 +29,9 @@ const openGamesSlice = createSlice({
 });
 
 export const {
-  getOpenGamesLoading,
-  getOpenGamesSuccess,
-  getOpenGamesFailed,
-  getOpenGamesReset,
-} = openGamesSlice.actions;
-export default openGamesSlice.reducer;
+  getGamesLoading,
+  getGamesSuccess,
+  getGamesFailed,
+  getGamesReset,
+} = gamesSlice.actions;
+export default gamesSlice.reducer;

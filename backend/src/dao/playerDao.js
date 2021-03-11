@@ -11,10 +11,10 @@ const getPlayer = async (id) => {
   );
 };
 
-const createPlayer = async (email, password) => {
+const createPlayer = async (email, username, password) => {
   return await pgClient.query(
-    `INSERT INTO player (email, password) VALUES ($1, $2)`,
-      [email, password]
+    `INSERT INTO player (email, username, password) VALUES ($1, $2, $3) RETURNING id`,
+      [email, username, password]
   );
 };
 
@@ -22,6 +22,13 @@ const emailCheck = async (email) => {
   return await pgClient.query(
     "SELECT email FROM player WHERE email = $1", 
       [email]
+  );
+}
+
+const usernameCheck = async (username) => {
+  return await pgClient.query(
+    "SELECT username FROM player WHERE username = $1", 
+      [username]
   );
 }
 
@@ -51,6 +58,7 @@ export const playerDao = {
   getPlayer,
   createPlayer,
   emailCheck,
+  usernameCheck,
   updatePassword,
   getPlayerWins,
   getPlayerTotalGames
