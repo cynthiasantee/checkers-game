@@ -13,11 +13,14 @@ const getPlayer = async (id) => {
     return player;
 };
 
-const createPlayer = async (email, password) => {
+const createPlayer = async (email, username, password) => {
     const isValidEmail = await playerDao.emailCheck(email);
     if (isValidEmail.rows && isValidEmail.rows.length > 0) throw Errors.EMAIL_IN_USE;
 
-    const playerInsert = await playerDao.createPlayer(email, password);
+    const isValidUsername = await playerDao.usernameCheck(username);
+    if (isValidUsername.rows && isValidUsername.rows.length > 0) throw Errors.USERNAME_IN_USE;
+
+    const playerInsert = await playerDao.createPlayer(email, username, password);
 
     // We need this if since errors return undefined.
     if (!playerInsert) throw Errors.PLAYER_INSERT_FAILED;

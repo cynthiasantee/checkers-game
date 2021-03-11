@@ -16,36 +16,6 @@ router.get('/all', async (_, res) => {
     }
 });
 
-//get open games
-router.get('/open', async (req, res) => {
-    try {
-        const openGames = await gameService.getOpenGames(req.query.myId);
-        res.status(200).send(openGames.rows).end();
-    } catch(err) {
-        return res.errorHandler(err);
-    }
-});
-
-//get open games
-router.get('/curr', async (req, res) => {
-    try {
-        const myCurrGames = await gameService.getMyCurrGames(req.query.myId);
-        res.status(200).send(myCurrGames.rows).end();
-    } catch(err) {
-        return res.errorHandler(err);
-    }
-});
-
-//get empty games
-router.get('/empty', async (req, res) => {
-    try {
-        const myEmptyGames = await gameService.getMyEmptyGames(req.query.myId);
-        res.status(200).send(myEmptyGames.rows).end();
-    } catch(err) {
-        return res.errorHandler(err);
-    }
-});
-
 //get game by id
 router.get('/id/:id', async (req, res) => {
     try {

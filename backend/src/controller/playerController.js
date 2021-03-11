@@ -47,8 +47,8 @@ router.get('/id/:id', async (req, res) => {
 //create player
 router.post('/', async (req, res) => {
     try {
-        await playerService.createPlayer(req.body.email, req.body.password);
-        res.status(201).send("PLAYER_ADDED").end();
+        const player = await playerService.createPlayer(req.body.email, req.body.username, req.body.password);
+        res.status(201).send(player.rows[0]).end();
     } catch(err) {
         return res.errorHandler(err);
     }

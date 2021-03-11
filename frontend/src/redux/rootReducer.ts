@@ -7,11 +7,9 @@ import playerTotalGames from "./reducer/getPlayerTotalGamesReducer";
 import createGame from "./reducer/createGameReducer";
 import addMove from "./reducer/addMoveReducer";
 import getGame from "./reducer/getGameReducer";
+import getGames from "./reducer/getGamesReducer";
 import currBoard from "./reducer/getCurrBoardReducer";
-import openGames from "./reducer/getOpenGamesReducer";
 import addSecondPlayer from "./reducer/addSecondPlayerReducer";
-import myCurrGames from "./reducer/getMyCurrGamesReducer";
-import myEmptyGames from "./reducer/getEmptyGamesReducer";
 
 export default combineReducers({
   page,
@@ -22,9 +20,7 @@ export default combineReducers({
   addMove,
   selectPiece,
   getGame,
+  getGames,
   currBoard,
-  openGames,
   addSecondPlayer,
-  myCurrGames,
-  myEmptyGames,
 });
