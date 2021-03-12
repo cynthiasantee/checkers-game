@@ -68,7 +68,7 @@ pgClient
     PRIMARY KEY(id),
     FOREIGN KEY(player_one_id) REFERENCES player(id),
     FOREIGN KEY(player_two_id) REFERENCES player(id),
-    FOREIGN KEY(turn) REFERENCES player (id),
+    FOREIGN KEY(turn) REFERENCES player(id),
     FOREIGN KEY(winner_id) REFERENCES player(id)
   );
 

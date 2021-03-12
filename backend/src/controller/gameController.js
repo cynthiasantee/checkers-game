@@ -56,4 +56,24 @@ router.put('/winner/:id', async (req, res) => {
     }
 });
 
+//set turn
+router.put('/turn/:game_id', async (req, res) => {
+    try {
+        const newTurn = await gameService.setTurn(req.body.other_player_id, req.params.game_id);
+        res.status(200).send(newTurn.rows[0]).end();
+    } catch(err) {
+        return res.errorHandler(err);
+    }
+});
+
+//set colors
+router.put('/colors/:game_id', async (req, res) => {
+    try {
+        const setColors = await gameService.setColors(req.body.player_one_id, req.body.player_id, req.body.color, req.params.game_id);
+        res.status(200).send("COLORS_ADDED").end();
+    } catch(err) {
+        return res.errorHandler(err);
+    }
+});
+
 export default router;

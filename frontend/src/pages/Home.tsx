@@ -28,9 +28,13 @@ import {fetchGames } from "../redux/thunk/getGamesThunk";
 import { SelectAddSecondPlayer } from '../redux/selector/addSecondPlayerSelector';
 import { addSecondPlayer } from "../redux/thunk/addSecondPlayerThunk";
 import { SecondPlayer } from '../redux/api/addSecondPlayerApi';
+import { setMyId } from '../redux/reducer/myId';
 
 
 interface StateProps {
+  //myId
+  myId: number | null;
+  //player
   player?: Player;
   errorPlayer?: MyKnownError;
   fetchStatusPlayer: FetchStatus;
@@ -63,18 +67,20 @@ interface DispatchProps {
   createGame: (id: number) => void;
   getGames: () => void;
   addSecondPlayer: (player: SecondPlayer, id: number) => void;
+  setMyId: (id: number) => void;
 }
 
 const Home = (props: StateProps & DispatchProps) => {
     const { id } = useParams<{ id: string }>();
-    const { getPlayer, getPlayerWins, getPlayerTotalGames, getGames } = props;
+    const { getPlayer, getPlayerWins, getPlayerTotalGames, getGames, setMyId } = props;
 
   useEffect(() => {
     getPlayer(parseInt(id));
     getPlayerWins(parseInt(id));
     getPlayerTotalGames(parseInt(id));
     getGames();
-  }, [id, getPlayer, getPlayerWins, getPlayerTotalGames, getGames]);
+    setMyId(parseInt(id));
+  }, [id, getPlayer, getPlayerWins, getPlayerTotalGames, getGames, setMyId]);
 
   const [gameId, setGameId] = useState(undefined as undefined | number);
   const [goToGame, setGoToGame] = useState(undefined as undefined | number);
@@ -141,6 +147,8 @@ const Home = (props: StateProps & DispatchProps) => {
 }
 
 const mapStateToProps = (state: RootState): StateProps => ({
+  //my Id
+  myId: state.myId,
   //Player info
   player: SelectPlayer.data(state),
   errorPlayer: SelectPlayer.error(state),
@@ -168,6 +176,7 @@ const mapStateToProps = (state: RootState): StateProps => ({
 });
 
 const mapDispatchToProps = (dispatch: AppDispatch): DispatchProps => ({
+  setMyId: (id) => dispatch(setMyId(id)),
   getPlayer: (id) => dispatch(fetchPlayer(id)),
   getPlayerWins: (id) => dispatch(fetchPlayerWins(id)),
   getPlayerTotalGames: (id) => dispatch(fetchPlayerTotalGames(id)),

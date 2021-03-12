@@ -38,10 +38,30 @@ const setWinner = async (id, winner_id) => {
     };
 };
 
+const setTurn = async (other_player_id, game_id) => {
+    const setTurn = await gameDao.setTurn(other_player_id, game_id);
+
+    if (setTurn.rowCount === 0) {
+        throw Errors.SET_TURN_FAILED;
+    };
+
+    return setTurn;
+};
+
+const setColors = async (player_one_id, player_id, color, game_id) => {
+    const setColors = await gameDao.setColors(player_one_id, player_id, color, game_id);
+
+    if (setTurn.rowCount === 0) {
+        throw Errors.SET_COLORS_FAILED;
+    };
+};
+
 export const gameService = {
     getGames,
     getGameById,
     createGame,
     setSecondPlayer,
-    setWinner
+    setWinner,
+    setTurn,
+    setColors
 };
