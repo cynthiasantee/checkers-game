@@ -13,6 +13,7 @@ import addSecondPlayer from "./reducer/addSecondPlayerReducer";
 import changeTurn from "./reducer/changeTurnReducer";
 import myId from "./reducer/myId";
 import setColors from "./reducer/setColorsReducer";
+import login from "./reducer/loginReducer";
 
 export default combineReducers({
   page,
@@ -29,4 +30,5 @@ export default combineReducers({
   changeTurn,
   myId,
   setColors,
+  login,
 });

@@ -1,8 +1,23 @@
 import { playerService } from "../service/playerService.js";
 import express from 'express';
 // import { Errors } from '../errorHandler.js';
+import passport from '../passport.js';
 
 const router = express.Router();
+
+// router.get('/id/:id',
+//   function(req, res) {
+//     res.json(req.isAuthenticated());
+//     // res.json(req.user);
+//   });
+
+router.use('/', (req, res, next) => {
+    if (req.isAuthenticated()) {
+        next();
+    } else {
+        res.sendStatus(401);
+    }
+});
 
 //get all players
 router.get('/all', async (_, res) => {
@@ -34,11 +49,21 @@ router.get('/total/:id', async (req, res) => {
     }
 });
 
-//get player by id **
+//get player by id
 router.get('/id/:id', async (req, res) => {
     try {
         const player = await playerService.getPlayer(req.params.id);
         res.status(200).send(player.rows[0]).end();
+    } catch(err) {
+        return res.errorHandler(err);
+    }
+});
+
+//get player by email
+router.get('/email/:email', async (req, res) => {
+    try {
+        const player = await playerService.getPlayerByEmail(req.params.email);
+        res.status(200).send(player).end();
     } catch(err) {
         return res.errorHandler(err);
     }

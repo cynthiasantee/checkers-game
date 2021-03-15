@@ -8,15 +8,26 @@ import express from "express";
 import http from "http";
 import bodyParser from "body-parser";
 import cors from "cors";
+import expressSession from "express-session";
 
 
 //Config
 import {pgClient} from "./pool.js"
+import passport from "./passport.js";
+
+var corsOptions = {
+    origin: '*',
+    credentials: true };
 
 // Initialization
 const app = express();
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(bodyParser.json());
+app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
+app.use(expressSession({ secret: 'secret' }));
+app.use(passport.initialize());
+app.use(passport.session());
 
 // Controller imports
 import playerController from "./controller/playerController.js"
@@ -24,25 +35,23 @@ import gameController from "./controller/gameController.js"
 import moveController from "./controller/moveController.js"
 
 app.use((req, res, next) => {
-  const allowedOrigins = [
-      'http://localhost:3001',
-  ];
-  
-
-  if (allowedOrigins.includes(req.headers.origin)) {
-      res.header('Access-Control-Allow-Origin', req.headers.origin);
-  }    
-
   res.header('Vary', 'Origin');
-  res.header('Access-Control-Allow-Credentials', true);
-  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  // res.header('Access-Control-Allow-Credentials', true);
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Origin, X-Requested With, Content-Type, Accept');
   res.header('Access-Control-Expose-Headers', 'Location');
-  res.header('Access-Control-Allow-Methods', 'DELETE, POST, PUT, GET');
+  res.header('Access-Control-Allow-Methods', 'DELETE, POST, PUT, GET, OPTIONS');
 
   // Self built error handler
   res.errorHandler = errorHandler.handle(res);
 
   next();
+});
+
+// No further processing needed for options calls.
+app.options('/*', (req, res) => {
+  console.log('Handling any options request');
+  res.status(200).end();
 });
 
 // Create tables
@@ -91,6 +100,17 @@ app.use("/player", playerController);
 app.use("/game", gameController);
 //Move subroute
 app.use("/move", moveController);
+
+app.post('/login',
+  passport.authenticate('local'),
+  function(req, res) {
+    // If this function gets called, authentication was successful.
+    // `req.user` contains the authenticated user.
+    // res.redirect('http://localhost:3000/home/' + req.user.id);
+    var origin = req.get('Origin')
+    // res.redirect(origin + '/home/' + req.user.id);
+    res.send(origin + '/home/' + req.user.id);
+  });
 
 
 // Server

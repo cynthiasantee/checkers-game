@@ -3,7 +3,7 @@ import { Errors } from '../errorHandler.js';
 
 const getGames = async () => {
     const games = await gameDao.getGames();
-    if (!games.rows || !games.rows.length) throw Errors.NO_GAMES;
+    if (!games.rows ) throw Errors.NO_GAMES;
     return games;
 };
 

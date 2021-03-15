@@ -7,10 +7,18 @@ const getPlayers = async () => {
     return players;
 };
    
+//by id
 const getPlayer = async (id) => {
     const player = await playerDao.getPlayer(id);
     if (!player.rows || !player.rows.length) throw Errors.PLAYER_NOT_FOUND;
     return player;
+};
+
+//by email
+const getPlayerByEmail = async (email) => {
+    const player = await playerDao.getPlayerByEmail(email);
+    if (!player.rows || !player.rows.length) throw Errors.ACCOUNT_NOT_FOUND;
+    return player.rows[0];
 };
 
 const createPlayer = async (email, username, password) => {
@@ -54,5 +62,6 @@ export const playerService = {
     createPlayer,
     updatePassword,
     getPlayerWins,
-    getPlayerTotalGames
+    getPlayerTotalGames,
+    getPlayerByEmail,
 };

@@ -9,6 +9,7 @@ export const Errors = {
     PLAYER_DELETION_FAILED: 'PLAYER_DELETION_FAILED',
     PLAYER_WINS_FAILED: 'PLAYER_WINS_FAILED',
     PLAYER_TOTAL_FAILED: 'PLAYER_TOTAL_FAILED',
+    ACCOUNT_NOT_FOUND: 'ACCOUNT_NOT_FOUND',
     // Game
     NO_GAMES: 'NO_GAMES',
     GAME_NOT_FOUND: 'GAME_NOT_FOUND',
@@ -54,6 +55,7 @@ export const handle = (res) => (err) => {
             Errors.USERNAME_IN_USE,
             Errors.SET_TURN_FAILED,
             Errors.SET_COLORS_FAILED,
+            Errors.ACCOUNT_NOT_FOUND,
 
         ],
         401: [Errors.INCORRECT_CREDENTIALS],
