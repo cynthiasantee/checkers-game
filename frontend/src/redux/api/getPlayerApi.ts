@@ -1,10 +1,8 @@
 import { api } from "../../axios.config";
 
 export interface Player {
-  id: number;
-  email: string;
-  username: string;
-  password: string;
+  player_id: number;
+  player_username: string;
 }
 
 const getPlayer = (id: number) => {

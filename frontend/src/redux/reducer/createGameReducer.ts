@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { PlayerOne, NewGameId } from "../api/createGameApi";
+import { NewGameId } from "../api/createGameApi";
 import { MyKnownError } from "../util/myKnownError";
 import { defaultState } from "../util/defaultState";
 

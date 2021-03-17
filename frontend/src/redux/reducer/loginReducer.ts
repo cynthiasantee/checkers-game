@@ -1,7 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { MyKnownError } from "../util/myKnownError";
 import { defaultState } from "../util/defaultState";
-import { Login } from "../api/loginApi";
 
 const loginSlice = createSlice({
   name: "login",

@@ -5,6 +5,14 @@ import express from 'express';
 
 const router = express.Router();
 
+router.use('/', (req, res, next) => {
+    if (req.isAuthenticated()) {
+        next();
+    } else {
+        res.sendStatus(401);
+    }
+});
+
 //get all games
 router.get('/all', async (_, res) => {
     logger.info('game/all');

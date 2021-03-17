@@ -7,7 +7,7 @@ passport.use(new LocalStrategy(
     function(username, password, done) {
       playerService.getPlayerByEmail(username)
         .then(user => {
-          console.log(user);
+          // console.log(user);
           if (user.password === password) {
             return done(null, user);
           } else {

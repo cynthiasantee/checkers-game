@@ -1,5 +1,5 @@
 import { serializeError } from "serialize-error";
-import { ChangeTurnApi, OtherPlayerId, Turn } from "../api/changeTurnApi";
+import { ChangeTurnApi, OtherPlayerId } from "../api/changeTurnApi";
 import {
   changeTurnFailed,
   changeTurnLoading,

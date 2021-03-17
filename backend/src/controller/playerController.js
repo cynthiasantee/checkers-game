@@ -1,15 +1,7 @@
 import { playerService } from "../service/playerService.js";
 import express from 'express';
-// import { Errors } from '../errorHandler.js';
-import passport from '../passport.js';
 
 const router = express.Router();
-
-// router.get('/id/:id',
-//   function(req, res) {
-//     res.json(req.isAuthenticated());
-//     // res.json(req.user);
-//   });
 
 router.use('/', (req, res, next) => {
     if (req.isAuthenticated()) {
@@ -29,7 +21,7 @@ router.get('/all', async (_, res) => {
     }
 });
 
-//get player wins **
+//get player wins
 router.get('/wins/:id', async (req, res) => {
     try {
         const wins = await playerService.getPlayerWins(req.body.id);
@@ -39,7 +31,7 @@ router.get('/wins/:id', async (req, res) => {
     }
 });
 
-//get player total **
+//get player total
 router.get('/total/:id', async (req, res) => {
     try {
         const total = await playerService.getPlayerTotalGames(req.body.id);
@@ -53,10 +45,22 @@ router.get('/total/:id', async (req, res) => {
 router.get('/id/:id', async (req, res) => {
     try {
         const player = await playerService.getPlayer(req.params.id);
-        res.status(200).send(player.rows[0]).end();
+        res.status(200).send(player).end();
     } catch(err) {
         return res.errorHandler(err);
     }
+});
+
+//get player by id (player info for heartbeat request)
+router.get('/info', async (req, res) => {
+    try {
+        const player = await playerService.getPlayer(req.user.id);
+        const playerInfo = await playerService.getPlayerInfo(player.player_id)
+        res.status(200).send(playerInfo).end();
+    } catch(err) {
+        return res.errorHandler(err);
+    }
+
 });
 
 //get player by email
@@ -79,7 +83,7 @@ router.post('/', async (req, res) => {
     }
 });
 
-//update password **
+//update password
 router.put('/id/:id', async (req, res) => {
     try {
         await playerService.updatePassword(req.params.id, req.body.email, req.body.password);

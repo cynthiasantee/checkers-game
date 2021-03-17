@@ -1,14 +1,15 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { AppDispatch, RootState } from '../redux/store';
 import page from './page';
+import { MyKnownError } from '../redux/util/myKnownError';
+import { FetchStatus } from '../redux/util/fetchStatus';
+import { useForm } from "react-hook-form";
 //Login fetch
 import { SelectLogin } from '../redux/selector/loginSelector';
 import { login as loginFetch} from "../redux/thunk/loginThunk";
-import { useForm } from "react-hook-form";
 import { Login as LoginType} from '../redux/api/loginApi';
-import { MyKnownError } from '../redux/util/myKnownError';
-import { FetchStatus } from '../redux/util/fetchStatus';
+//Redux
+import { connect } from 'react-redux';
+import { AppDispatch, RootState } from '../redux/store';
 
 interface StateProps {
     //login
@@ -22,7 +23,7 @@ interface DispatchProps {
 }
 
 const Login = (props: StateProps & DispatchProps) => {
-    const { register, handleSubmit, errors } = useForm<LoginType>();
+    const { register, handleSubmit } = useForm<LoginType>();
 
     const onSubmit = handleSubmit(({ username, password }) => {
         props.loginFetch({username, password})
@@ -30,7 +31,7 @@ const Login = (props: StateProps & DispatchProps) => {
 
     return(
         <form onSubmit={onSubmit}>
-            <label>First Name</label>
+            <label>Email</label>
             <input name="username" ref={register} />
             <label>Password</label>
             <input name="password" ref={register} />
