@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { FetchStatus } from '../redux/util/fetchStatus';
 import page from './page';
-import { useParams, Redirect } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 //Redux
 import { AppDispatch, RootState } from '../redux/store';
 import { connect } from 'react-redux';
@@ -46,14 +46,13 @@ interface DispatchProps {
 }
 
 const Home = (props: StateProps & DispatchProps) => {
-    const { id } = useParams<{ id: string }>();
-    const { getPlayerWins, getPlayerTotalGames, getGames } = props;
+    const { getPlayerWins, getPlayerTotalGames, getGames, player } = props;
 
   useEffect(() => {
-    getPlayerWins(parseInt(id));
-    getPlayerTotalGames(parseInt(id));
+    getPlayerWins(player?.player_id || 0);
+    getPlayerTotalGames(player?.player_id || 0);
     getGames();
-  }, [id, getPlayerWins, getPlayerTotalGames, getGames]);
+  }, [ getPlayerWins, getPlayerTotalGames, getGames, player]);
 
   const [gameId, setGameId] = useState(undefined as undefined | number);
   const [goToGame, setGoToGame] = useState(undefined as undefined | number);
@@ -62,11 +61,11 @@ const Home = (props: StateProps & DispatchProps) => {
 //     return <Redirect to="/bad-request" />;
 //   }
 
-  if (!props.player || !props.allGames) {
+  if (!props.allGames || !player) {
     return <></>;
   }
 
-  const player = props.player;
+  // const player = props.player;
 
   const openGames = props.allGames.filter(g => g.player_two_id === null && g.player_one_id !== player.player_id);
   const myGames = props.allGames.filter(g => (g.player_one_id === player.player_id || g.player_two_id === player.player_id) && g.player_two_id !== null && g.winner_id === null);
@@ -74,7 +73,7 @@ const Home = (props: StateProps & DispatchProps) => {
 
   return (
     <div>
-      <p>Welcomes, {props.player.player_username}!</p>
+      <p>Welcomes, {player.player_username}!</p>
       <p>Wins: {props.playerWins || 0}</p>
       <p>Losses: {(props.playerTotalGames || 0) - (props.playerWins || 0)}</p>
       <button onClick={() => props.createGame(props.player?.player_id || 0)}>Start a new game?</button>
@@ -82,7 +81,7 @@ const Home = (props: StateProps & DispatchProps) => {
       <p>Open Games:{openGames.map(game => {
         const onGameClick = () => {
           setGameId(game.id);
-          props.addSecondPlayer({player_two_id: parseInt(id)}, game.id);
+          props.addSecondPlayer({player_two_id: player.player_id}, game.id);
         }
         return(
           <button onClick={onGameClick} key={game.id}>Game started by {game.player_one_username}</button>
@@ -94,7 +93,7 @@ const Home = (props: StateProps & DispatchProps) => {
           setGoToGame(game.id);
         }
         return(
-          <button onClick={onGameClick} key={game.id}>Game against {game.player_one_id === parseInt(id) ? game.player_two_username : game.player_one_username}</button>
+          <button onClick={onGameClick} key={game.id}>Game against {game.player_one_id === player.player_id ? game.player_two_username : game.player_one_username}</button>
         )
       })}</p>
 

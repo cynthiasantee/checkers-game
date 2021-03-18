@@ -1,7 +1,8 @@
 import { logger } from '../config/index.js';
 import { gameService } from "../service/gameService.js";
 import express from 'express';
-
+// import { ws } from '../index.js';
+// import WebSocket from 'ws';
 
 const router = express.Router();
 
@@ -68,7 +69,12 @@ router.put('/winner/:id', async (req, res) => {
 router.put('/turn/:game_id', async (req, res) => {
     try {
         const newTurn = await gameService.setTurn(req.body.other_player_id, req.params.game_id);
-        res.status(200).send(newTurn.rows[0]).end();
+        // ws.getWss().clients.forEach((client) => {
+        //     if (client.readyState === WebSocket.OPEN) {
+        //       client.send('turn changed');
+        //     }
+        //   });
+          res.status(200).send(newTurn.rows[0]).end();
     } catch(err) {
         return res.errorHandler(err);
     }

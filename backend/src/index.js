@@ -9,18 +9,20 @@ import http from "http";
 import bodyParser from "body-parser";
 import cors from "cors";
 import expressSession from "express-session";
-
+// import expressWs from 'express-ws';
 
 //Config
 import {pgClient} from "./pool.js"
 import passport from "./passport.js";
 
 var corsOptions = {
-    origin: '*',
-    credentials: true };
+    origin: 'http://localhost:3000',
+    credentials: true 
+};
 
 // Initialization
 const app = express();
+// expressWs(app)
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(express.json());
@@ -35,9 +37,19 @@ import gameController from "./controller/gameController.js"
 import moveController from "./controller/moveController.js"
 
 app.use((req, res, next) => {
+  const allowedOrigins = [
+    'http://localhost:3000',
+    'http://localhost:3001',
+];
+
+if (allowedOrigins.includes(req.headers.origin)) {
+
+  res.header('Access-Control-Allow-Origin', req.headers.origin);
+}
+
   res.header('Vary', 'Origin');
-  // res.header('Access-Control-Allow-Credentials', true);
-  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Credentials', true);
+  // res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Headers', 'Content-Type, Origin, X-Requested With, Content-Type, Accept');
   res.header('Access-Control-Expose-Headers', 'Location');
   res.header('Access-Control-Allow-Methods', 'DELETE, POST, PUT, GET, OPTIONS');
@@ -53,6 +65,8 @@ app.options('/*', (req, res) => {
   console.log('Handling any options request');
   res.status(200).end();
 });
+
+
 
 // Create tables
 pgClient
@@ -74,6 +88,8 @@ pgClient
     player_one_color VARCHAR (7) NULL,
     player_two_color VARCHAR (7) NULL,
     turn INT NOT NULL,
+    select_piece_i INT NULL,
+    select_piece_j INT NULL,
     PRIMARY KEY(id),
     FOREIGN KEY(player_one_id) REFERENCES player(id),
     FOREIGN KEY(player_two_id) REFERENCES player(id),
@@ -112,4 +128,14 @@ app.post('/login',
 // Server
 const port = process.env.PORT || 3001;
 const server = http.createServer(app);
+// export const ws = expressWs(app, server)
+
+//when receives a message from frontend, it console.logs it
+// app.ws('/', function(ws, req) {
+//   ws.on('message', function(msg) {
+//     console.log(msg);
+//   });
+//   // console.log('socket', req.testing);
+// });
+
 server.listen(port, () => console.log(`Server running on port ${port}`));

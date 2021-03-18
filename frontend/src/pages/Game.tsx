@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import styled from 'styled-components/macro';
 import page from '../pages/page';
 import { useParams } from "react-router-dom";
+// import { Socket } from '../util/socket'
 //Redux
 import { AppDispatch, RootState } from '../redux/store';
 import { connect } from 'react-redux';
@@ -17,9 +18,7 @@ import { fetchCurrBoard } from "../redux/thunk/getCurrBoardThunk";
 import { SelectCurrBoard  } from '../redux/selector/getCurrBoardSelector';
 import { BoardSquare } from '../redux/api/addMoveApi';
 //Board components
-import Square from '../components/Square';
-import Piece from '../components/Piece';
-import Double from '../components/Double';
+import { Square, Piece, Double } from '../components';
 //Turn
 import { SelectChangeTurn } from '../redux/selector/changeTurnSelector';
 import {changeTurn } from "../redux/thunk/changeTurnThunk";
@@ -58,6 +57,17 @@ const Game = (props: StateProps & DispatchProps) => {
 
   const otherPlayerId = game.player_one_id === player.player_id ? game.player_two_id : game.player_one_id;
 
+  const changeTurnHandler = () => {
+    otherPlayerId && props.changeTurn({other_player_id: otherPlayerId}, parseInt(id));
+  }
+
+  // Socket.echo.addEventListener('message', function (event) {
+  //   if (event.data === 'turn changed') {
+  //     getGame(parseInt(id));
+  //     getCurrBoard(parseInt(id))
+  //   }
+  // });
+
   return (
     <div>
       <p>Player one ID: {game.player_one_id}</p>
@@ -70,7 +80,7 @@ const Game = (props: StateProps & DispatchProps) => {
       <p>-------------------------</p>
       <p>Player turn: {game.turn}</p>
 
-      {otherPlayerId && <button disabled={game.turn !== player.player_id} onClick={() => props.changeTurn({other_player_id: otherPlayerId}, parseInt(id))}>Change Turn</button>}
+      {otherPlayerId && <button disabled={game.turn !== player.player_id} onClick={changeTurnHandler}>Change Turn</button>}
 
       <p>Pick your color:</p>
       {otherPlayerId && <button disabled={game.player_one_color !== null} onClick={() => props.setColors({ player_one_id: game.player_one_id, player_id: player.player_id || 0, color: "black"}, parseInt(id))}>Black</button>}
