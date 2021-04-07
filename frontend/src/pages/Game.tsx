@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components/macro';
 import page from '../pages/page';
 import { useParams } from "react-router-dom";
-// import { Socket } from '../util/socket'
+import { getSocket } from '../websocket';
 //Redux
 import { AppDispatch, RootState } from '../redux/store';
 import { connect } from 'react-redux';
@@ -44,10 +44,26 @@ interface DispatchProps {
 const Game = (props: StateProps & DispatchProps) => {
     const { id } = useParams<{ id: string }>();
     const { getGame, getCurrBoard, game, player } = props;
+    const [players, setPlayers] = useState([] as number[]);
 
     useEffect(() => {
       getGame(parseInt(id));
       getCurrBoard(parseInt(id))
+
+      //join game room
+      const socket = getSocket('game');
+
+      socket.on('connect', () => {
+          socket.emit("join_game", parseInt(id));
+      });
+
+      socket.on('players_in_room', (players) => {
+          setPlayers(players);
+      })
+
+      return () => {
+          socket.disconnect();
+      }
     
     }, [id, getGame, getCurrBoard, props.turn]);
 
@@ -60,13 +76,6 @@ const Game = (props: StateProps & DispatchProps) => {
   const changeTurnHandler = () => {
     otherPlayerId && props.changeTurn({other_player_id: otherPlayerId}, parseInt(id));
   }
-
-  // Socket.echo.addEventListener('message', function (event) {
-  //   if (event.data === 'turn changed') {
-  //     getGame(parseInt(id));
-  //     getCurrBoard(parseInt(id))
-  //   }
-  // });
 
   return (
     <div>
@@ -125,6 +134,7 @@ const Game = (props: StateProps & DispatchProps) => {
         }
       }))}
     </Container>
+    {players.map(id => <div>Player {id}</div>)}
     </div>
   );
 }

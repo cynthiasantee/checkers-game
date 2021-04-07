@@ -1,4 +1,5 @@
 import * as errorHandler from './errorHandler.js';
+import { Server } from "socket.io";
 
 import dotenv from 'dotenv';
 dotenv.config()
@@ -9,7 +10,6 @@ import http from "http";
 import bodyParser from "body-parser";
 import cors from "cors";
 import expressSession from "express-session";
-// import expressWs from 'express-ws';
 
 //Config
 import {pgClient} from "./pool.js"
@@ -22,7 +22,6 @@ var corsOptions = {
 
 // Initialization
 const app = express();
-// expressWs(app)
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(express.json());
@@ -39,7 +38,7 @@ import moveController from "./controller/moveController.js"
 app.use((req, res, next) => {
   const allowedOrigins = [
     'http://localhost:3000',
-    'http://localhost:3001',
+    // 'http://localhost:3001',
 ];
 
 if (allowedOrigins.includes(req.headers.origin)) {
@@ -49,9 +48,7 @@ if (allowedOrigins.includes(req.headers.origin)) {
 
   res.header('Vary', 'Origin');
   res.header('Access-Control-Allow-Credentials', true);
-  // res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Headers', 'Content-Type, Origin, X-Requested With, Content-Type, Accept');
-  res.header('Access-Control-Expose-Headers', 'Location');
   res.header('Access-Control-Allow-Methods', 'DELETE, POST, PUT, GET, OPTIONS');
 
   // Self built error handler
@@ -128,14 +125,54 @@ app.post('/login',
 // Server
 const port = process.env.PORT || 3001;
 const server = http.createServer(app);
-// export const ws = expressWs(app, server)
 
-//when receives a message from frontend, it console.logs it
-// app.ws('/', function(ws, req) {
-//   ws.on('message', function(msg) {
-//     console.log(msg);
-//   });
-//   // console.log('socket', req.testing);
-// });
+
+// Start websocket server
+const io = new Server(server, {
+  cors: {
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST", "OPTIONS", "PUT", "DELETE"],
+  },
+});
+
+const home = io.of("/home");
+const game = io.of("/game");
+
+home.on("connection", async (socket) => {
+  const ids = await home.allSockets();
+  home.emit("users", Array.from(ids));
+
+  socket.on("disconnect", async (reason) => {
+    const ids = await home.allSockets();
+    home.emit("users", Array.from(ids));
+  });
+});
+
+game.on("connection", (socket) => {
+  socket.on("join_game", async (gameId) => {
+    const roomName = "game" + gameId;
+    socket.join(roomName);
+
+    const room = game.to(roomName);
+    const players = await room.allSockets();
+
+    room.emit("players_in_room", Array.from(players));
+  });
+
+  socket.on("disconnecting", async () => {
+    const rooms = Array.from(socket.rooms).slice(1);
+    const mySocketId = socket.id;
+
+    socket.id;
+    for (let i = 0; i < rooms.length; i++) {
+      const curr = game.to(rooms[i]);
+      const players = await curr.allSockets();
+      curr.emit(
+        "players_in_room",
+        Array.from(players).filter((id) => id !== mySocketId)
+      );
+    }
+  });
+});
 
 server.listen(port, () => console.log(`Server running on port ${port}`));

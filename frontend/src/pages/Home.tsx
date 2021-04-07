@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { FetchStatus } from '../redux/util/fetchStatus';
 import page from './page';
 import { Redirect } from "react-router-dom";
+import { getSocket } from '../websocket';
 //Redux
 import { AppDispatch, RootState } from '../redux/store';
 import { connect } from 'react-redux';
@@ -47,11 +48,23 @@ interface DispatchProps {
 
 const Home = (props: StateProps & DispatchProps) => {
     const { getPlayerWins, getPlayerTotalGames, getGames, player } = props;
+    const [userIds, setUserIds] = useState([] as string[]);
 
   useEffect(() => {
     getPlayerWins(player?.player_id || 0);
     getPlayerTotalGames(player?.player_id || 0);
     getGames();
+
+    const socket = getSocket('home');
+    
+
+    socket.on("users", ids => {
+        setUserIds(ids);
+    })
+
+    return () => {
+        socket.disconnect();
+    }
   }, [ getPlayerWins, getPlayerTotalGames, getGames, player]);
 
   const [gameId, setGameId] = useState(undefined as undefined | number);
@@ -73,7 +86,7 @@ const Home = (props: StateProps & DispatchProps) => {
 
   return (
     <div>
-      <p>Welcomes, {player.player_username}!</p>
+      <p>Welcome, {player.player_username}!</p>
       <p>Wins: {props.playerWins || 0}</p>
       <p>Losses: {(props.playerTotalGames || 0) - (props.playerWins || 0)}</p>
       <button onClick={() => props.createGame(props.player?.player_id || 0)}>Start a new game?</button>
@@ -106,6 +119,8 @@ const Home = (props: StateProps & DispatchProps) => {
         )
       })}</p>
 
+
+      Users: {userIds.map(id => <div>User {id}</div>)} 
       {props.fetchStatusCreateGame === "success" && <Redirect to={`/game/${props.newGame?.new_game_id}`} /> }
       {props.fetchStatusSecondPlayer === "success" && <Redirect to={`/game/${gameId}`} /> }
       {goToGame && <Redirect to={`/game/${goToGame}`} />}
