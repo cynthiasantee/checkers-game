@@ -73,16 +73,6 @@ router.get('/email/:email', async (req, res) => {
     }
 });
 
-//create player
-router.post('/', async (req, res) => {
-    try {
-        const player = await playerService.createPlayer(req.body.email, req.body.username, req.body.password);
-        res.status(201).send(player.rows[0]).end();
-    } catch(err) {
-        return res.errorHandler(err);
-    }
-});
-
 //update password
 router.put('/id/:id', async (req, res) => {
     try {
