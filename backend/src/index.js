@@ -135,8 +135,8 @@ const io = new Server(server, {
   },
 });
 
-const home = io.of("/home");
-const game = io.of("/game");
+export const home = io.of("/home");
+export const game = io.of("/game");
 
 home.on("connection", async (socket) => {
   const ids = await home.allSockets();

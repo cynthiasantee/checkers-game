@@ -1,5 +1,6 @@
 import { gameDao } from "../dao/gameDao.js";
 import { Errors } from '../errorHandler.js';
+import { game } from "../index.js"
 
 const getGames = async () => {
     const games = await gameDao.getGames();
@@ -28,6 +29,8 @@ const setSecondPlayer = async (player_two_id, id) => {
     if (secondPlayerUpdate.rowCount === 0) {
         throw Errors.SET_SECOND_PLAYER_FAILED;
     };
+
+    game.to(`game${id}`).emit("second_player");
 };
 
 const setWinner = async (id, winner_id) => {
@@ -45,6 +48,8 @@ const setTurn = async (other_player_id, game_id) => {
         throw Errors.SET_TURN_FAILED;
     };
 
+    game.to(`game${game_id}`).emit("game_changed");
+
     return setTurn;
 };
 
@@ -54,6 +59,8 @@ const setColors = async (player_one_id, player_id, color, game_id) => {
     if (setTurn.rowCount === 0) {
         throw Errors.SET_COLORS_FAILED;
     };
+
+    game.to(`game${game_id}`).emit("color_set");
 };
 
 export const gameService = {
