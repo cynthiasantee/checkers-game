@@ -1,5 +1,8 @@
 import { playerDao } from "../dao/playerDao.js";
 import { Errors } from '../errorHandler.js';
+import bcrypt from "bcrypt";
+
+const saltRounds = 10;
 
 const getPlayers = async () => {
     const players = await playerDao.getPlayers();
@@ -41,12 +44,14 @@ const createPlayer = async (email, username, password) => {
     const isValidUsername = await playerDao.usernameCheck(username);
     if (isValidUsername.rows && isValidUsername.rows.length > 0) throw Errors.USERNAME_IN_USE;
 
-    const playerInsert = await playerDao.createPlayer(email, username, password);
-
-    // We need this if since errors return undefined.
-    if (!playerInsert) throw Errors.PLAYER_INSERT_FAILED;
-    
-    return playerInsert;
+    bcrypt.genSalt(saltRounds, function(err, salt) {
+        bcrypt.hash(password, salt, async (err, hash) => {
+            const playerInsert = await playerDao.createPlayer(email, username, hash);
+                // We need this if since errors return undefined.
+                if (!playerInsert) throw Errors.PLAYER_INSERT_FAILED;
+                return playerInsert;
+        });
+    });    
 };
 
 const updatePassword = async (id, email, password) => {

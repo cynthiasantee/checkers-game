@@ -11,6 +11,10 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import expressSession from "express-session";
 
+//Register Api
+import { playerService } from "../src/service/playerService.js";
+// const router = express.Router();
+
 //Config
 import {pgClient} from "./pool.js"
 import passport from "./passport.js";
@@ -38,7 +42,6 @@ import moveController from "./controller/moveController.js"
 app.use((req, res, next) => {
   const allowedOrigins = [
     'http://localhost:3000',
-    // 'http://localhost:3001',
 ];
 
 if (allowedOrigins.includes(req.headers.origin)) {
@@ -72,7 +75,7 @@ pgClient
   CREATE TABLE IF NOT EXISTS player (
     id SERIAL,
     email VARCHAR (320) UNIQUE NOT NULL,
-    password VARCHAR (20) NOT NULL,
+    password VARCHAR (900) NOT NULL,
     username VARCHAR (30) UNIQUE NOT NULL,
     PRIMARY KEY(id)
   );
@@ -119,8 +122,17 @@ app.post('/login',
   function(req, res) {
     var origin = req.get('Origin')
     res.send(origin + '/home/' + req.user.id);
-  });
+});
 
+//create player
+app.post('/register', async (req, res) => {
+  try {
+      const player = await playerService.createPlayer(req.body.email, req.body.username, req.body.password);
+      res.status(201).send(player).end();
+  } catch(err) {
+      return res.errorHandler(err);
+  }
+});
 
 // Server
 const port = process.env.PORT || 3001;

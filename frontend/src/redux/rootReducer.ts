@@ -14,6 +14,7 @@ import changeTurn from "./reducer/changeTurnReducer";
 import myId from "./reducer/myId";
 import setColors from "./reducer/setColorsReducer";
 import login from "./reducer/loginReducer";
+import register from "./reducer/registerReducer";
 
 export default combineReducers({
   page,
@@ -31,4 +32,5 @@ export default combineReducers({
   myId,
   setColors,
   login,
+  register,
 });

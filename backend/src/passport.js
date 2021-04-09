@@ -2,13 +2,14 @@ import passport from "passport"
 import passportLocal from 'passport-local'
 import { playerService } from "./service/playerService.js";
 const LocalStrategy = passportLocal.Strategy;
+import bcrypt from "bcrypt";
 
 passport.use(new LocalStrategy(
-    function(username, password, done) {
+     function(username, password, done) {
       playerService.getPlayerByEmail(username)
         .then(user => {
-          // console.log(user);
-          if (user.password === password) {
+          const isPasswordValid = bcrypt.compareSync(password, user.password)
+          if (isPasswordValid) {
             return done(null, user);
           } else {
             return done(null, false, { message: 'Incorrect password.' });
