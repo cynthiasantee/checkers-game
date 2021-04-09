@@ -46,6 +46,7 @@ const Game = (props: StateProps & DispatchProps) => {
     const { getGame, getCurrBoard, game, player } = props;
     const [players, setPlayers] = useState([] as number[]);
     const [gameChanged, setGameChanged] = useState(true);
+    const [gameInfoChanged, setGameInfoChanged] = useState(false);
 
     useEffect(() => {
       if (gameChanged) {
@@ -54,6 +55,13 @@ const Game = (props: StateProps & DispatchProps) => {
         setGameChanged(false);
       }      
     }, [gameChanged]);
+
+    useEffect(() => {
+      if (gameInfoChanged) {
+        getGame(parseInt(id));
+        setGameInfoChanged(false);
+      }      
+    }, [gameInfoChanged]);
 
     useEffect(() => {
       //join game room
@@ -72,13 +80,12 @@ const Game = (props: StateProps & DispatchProps) => {
       })
 
       socket.on('second_player', () => {
-        setGameChanged(true);
+        setGameInfoChanged(true);
     })
 
-
     socket.on('color_set', () => {
-      setGameChanged(true);
-  })
+      setGameInfoChanged(true);
+    })
 
       return () => {
           socket.disconnect();

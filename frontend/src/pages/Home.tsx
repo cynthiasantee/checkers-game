@@ -49,23 +49,39 @@ interface DispatchProps {
 const Home = (props: StateProps & DispatchProps) => {
     const { getPlayerWins, getPlayerTotalGames, getGames, player } = props;
     const [userIds, setUserIds] = useState([] as string[]);
+    const [newGame, setNewGame] = useState(true);
 
   useEffect(() => {
     getPlayerWins(player?.player_id || 0);
     getPlayerTotalGames(player?.player_id || 0);
-    getGames();
+  }, [ getPlayerWins, getPlayerTotalGames, player]);
 
+  useEffect(() => {
+    if (newGame) {
+      getGames();
+      setNewGame(false);
+    }
+  }, [newGame]);
+
+  useEffect(() => {
     const socket = getSocket('home');
     
-
     socket.on("users", ids => {
         setUserIds(ids);
     })
 
+    socket.on("game_created", () => {
+      setNewGame(true);
+  })
+
+  socket.on("game_entered", () => {
+    setNewGame(true);
+})
+
     return () => {
         socket.disconnect();
     }
-  }, [ getPlayerWins, getPlayerTotalGames, getGames, player]);
+  },[]);
 
   const [gameId, setGameId] = useState(undefined as undefined | number);
   const [goToGame, setGoToGame] = useState(undefined as undefined | number);

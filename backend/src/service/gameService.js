@@ -1,6 +1,6 @@
 import { gameDao } from "../dao/gameDao.js";
 import { Errors } from '../errorHandler.js';
-import { game } from "../index.js"
+import { game, home } from "../index.js"
 
 const getGames = async () => {
     const games = await gameDao.getGames();
@@ -20,6 +20,7 @@ const createGame = async (player_one_id) => {
     // We need this if since errors return undefined.
     if (!gameInsert) throw Errors.GAME_INSERT_FAILED;
 
+    home.emit("game_created");
     return gameInsert;
 };
 
@@ -31,6 +32,7 @@ const setSecondPlayer = async (player_two_id, id) => {
     };
 
     game.to(`game${id}`).emit("second_player");
+    home.emit("game_entered")
 };
 
 const setWinner = async (id, winner_id) => {
