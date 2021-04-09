@@ -1,27 +1,27 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { NewGameId } from "../api/createGameApi";
 import { MyKnownError } from "../util/myKnownError";
 import { defaultState } from "../util/defaultState";
+import { Turn } from "../api/changeTurnApi";
 
-const createGameSlice = createSlice({
-  name: "current-game",
-  initialState: defaultState<NewGameId>(),
+const changeTurnSlice = createSlice({
+  name: "turn",
+  initialState: defaultState<Turn>(),
   reducers: {
-    createGameLoading: (state) => {
+    changeTurnLoading: (state) => {
       state.fetchStatus = "pending";
       return state;
     },
-    createGameSuccess: (state, action: PayloadAction<NewGameId>) => {
+    changeTurnSuccess: (state, action: PayloadAction<Turn>) => {
       state.fetchStatus = "success";
       state.data = action.payload;
       return state;
     },
-    createGameFailed: (state, action: PayloadAction<MyKnownError>) => {
+    changeTurnFailed: (state, action: PayloadAction<MyKnownError>) => {
       state.fetchStatus = "failed";
       state.error = action.payload;
       return state;
     },
-    createGameReset: (state) => {
+    changeTurnReset: (state) => {
       state = defaultState();
       return state;
     },
@@ -29,9 +29,9 @@ const createGameSlice = createSlice({
 });
 
 export const {
-  createGameLoading,
-  createGameSuccess,
-  createGameFailed,
-  createGameReset,
-} = createGameSlice.actions;
-export default createGameSlice.reducer;
+  changeTurnLoading,
+  changeTurnSuccess,
+  changeTurnFailed,
+  changeTurnReset,
+} = changeTurnSlice.actions;
+export default changeTurnSlice.reducer;

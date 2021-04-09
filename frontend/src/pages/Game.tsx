@@ -1,95 +1,147 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components/macro';
-import Square from '../components/Square';
-import Piece from '../components/Piece';
-import Double from '../components/Double';
-import { Player } from '../redux/api/getPlayerApi';
-import { MyKnownError } from '../redux/util/myKnownError';
-import { FetchStatus } from '../redux/util/fetchStatus';
-import { AppDispatch, RootState } from '../redux/store';
-import { SelectPlayer } from '../redux/selector/getPlayerSelector';
-import { fetchPlayer } from "../redux/thunk/getPlayerThunk";
-import { SelectGame } from '../redux/selector/getGameSelector';
-import { fetchGame } from "../redux/thunk/getGameThunk";
-import { fetchCurrBoard } from "../redux/thunk/getCurrBoardThunk";
-import { connect } from 'react-redux';
 import page from '../pages/page';
 import { useParams } from "react-router-dom";
-import { BoardSquare } from '../redux/api/addMoveApi';
-import { SelectCurrBoard  } from '../redux/selector/getCurrBoardSelector';
+import { getSocket } from '../websocket';
+//Redux
+import { AppDispatch, RootState } from '../redux/store';
+import { connect } from 'react-redux';
+//Player
+import { Player } from '../redux/api/getPlayerApi';
+import { SelectPlayer } from '../redux/selector/getPlayerSelector';
+//Game
+import { SelectGame } from '../redux/selector/getGameSelector';
+import { fetchGame } from "../redux/thunk/getGameThunk";
 import { Game as GameInterface } from '../redux/api/getGameApi';
-import { SelectAddMove } from '../redux/selector/addMoveSelector';
-import {addMoveReset} from "../redux/reducer/addMoveReducer"
+//Board
+import { fetchCurrBoard } from "../redux/thunk/getCurrBoardThunk";
+import { SelectCurrBoard  } from '../redux/selector/getCurrBoardSelector';
+import { BoardSquare } from '../redux/api/addMoveApi';
+//Board components
+import { Square, Piece, Double } from '../components';
+//Turn
+import { SelectChangeTurn } from '../redux/selector/changeTurnSelector';
+import {changeTurn } from "../redux/thunk/changeTurnThunk";
+import { OtherPlayerId, Turn } from '../redux/api/changeTurnApi';
+//Set colors
+import { setColors } from "../redux/thunk/setColorsThunk";
+import { SetColor } from '../redux/api/setColorsApi';
 
 interface StateProps {
-  //player info
   player?: Player;
-  playerError?: MyKnownError;
-  playerFetchStatus: FetchStatus;
-
-  // game info
   game?: GameInterface;
-  gameError?: MyKnownError;
-  gameFetchStatus: FetchStatus;
-
-  //get board
   currBoard?: BoardSquare[][];
-  currBoardError?: MyKnownError;
-  currBoardFetchStatus: FetchStatus;
-
-  // move fetch
-  moveFetchStatus: FetchStatus;
+  turn?: Turn;
 }
 
 interface DispatchProps {
-  getPlayer: (id: number) => void;
   getGame: (id: number) => void;
   getCurrBoard: (id: number) => void;
-  moveReset: () => void;
+  changeTurn: (other_player_id: OtherPlayerId, game_id: number) => void;
+  setColors: (colorInfo: SetColor, game_id: number) => void;
 }
 
 const Game = (props: StateProps & DispatchProps) => {
     const { id } = useParams<{ id: string }>();
-    const { getGame, getPlayer, getCurrBoard, game, player } = props;
+    const { getGame, getCurrBoard, game, player } = props;
+    const [players, setPlayers] = useState([] as number[]);
+    const [gameChanged, setGameChanged] = useState(true);
+    const [gameInfoChanged, setGameInfoChanged] = useState(false);
 
     useEffect(() => {
-      getCurrBoard(parseInt(id))
-      getGame(parseInt(id));
-      getPlayer(game?.player_one_id || 1);
+      if (gameChanged) {
+        getGame(parseInt(id));
+        getCurrBoard(parseInt(id));
+        setGameChanged(false);
+      }      
+    }, [gameChanged]);
+
+    useEffect(() => {
+      if (gameInfoChanged) {
+        getGame(parseInt(id));
+        setGameInfoChanged(false);
+      }      
+    }, [gameInfoChanged]);
+
+    useEffect(() => {
+      //join game room
+      const socket = getSocket('game');
+
+      socket.on('connect', () => {
+          socket.emit("join_game", parseInt(id));
+      });
+
+      socket.on('players_in_room', (players) => {
+          setPlayers(players);
+      })
+
+      socket.on('game_changed', () => {
+          setGameChanged(true);
+      })
+
+      socket.on('second_player', () => {
+        setGameInfoChanged(true);
+    })
+
+    socket.on('color_set', () => {
+      setGameInfoChanged(true);
+    })
+
+      return () => {
+          socket.disconnect();
+      }
     
-  }, [id, getGame, getPlayer, getCurrBoard]);
+    }, [id]);
 
   if ( !game || !player || !props.currBoard){
     return <></>;
+  }
+
+  const otherPlayerId = game.player_one_id === player.player_id ? game.player_two_id : game.player_one_id;
+
+  const changeTurnHandler = () => {
+    otherPlayerId && props.changeTurn({other_player_id: otherPlayerId}, parseInt(id));
+    
   }
 
   return (
     <div>
       <p>Player one ID: {game.player_one_id}</p>
       <p>Player one username: {game.player_one_username}</p>
+      <p>Player one color: {game.player_one_color}</p>
+      <p>-------------------------</p>
       <p>Player two ID: {game.player_two_id}</p>
       <p>Player two username: {game.player_two_username}</p>
-        
+      <p>Player two color: {game.player_two_color}</p>
+      <p>-------------------------</p>
+      <p>Player turn: {game.turn}</p>
+
+      {otherPlayerId && <button disabled={game.turn !== player.player_id} onClick={changeTurnHandler}>Change Turn</button>}
+
+      <p>Pick your color:</p>
+      {otherPlayerId && <button disabled={game.player_one_color !== null} onClick={() => props.setColors({ player_one_id: game.player_one_id, player_id: player.player_id || 0, color: "black"}, parseInt(id))}>Black</button>}
+      {otherPlayerId && <button disabled={game.player_one_color !== null} onClick={() => props.setColors({ player_one_id: game.player_one_id, player_id: player.player_id || 0, color: "white"}, parseInt(id))}>White</button>}
+      
     <Container>
       {props.currBoard.map(row => row.map(square => {
         if (square.squareColor === 'black') {
           if (square.piece === null) {
-            return <Square color="black" location={square.location} hasPiece={square.piece === null ? false : true}></Square>
+            return <Square color="black" location={square.location} hasPiece={square.piece === null ? false : true} key={square.location.toString()}></Square>
           } else if (square.piece.color === 'white' && square.piece.isDouble === false) {
             return(
-            <Square color="black" location={square.location} hasPiece={square.piece === null ? false : true}>
+            <Square color="black" location={square.location} hasPiece={square.piece === null ? false : true} key={square.location.toString()}>
               <Piece color="white" id={square.piece.id} isDouble={square.piece.isDouble} squareLocation={square.location}></Piece>
             </Square>
             )
           } else if (square.piece.color === 'black' && square.piece.isDouble === false) {
             return(
-            <Square color="black" location={square.location} hasPiece={square.piece === null ? false : true}>
+            <Square color="black" location={square.location} hasPiece={square.piece === null ? false : true} key={square.location.toString()}>
               <Piece color="black" id={square.piece.id} isDouble={square.piece.isDouble} squareLocation={square.location}></Piece>
             </Square>
             )
           } else if (square.piece.color === 'white' && square.piece.isDouble === true) {
             return(
-            <Square color="black" location={square.location} hasPiece={square.piece === null ? false : true}>
+            <Square color="black" location={square.location} hasPiece={square.piece === null ? false : true} key={square.location.toString()}>
               <Piece color="white" id={square.piece.id} isDouble={square.piece.isDouble} squareLocation={square.location}>
                 <Double color="white"></Double>
               </Piece>
@@ -97,7 +149,7 @@ const Game = (props: StateProps & DispatchProps) => {
             )
           } else if (square.piece.color === 'black' && square.piece.isDouble === true) {
             return(
-            <Square color="black" location={square.location} hasPiece={square.piece === null ? false : true}>
+            <Square color="black" location={square.location} hasPiece={square.piece === null ? false : true} key={square.location.toString()}>
               <Piece color="black" id={square.piece.id} isDouble={square.piece.isDouble} squareLocation={square.location}>
                 <Double color="black"></Double>
               </Piece>
@@ -105,35 +157,27 @@ const Game = (props: StateProps & DispatchProps) => {
             )
           }
         } else if (square.squareColor === 'white') {
-          return <Square color="white" location={square.location} hasPiece={square.piece === null ? false : true}></Square>
+          return <Square color="white" location={square.location} hasPiece={square.piece === null ? false : true} key={square.location.toString()}></Square>
         }
       }))}
     </Container>
+    {players.map(id => <div>Player {id}</div>)}
     </div>
   );
 }
 
 const mapStateToProps = (state: RootState): StateProps => ({
   player: SelectPlayer.data(state),
-  playerError: SelectPlayer.error(state),
-  playerFetchStatus: SelectPlayer.status(state),
-
   game: SelectGame.data(state),
-  gameError: SelectGame.error(state),
-  gameFetchStatus: SelectGame.status(state),
-
   currBoard: SelectCurrBoard.data(state),
-  currBoardError: SelectCurrBoard.error(state),
-  currBoardFetchStatus: SelectCurrBoard.status(state),
-
-  moveFetchStatus: SelectAddMove.status(state),
+  turn: SelectChangeTurn.data(state),
 });
 
 const mapDispatchToProps = (dispatch: AppDispatch): DispatchProps => ({
-  getPlayer: (id) => dispatch(fetchPlayer(id)),
   getGame: (id) => dispatch(fetchGame(id)),
   getCurrBoard: (id) => dispatch(fetchCurrBoard(id)),
-  moveReset: () => dispatch(addMoveReset()),
+  changeTurn: (other_player_id, game_id) => dispatch(changeTurn(other_player_id, game_id)),
+  setColors: (colorInfo, game_id) => dispatch(setColors(colorInfo, game_id))
 
 });
 export default page("game")(connect(mapStateToProps, mapDispatchToProps)(Game));

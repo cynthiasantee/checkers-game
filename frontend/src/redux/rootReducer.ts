@@ -10,6 +10,10 @@ import getGame from "./reducer/getGameReducer";
 import getGames from "./reducer/getGamesReducer";
 import currBoard from "./reducer/getCurrBoardReducer";
 import addSecondPlayer from "./reducer/addSecondPlayerReducer";
+import changeTurn from "./reducer/changeTurnReducer";
+import myId from "./reducer/myId";
+import setColors from "./reducer/setColorsReducer";
+import login from "./reducer/loginReducer";
 
 export default combineReducers({
   page,
@@ -23,4 +27,8 @@ export default combineReducers({
   getGames,
   currBoard,
   addSecondPlayer,
+  changeTurn,
+  myId,
+  setColors,
+  login,
 });

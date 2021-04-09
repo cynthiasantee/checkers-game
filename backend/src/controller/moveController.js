@@ -3,6 +3,14 @@ import express from 'express';
 
 const router = express.Router();
 
+router.use('/', (req, res, next) => {
+    if (req.isAuthenticated()) {
+        next();
+    } else {
+        res.sendStatus(401);
+    }
+});
+
 //get game moves
 router.get('/id/:id', async (req, res) => {
     try {

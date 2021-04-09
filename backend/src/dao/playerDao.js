@@ -4,10 +4,20 @@ const getPlayers = async () => {
  return await pgClient.query('SELECT * FROM player');
 };
 
+//get player by id
 const getPlayer = async (id) => {
   return await pgClient.query(
     `SELECT * FROM player WHERE id = $1`,
       [id]
+  );
+};
+
+//check email and password and return cookie
+//get player by email
+const getPlayerByEmail = async (email) => {
+  return await pgClient.query(
+    `SELECT * FROM player WHERE email = $1`,
+      [email]
   );
 };
 
@@ -61,5 +71,6 @@ export const playerDao = {
   usernameCheck,
   updatePassword,
   getPlayerWins,
-  getPlayerTotalGames
+  getPlayerTotalGames,
+  getPlayerByEmail
 };

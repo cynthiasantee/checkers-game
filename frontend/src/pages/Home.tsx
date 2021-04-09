@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import styled from 'styled-components/macro';
-import { MyKnownError } from '../redux/util/myKnownError';
 import { FetchStatus } from '../redux/util/fetchStatus';
+import page from './page';
+import { Redirect } from "react-router-dom";
+import { getSocket } from '../websocket';
+//Redux
 import { AppDispatch, RootState } from '../redux/store';
 import { connect } from 'react-redux';
-import page from './page';
-import { useParams, Redirect } from "react-router-dom";
 //Player info
 import { Player } from '../redux/api/getPlayerApi';
 import { SelectPlayer } from '../redux/selector/getPlayerSelector';
-import { fetchPlayer } from "../redux/thunk/getPlayerThunk";
 //Player wins
 import { SelectPlayerWins } from '../redux/selector/getPlayerWinsSelector';
 import { fetchPlayerWins } from "../redux/thunk/getPlayerWinsThunk";
@@ -29,35 +28,17 @@ import { SelectAddSecondPlayer } from '../redux/selector/addSecondPlayerSelector
 import { addSecondPlayer } from "../redux/thunk/addSecondPlayerThunk";
 import { SecondPlayer } from '../redux/api/addSecondPlayerApi';
 
-
 interface StateProps {
   player?: Player;
-  errorPlayer?: MyKnownError;
-  fetchStatusPlayer: FetchStatus;
-//Player wins
   playerWins?: number;
-  errorPlayerWins?: MyKnownError;
-  fetchStatusPlayerWins: FetchStatus;
-//Player total games
   playerTotalGames?: number;
-  errorPlayerTotalGames?: MyKnownError;
-  fetchStatusPlayerTotalGames: FetchStatus;
-  //Create game
   newGame?: NewGameId;
-  errorCreateGame?: MyKnownError;
   fetchStatusCreateGame: FetchStatus;
-  //All games
   allGames?: Game[];
-  errorAllGames?: MyKnownError;
-  fetchStatusAllGames: FetchStatus;
-  //Add second player
-  secondPlayer?: SecondPlayer;
-  errorSecondPlayer?: MyKnownError;
   fetchStatusSecondPlayer: FetchStatus;
 }
 
 interface DispatchProps {
-  getPlayer: (id: number) => void;
   getPlayerWins: (id: number) => void;
   getPlayerTotalGames: (id: number) => void;
   createGame: (id: number) => void;
@@ -66,15 +47,41 @@ interface DispatchProps {
 }
 
 const Home = (props: StateProps & DispatchProps) => {
-    const { id } = useParams<{ id: string }>();
-    const { getPlayer, getPlayerWins, getPlayerTotalGames, getGames } = props;
+    const { getPlayerWins, getPlayerTotalGames, getGames, player } = props;
+    const [userIds, setUserIds] = useState([] as string[]);
+    const [newGame, setNewGame] = useState(true);
 
   useEffect(() => {
-    getPlayer(parseInt(id));
-    getPlayerWins(parseInt(id));
-    getPlayerTotalGames(parseInt(id));
-    getGames();
-  }, [id, getPlayer, getPlayerWins, getPlayerTotalGames, getGames]);
+    getPlayerWins(player?.player_id || 0);
+    getPlayerTotalGames(player?.player_id || 0);
+  }, [ getPlayerWins, getPlayerTotalGames, player]);
+
+  useEffect(() => {
+    if (newGame) {
+      getGames();
+      setNewGame(false);
+    }
+  }, [newGame]);
+
+  useEffect(() => {
+    const socket = getSocket('home');
+    
+    socket.on("users", ids => {
+        setUserIds(ids);
+    })
+
+    socket.on("game_created", () => {
+      setNewGame(true);
+  })
+
+  socket.on("game_entered", () => {
+    setNewGame(true);
+})
+
+    return () => {
+        socket.disconnect();
+    }
+  },[]);
 
   const [gameId, setGameId] = useState(undefined as undefined | number);
   const [goToGame, setGoToGame] = useState(undefined as undefined | number);
@@ -83,56 +90,53 @@ const Home = (props: StateProps & DispatchProps) => {
 //     return <Redirect to="/bad-request" />;
 //   }
 
-  if (!props.player || !props.allGames) {
+  if (!props.allGames || !player) {
     return <></>;
   }
 
-  const player = props.player;
+  // const player = props.player;
 
-  const openGames = props.allGames.filter(g => g.player_two_id === null && g.player_one_id !== player.id);
-  const myGames = props.allGames.filter(g => (g.player_one_id === player.id || g.player_two_id === player.id) && g.player_two_id !== null && g.winner_id === null);
-  const emptyGames = props.allGames.filter(g => g.player_one_id === player.id && g.player_two_id === null && g.winner_id === null)
+  const openGames = props.allGames.filter(g => g.player_two_id === null && g.player_one_id !== player.player_id);
+  const myGames = props.allGames.filter(g => (g.player_one_id === player.player_id || g.player_two_id === player.player_id) && g.player_two_id !== null && g.winner_id === null);
+  const emptyGames = props.allGames.filter(g => g.player_one_id === player.player_id && g.player_two_id === null && g.winner_id === null)
 
   return (
     <div>
-      <p>Welcomes, {props.player.username}!</p>
+      <p>Welcome, {player.player_username}!</p>
       <p>Wins: {props.playerWins || 0}</p>
       <p>Losses: {(props.playerTotalGames || 0) - (props.playerWins || 0)}</p>
-      <button onClick={() => props.createGame(props.player?.id || 0)}>Start a new game?</button>
+      <button onClick={() => props.createGame(props.player?.player_id || 0)}>Start a new game?</button>
+      
       <p>Open Games:{openGames.map(game => {
-        
         const onGameClick = () => {
           setGameId(game.id);
-          props.addSecondPlayer({player_two_id: parseInt(id)}, game.id);
+          props.addSecondPlayer({player_two_id: player.player_id}, game.id);
         }
-
         return(
-          <button onClick={onGameClick}>Game started by {game.player_one_username}</button>
+          <button onClick={onGameClick} key={game.id}>Game started by {game.player_one_username}</button>
         )
       })}</p>
 
       <p>My Games:{myGames.map(game => {
-        
         const onGameClick = () => {
           setGoToGame(game.id);
         }
-
         return(
-          <button onClick={onGameClick}>Game against {game.player_one_id === parseInt(id) ? game.player_two_username : game.player_one_username}</button>
+          <button onClick={onGameClick} key={game.id}>Game against {game.player_one_id === player.player_id ? game.player_two_username : game.player_one_username}</button>
         )
       })}</p>
 
       <p>My Empty Games:{emptyGames.map((game, i) => {
-        
         const onGameClick = () => {
           setGoToGame(game.id);
         }
-
         return(
-          <button onClick={onGameClick}>My game {i+1}</button>
+          <button onClick={onGameClick} key={game.id}>My game {i+1}</button>
         )
       })}</p>
 
+
+      Users: {userIds.map(id => <div>User {id}</div>)} 
       {props.fetchStatusCreateGame === "success" && <Redirect to={`/game/${props.newGame?.new_game_id}`} /> }
       {props.fetchStatusSecondPlayer === "success" && <Redirect to={`/game/${gameId}`} /> }
       {goToGame && <Redirect to={`/game/${goToGame}`} />}
@@ -141,34 +145,16 @@ const Home = (props: StateProps & DispatchProps) => {
 }
 
 const mapStateToProps = (state: RootState): StateProps => ({
-  //Player info
   player: SelectPlayer.data(state),
-  errorPlayer: SelectPlayer.error(state),
-  fetchStatusPlayer: SelectPlayer.status(state),
-  //Player wins
   playerWins: SelectPlayerWins.data(state),
-  errorPlayerWins: SelectPlayerWins.error(state),
-  fetchStatusPlayerWins: SelectPlayerWins.status(state),
-  //Player total games
   playerTotalGames: SelectPlayerTotalGames.data(state),
-  errorPlayerTotalGames: SelectPlayerTotalGames.error(state),
-  fetchStatusPlayerTotalGames: SelectPlayerTotalGames.status(state),
-  //Create game
   newGame: SelectCreateGame.data(state),
-  errorCreateGame: SelectCreateGame.error(state),
   fetchStatusCreateGame: SelectCreateGame.status(state),
-  //All games
   allGames: SelectGames.data(state),
-  errorAllGames: SelectGames.error(state),
-  fetchStatusAllGames: SelectGames.status(state),
-  //Add second player
-  secondPlayer: SelectAddSecondPlayer.data(state),
-  errorSecondPlayer: SelectAddSecondPlayer.error(state),
   fetchStatusSecondPlayer: SelectAddSecondPlayer.status(state),
 });
 
 const mapDispatchToProps = (dispatch: AppDispatch): DispatchProps => ({
-  getPlayer: (id) => dispatch(fetchPlayer(id)),
   getPlayerWins: (id) => dispatch(fetchPlayerWins(id)),
   getPlayerTotalGames: (id) => dispatch(fetchPlayerTotalGames(id)),
   createGame: (id) => dispatch(createGame(id)),

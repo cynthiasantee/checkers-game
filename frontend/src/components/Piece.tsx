@@ -5,6 +5,10 @@ import { Color } from '../redux/api/addMoveApi';
 import { AppDispatch, RootState } from '../redux/store';
 import { Location } from '../util/move';
 import {selectPiece} from "../redux/reducer/selectPiece"
+import { Player } from '../redux/api/getPlayerApi';
+import { Game } from '../redux/api/getGameApi';
+import { SelectPlayer } from '../redux/selector/getPlayerSelector';
+import { SelectGame } from '../redux/selector/getGameSelector';
 
 interface OwnProps {
     color: Color;
@@ -16,6 +20,8 @@ interface OwnProps {
 
 interface StateProps {
     selectedPiece: Location| null;
+    player?: Player;
+    game?: Game;
 }
 
 interface DispatchProps {
@@ -24,8 +30,15 @@ interface DispatchProps {
 
 
 const Piece: React.FC<OwnProps & StateProps & DispatchProps> = (props) => {
+    const {player, game} = props;
+    if (!player || !game) return <></>
+
+    const myColor = player.player_id === game.player_one_id ? game.player_one_color : game.player_two_color;
+
     const onPieceSelect = () => {
-        props.selectPiece(props.squareLocation);
+        if (props.color === myColor && game.turn === player.player_id) {
+            props.selectPiece(props.squareLocation);
+        }
     }
     
     return (
@@ -47,7 +60,8 @@ const Container = styled.div<{color: Color; squareLocation: Location; selectedPi
 `
 const mapStateToProps = (state: RootState): StateProps => ({
     selectedPiece: state.selectPiece,
-
+    player: SelectPlayer.data(state),
+    game: SelectGame.data(state),
 });
   
   const mapDispatchToProps = (dispatch: AppDispatch): DispatchProps => ({
