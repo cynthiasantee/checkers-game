@@ -41,6 +41,8 @@ const setWinner = async (id, winner_id) => {
     if (setWinnerUpdate.rowCount === 0) {
         throw Errors.SET_WINNER_FAILED;
     };
+
+    game.to(`game${id}`).emit("winner_set");
 };
 
 const setTurn = async (other_player_id, game_id) => {
