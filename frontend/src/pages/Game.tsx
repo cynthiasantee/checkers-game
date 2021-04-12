@@ -91,12 +91,6 @@ const Game = (props: StateProps & DispatchProps) => {
       }
     }, [winnerWasSet]);
 
-    // useEffect(() => {
-    //   if (props.setWinnerFetch === "success") {
-    //     alert("game has winner")
-    //   }      
-    // }, [props.setWinnerFetch]);
-
     useEffect(() => {
       //join game room
       const socket = getSocket('game');
@@ -119,6 +113,10 @@ const Game = (props: StateProps & DispatchProps) => {
 
     socket.on('color_set', () => {
       setGameInfoChanged(true);
+    })
+
+    socket.on('winner_set', () => {
+      setGameChanged(true);
     })
 
       return () => {
