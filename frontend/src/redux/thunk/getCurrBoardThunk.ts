@@ -14,6 +14,7 @@ import {
   addMoveSuccess,
 } from "../reducer/addMoveReducer";
 import { CGThunkAction } from "./cgThunkAction";
+import { hasWinner } from "../../util/hasWinner";
 
 export function fetchCurrBoard(id: number, move?: Move): CGThunkAction<void> {
   return async (dispatch) => {
