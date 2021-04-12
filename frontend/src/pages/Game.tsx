@@ -85,11 +85,11 @@ const Game = (props: StateProps & DispatchProps) => {
       }
     }, [winner]);
 
-    useEffect(() => {
-      if (winnerWasSet === 'success') {
-        alert("you have a winner")
-      }
-    }, [winnerWasSet]);
+    // useEffect(() => {
+    //   if (winnerWasSet === 'success') {
+    //     alert("you have a winner")
+    //   }
+    // }, [winnerWasSet]);
 
     useEffect(() => {
       //join game room
@@ -116,7 +116,8 @@ const Game = (props: StateProps & DispatchProps) => {
     })
 
     socket.on('winner_set', () => {
-      setGameChanged(true);
+      setGameInfoChanged(true);
+      alert('there was a winner')
     })
 
       return () => {
@@ -152,6 +153,9 @@ const Game = (props: StateProps & DispatchProps) => {
       <p>Pick your color:</p>
       {otherPlayerId && <button disabled={game.player_one_color !== null} onClick={() => props.setColors({ player_one_id: game.player_one_id, player_id: player.player_id || 0, color: "black"}, parseInt(id))}>Black</button>}
       {otherPlayerId && <button disabled={game.player_one_color !== null} onClick={() => props.setColors({ player_one_id: game.player_one_id, player_id: player.player_id || 0, color: "white"}, parseInt(id))}>White</button>}
+
+      <p>Give up:</p>
+      {otherPlayerId && <button disabled={game.winner_id !== null} onClick={() => props.setWinner(parseInt(id), {winner_id: otherPlayerId}) }>Give Up</button>}
       
     <Container>
       {props.currBoard.map(row => row.map(square => {
