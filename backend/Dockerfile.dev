@@ -6,9 +6,10 @@ WORKDIR /app
 
 # Install dependencies
 # COPY will be executed on the HOST machine
-COPY package.json .
-RUN npm install 
 COPY . .
+
+RUN npm ci
+
 
 # Default command, executes them in the container
 CMD ["npm", "run", "dev"]
