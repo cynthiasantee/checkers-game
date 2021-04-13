@@ -134,6 +134,16 @@ app.post('/register', async (req, res) => {
   }
 });
 
+//update password
+app.put('/update', async (req, res) => {
+  try {
+      await playerService.updatePassword(req.body.email, req.body.password);
+      res.status(200).send("PASSWORD_UPDATED").end();
+  } catch(err) {
+      return res.errorHandler(err);
+  }
+});
+
 // Server
 const port = process.env.PORT || 3001;
 const server = http.createServer(app);

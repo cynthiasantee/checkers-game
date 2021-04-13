@@ -42,10 +42,10 @@ const usernameCheck = async (username) => {
   );
 }
 
-const updatePassword = async (id, email, password) => {
+const updatePassword = async (email, password) => {
   return await pgClient.query(
-    "UPDATE player SET email = $1, password = $2 WHERE id = $3",
-      [email, password, id]
+    "UPDATE player SET password = $2 WHERE email = $1",
+      [email, password]
   );
 };
 

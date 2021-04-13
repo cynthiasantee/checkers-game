@@ -73,14 +73,4 @@ router.get('/email/:email', async (req, res) => {
     }
 });
 
-//update password
-router.put('/id/:id', async (req, res) => {
-    try {
-        await playerService.updatePassword(req.params.id, req.body.email, req.body.password);
-        res.status(200).send("PASSWORD_UPDATED").end();
-    } catch(err) {
-        return res.errorHandler(err);
-    }
-});
-
 export default router;

@@ -54,12 +54,20 @@ const createPlayer = async (email, username, password) => {
     });    
 };
 
-const updatePassword = async (id, email, password) => {
-    const passwordUpdate = await playerDao.updatePassword(id, email, password);
+const updatePassword = async (email, password) => {
+    const player = await playerDao.getPlayerByEmail(email);
+    if (!player.rows || !player.rows.length) throw Errors.ACCOUNT_NOT_FOUND;
 
-    if (passwordUpdate.rowCount === 0) {
-        throw Errors.PASSWORD_RESET_FAILED;
-    };
+    bcrypt.genSalt(saltRounds, function(err, salt) {
+        bcrypt.hash(password, salt, async (err, hash) => {
+            const passwordUpdate = await playerDao.updatePassword(email, hash);
+                // We need this if since errors return undefined.
+                if (passwordUpdate.rowCount === 0) {
+                    throw Errors.PASSWORD_RESET_FAILED;
+                };
+                return passwordUpdate;
+        });
+    });   
 };
 
 const getPlayerWins = async (id) => {
