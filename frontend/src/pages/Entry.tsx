@@ -5,6 +5,8 @@ import page from './page';
 //Redux
 import { AppDispatch, RootState } from '../redux/store';
 import { connect } from 'react-redux';
+import Register from './Register';
+import Login from './Login';
 
 interface StateProps {
 
@@ -14,10 +16,13 @@ interface DispatchProps {
 
 }
 
-const Game = (props: StateProps & DispatchProps) => {
+const Entry = (props: StateProps & DispatchProps) => {
 
   return (
-   <></>
+    <>
+      <Register></Register>
+      <Login></Login>
+   </>
   );
 }
 
@@ -29,7 +34,7 @@ const mapDispatchToProps = (dispatch: AppDispatch): DispatchProps => ({
 
 
 });
-export default page("game")(connect(mapStateToProps, mapDispatchToProps)(Game));
+export default page("entry")(connect(mapStateToProps, mapDispatchToProps)(Entry));
 
 const Container = styled.div`
 

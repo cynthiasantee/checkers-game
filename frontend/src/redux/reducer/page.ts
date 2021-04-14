@@ -3,7 +3,7 @@ import { Page } from "../../pages/page";
 
 const pageSlice = createSlice({
   name: "page",
-  initialState: "login" as Page,
+  initialState: "entry" as Page,
   reducers: {
     changePage: (state, action: PayloadAction<Page>) => {
       return action.payload;

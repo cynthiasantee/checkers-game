@@ -51,4 +51,4 @@ const mapStateToProps = (state: RootState): StateProps => ({
 
   });
   
-export default page("login")(connect(mapStateToProps, mapDispatchToProps)(Login));
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

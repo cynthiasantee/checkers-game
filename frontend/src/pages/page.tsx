@@ -7,8 +7,7 @@ import { changePage as changePageReducer} from "../redux/reducer/page"
 
 export type Page =
   | "home"
-  | "login"
-  | "register"
+  | "entry"
   | "reset-password"
   | "game";
 
@@ -31,7 +30,7 @@ const page = (page: Page) => (Comp: React.ComponentType) => {
     }, [changePage]);
 
     // if the "page" being loaded shows a nav bar, add margin to the page, so the navbar does not overlap the page's content
-    return page === "register" || page === "login" || page === "reset-password" ? (
+    return page === "entry"  || page === "reset-password" ? (
       <Comp></Comp>
     ) : (
       <Margin>

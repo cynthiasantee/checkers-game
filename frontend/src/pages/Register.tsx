@@ -53,4 +53,4 @@ const mapStateToProps = (state: RootState): StateProps => ({
 
   });
   
-export default page("register")(connect(mapStateToProps, mapDispatchToProps)(Register));
+export default connect(mapStateToProps, mapDispatchToProps)(Register);

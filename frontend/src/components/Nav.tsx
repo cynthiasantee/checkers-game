@@ -22,7 +22,7 @@ const NavBar = (props: StateProps & DispatchProps) => {
     props.onLogout();
   }
 
-  return props.page === "login" || props.page === "register" || props.page === "reset-password" ? (
+  return props.page === "entry" || props.page === "reset-password" ? (
     <></>
   ) : (
     <Nav>
