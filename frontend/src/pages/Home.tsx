@@ -94,8 +94,6 @@ const Home = (props: StateProps & DispatchProps) => {
     return <></>;
   }
 
-  // const player = props.player;
-
   const openGames = props.allGames.filter(g => g.player_two_id === null && g.player_one_id !== player.player_id);
   const myGames = props.allGames.filter(g => (g.player_one_id === player.player_id || g.player_two_id === player.player_id) && g.player_two_id !== null && g.winner_id === null);
   const emptyGames = props.allGames.filter(g => g.player_one_id === player.player_id && g.player_two_id === null && g.winner_id === null)

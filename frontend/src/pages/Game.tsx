@@ -3,6 +3,7 @@ import styled from 'styled-components/macro';
 import page from '../pages/page';
 import { Redirect, useParams } from "react-router-dom";
 import { getSocket } from '../websocket';
+
 //Redux
 import { AppDispatch, RootState } from '../redux/store';
 import { connect, useSelector } from 'react-redux';
@@ -84,12 +85,6 @@ const Game = (props: StateProps & DispatchProps) => {
 
       }
     }, [winner]);
-
-    // useEffect(() => {
-    //   if (winnerWasSet === 'success') {
-    //     alert("you have a winner")
-    //   }
-    // }, [winnerWasSet]);
 
     useEffect(() => {
       //join game room

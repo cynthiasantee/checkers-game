@@ -5,10 +5,11 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import PrivateRoute from './pages/PrivateRoute';
-
+import NavBar from './components/Nav'
 const App: React.FC = () => {
   return (
     <Router>
+      <NavBar></NavBar>
       <Switch>
         <PrivateRoute path='/game/:id' component={Game}/>
         <PrivateRoute path='/home' component={Home}/>
