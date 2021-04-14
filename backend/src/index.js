@@ -144,6 +144,12 @@ app.put('/update', async (req, res) => {
   }
 });
 
+//logout
+app.get('/logout', function(req, res){
+  req.logout();
+  res.send('/');
+});
+
 // Server
 const port = process.env.PORT || 3001;
 const server = http.createServer(app);

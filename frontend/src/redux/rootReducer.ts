@@ -16,6 +16,7 @@ import setColors from "./reducer/setColorsReducer";
 import login from "./reducer/loginReducer";
 import register from "./reducer/registerReducer";
 import setWinner from "./reducer/setWinnerReducer";
+import logout from "./reducer/logoutReducer";
 
 export default combineReducers({
   page,
@@ -35,4 +36,5 @@ export default combineReducers({
   login,
   register,
   setWinner,
+  logout,
 });
