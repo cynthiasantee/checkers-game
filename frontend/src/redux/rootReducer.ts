@@ -17,6 +17,7 @@ import login from "./reducer/loginReducer";
 import register from "./reducer/registerReducer";
 import setWinner from "./reducer/setWinnerReducer";
 import logout from "./reducer/logoutReducer";
+import resetPassword from "./reducer/resetPasswordReducer";
 
 export default combineReducers({
   page,
@@ -37,4 +38,5 @@ export default combineReducers({
   register,
   setWinner,
   logout,
+  resetPassword,
 });

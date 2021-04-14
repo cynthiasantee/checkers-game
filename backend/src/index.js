@@ -138,7 +138,7 @@ app.post('/register', async (req, res) => {
 app.put('/update', async (req, res) => {
   try {
       await playerService.updatePassword(req.body.email, req.body.password);
-      res.status(200).send("PASSWORD_UPDATED").end();
+      res.status(200).send("/").end();
   } catch(err) {
       return res.errorHandler(err);
   }

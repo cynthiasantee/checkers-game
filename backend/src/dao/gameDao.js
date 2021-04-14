@@ -61,8 +61,6 @@ const setColors = async (player_one_id, player_id, color, game_id) => {
   );
 };
 
-//        player_id !== player_one_id ? color : color === "white" ? "black" : "white",
-
 export const gameDao = {
   getGames,
   getGameById,
