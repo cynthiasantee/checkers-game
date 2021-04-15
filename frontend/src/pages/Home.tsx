@@ -29,6 +29,7 @@ import {fetchGames } from "../redux/thunk/getGamesThunk";
 import { SelectAddSecondPlayer } from '../redux/selector/addSecondPlayerSelector';
 import { addSecondPlayer } from "../redux/thunk/addSecondPlayerThunk";
 import { SecondPlayer } from '../redux/api/addSecondPlayerApi';
+import logoTwo from '../logo/logoTwo.png'
 
 interface StateProps {
   player?: Player;
@@ -102,12 +103,25 @@ const Home = (props: StateProps & DispatchProps) => {
 
   return (
     <Container>
-      <p>Welcome, {player.player_username}!</p>
-      <p>Wins: {props.playerWins || 0}</p>
-      <p>Losses: {props.playerLosses}</p>
+      <img src={logoTwo} alt="logo" />
+      <div className="player-info-outer">
+        <span className="player-info-inner">
+          <p>Welcome,</p>
+          <p>{player.player_username}!</p>
+        </span>
+        <span className="player-info-inner">
+          <p>Wins:</p>
+          <p>{props.playerWins || 0}</p>
+        </span>
+        <span className="player-info-inner">
+          <p>Losses:</p>
+          <p>{props.playerLosses}</p>
+        </span>
+      </div>
+
       <button onClick={() => props.createGame(props.player?.player_id || 0)}>Start a new game?</button>
       
-      {openGames.length && <h3>Join?</h3>}
+      {!!openGames.length && <h3>Join?</h3>}
       
       {openGames.map(game => {
         const onGameClick = () => {
@@ -119,7 +133,7 @@ const Home = (props: StateProps & DispatchProps) => {
         )
       })}
 
-      {myGames.length && <h3>My ongoing games</h3>}
+      {!!myGames.length && <h3>My ongoing games:</h3>}
       
       
       {myGames.map(game => {
@@ -131,7 +145,9 @@ const Home = (props: StateProps & DispatchProps) => {
         )
       })}
 
-      <h3>My Empty Games:</h3>
+      {!myGames.length && !openGames.length && <h3 style={{padding: "10px", textAlign: "center"}}>There are no games for you to join at the moment</h3>}
+
+      {!!emptyGames.length && <h3>Waiting for opponent:</h3>}
       
       {emptyGames.map((game, i) => {
         const onGameClick = () => {
@@ -141,6 +157,8 @@ const Home = (props: StateProps & DispatchProps) => {
           <button onClick={onGameClick} key={game.id}>My game #{i+1}</button>
         )
       })}
+
+      
 
 
       {/* Users: {userIds.map(id => <div>User {id}</div>)}  */}
@@ -157,9 +175,46 @@ const Container = styled.div`
   flex-direction: column;
   width: 100%;
 
-button {
-  ${homeButtonStyle};
-}
+  img {
+    margin: 20px auto 20px 20px;
+  }
+
+  .player-info-outer{
+    display: flex;
+    width: 95%;
+    justify-content: space-around;
+    border: 1px solid gray;
+    background-color: #F0F0F0;
+    border-radius: 5px;
+    margin-bottom: 20px;
+
+    @media (max-width: 500px) {
+      flex-direction: column;
+    }
+  }
+
+  .player-info-inner{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 2px;
+
+    @media (max-width: 500px) {
+      
+      flex-direction: row;
+    }
+
+    p{
+      margin: 5px;
+      font-weight: bold;
+      font-size: 20px;
+    }
+  }
+
+  button {
+    ${homeButtonStyle};
+  }
 `
 
 const mapStateToProps = (state: RootState): StateProps => ({

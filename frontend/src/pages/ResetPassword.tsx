@@ -72,9 +72,9 @@ const Container = styled.div`
   flex-direction: column;
 
   img {
-    height: 200px;
+    height: 87px;
     width: 200px;
-    margin-left: 20px;
+    margin: 20px 0 20px 20px;
   }
 
   .form-container {

@@ -28,9 +28,7 @@ export default page("entry")(Entry);
 
 const Container = styled.div`  
   img {
-    height: 200px;
-    width: 200px;
-    margin-left: 20px;
+    margin: 20px 0 20px 20px;
   }
 
   .form-container {
