@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import page from './page';
 import { MyKnownError } from '../redux/util/myKnownError';
 import { FetchStatus } from '../redux/util/fetchStatus';
@@ -23,10 +23,18 @@ interface DispatchProps {
 
 const ResetPassword = (props: StateProps & DispatchProps) => {
     const { register, handleSubmit } = useForm<ResetPasswordType>();
+    const { fetchStatusResetPassword } = props
 
     const onSubmit = handleSubmit(({ email, password }) => {
         props.resetPasswordFetch({email, password})
     });
+
+    useEffect(() => {
+        if (fetchStatusResetPassword === "success") {
+            alert("Password changed succesfully")
+        }    
+      }, [fetchStatusResetPassword]);
+  
 
     return(
         <form onSubmit={onSubmit}>

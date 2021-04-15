@@ -37,6 +37,8 @@ import { Winner } from "../redux/api/setWinnerApi";
 import { createGameReset } from "../redux/reducer/createGameReducer"
 //add second player
 import { addSecondPlayerReset } from "../redux/reducer/addSecondPlayerReducer"
+//Box
+import Box from '../components/Box';
 
 interface StateProps {
   player?: Player;
@@ -73,7 +75,6 @@ const Game = (props: StateProps & DispatchProps) => {
 
     useEffect(() => {
       if (gameChanged) {
-        debugger;
         getGame(parseInt(id));
         getCurrBoard(parseInt(id));
         setGameChanged(false);
@@ -138,33 +139,43 @@ const Game = (props: StateProps & DispatchProps) => {
   }
 
   const otherPlayerId = game.player_one_id === player.player_id ? game.player_two_id : game.player_one_id;
+  const pickYourColor = game.player_two_id && !game.player_one_color;
+  const yourColor: string | null = player.player_id === game.player_one_id ? game.player_one_color : game.player_two_color;
 
   const changeTurnHandler = () => {
     otherPlayerId && props.changeTurn({other_player_id: otherPlayerId}, parseInt(id));
   }
 
   return (
-    <div>
-      <p>Player one ID: {game.player_one_id}</p>
-      <p>Player one username: {game.player_one_username}</p>
-      <p>Player one color: {game.player_one_color}</p>
-      <p>-------------------------</p>
-      <p>Player two ID: {game.player_two_id}</p>
-      <p>Player two username: {game.player_two_username}</p>
-      <p>Player two color: {game.player_two_color}</p>
-      <p>-------------------------</p>
-      <p>Player turn: {game.turn}</p>
-
-      {otherPlayerId && <button disabled={game.turn !== player.player_id} onClick={changeTurnHandler}>Change Turn</button>}
-
-      <p>Pick your color:</p>
-      {otherPlayerId && <button disabled={game.player_one_color !== null} onClick={() => props.setColors({ player_one_id: game.player_one_id, player_id: player.player_id || 0, color: "black"}, parseInt(id))}>Black</button>}
-      {otherPlayerId && <button disabled={game.player_one_color !== null} onClick={() => props.setColors({ player_one_id: game.player_one_id, player_id: player.player_id || 0, color: "white"}, parseInt(id))}>White</button>}
-
-      <p>Give up:</p>
-      {otherPlayerId && <button disabled={game.winner_id !== null} onClick={() => props.setWinner(parseInt(id), {winner_id: otherPlayerId}) }>Give Up</button>}
-      
     <Container>
+      <div className="players-container">
+        <Box>{game.player_one_username}</Box>&nbsp; VS &nbsp;<Box>{game.player_two_username ? game.player_two_username : "???"}</Box>
+      </div>
+
+      {pickYourColor && 
+      <div className="players-container">
+        <p>Pick your color:</p>
+        {otherPlayerId && <button disabled={game.player_one_color !== null} onClick={() => props.setColors({ player_one_id: game.player_one_id, player_id: player.player_id || 0, color: "black"}, parseInt(id))}>Black</button>}
+        {otherPlayerId && <button disabled={game.player_one_color !== null} onClick={() => props.setColors({ player_one_id: game.player_one_id, player_id: player.player_id || 0, color: "white"}, parseInt(id))}>White</button>}
+      </div>
+      }
+
+      {yourColor !== null && 
+      <div className="players-container">
+        <p>Your color is: {yourColor}</p>
+      </div>
+      }   
+
+      <div className="players-container">
+        <p>{game.turn === player.player_id ? "It is your turn" : "It is not your turn"}</p>
+        {otherPlayerId && <button disabled={game.turn !== player.player_id} onClick={changeTurnHandler}>Change Turn</button>}
+      </div>
+
+      <div className="players-container">
+        {otherPlayerId && <button disabled={game.winner_id !== null} onClick={() => props.setWinner(parseInt(id), {winner_id: otherPlayerId}) }>Give Up?</button>}
+      </div>
+      
+    { yourColor && <div className="board" style={{transform: `${yourColor === "black" ? "rotateX(0)" : "rotateX(180deg)"}`}}>
       {props.currBoard.map(row => row.map(square => {
         if (square.squareColor === 'black') {
           if (square.piece === null) {
@@ -202,10 +213,11 @@ const Game = (props: StateProps & DispatchProps) => {
           return <Square color="white" location={square.location} hasPiece={square.piece === null ? false : true} key={square.location.toString()}></Square>
         }
       }))}
-    </Container>
+    </div>
+    }
     {game.player_one_id && game.player_one_id !== player.player_id && game.player_two_id && game.player_two_id !== player.player_id && <Redirect to={'/home'} /> }
     {players.map(id => <div>Player {id}</div>)}
-    </div>
+    </Container>
   );
 }
 
@@ -231,10 +243,25 @@ const mapDispatchToProps = (dispatch: AppDispatch): DispatchProps => ({
 export default page("game")(connect(mapStateToProps, mapDispatchToProps)(Game));
 
 const Container = styled.div`
+display: flex;
+width: 100%;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+
+.board {
   height: 640px;
   width: 640px;
   display: flex;
   flex: direction: row;
   flex-wrap: wrap;
-  border: 1px solid black
+  border: 1px solid black;
+}
+
+.players-container {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+}
 `

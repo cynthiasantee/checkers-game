@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import page from './page';
 import { MyKnownError } from '../redux/util/myKnownError';
 import { FetchStatus } from '../redux/util/fetchStatus';
@@ -24,10 +24,17 @@ interface DispatchProps {
 
 const Register = (props: StateProps & DispatchProps) => {
     const { register, handleSubmit } = useForm<RegisterType>();
+    const { fetchStatusRegister } = props;
 
     const onSubmit = handleSubmit(({ email, username, password }) => {
         props.registerFetch({email, username, password})
     });
+
+    useEffect(() => {
+        if (fetchStatusRegister === "success") {
+            alert("Account created succesfully")
+        }    
+      }, [fetchStatusRegister]);
 
     return(
         <form onSubmit={onSubmit}>
