@@ -1,41 +1,51 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import styled from 'styled-components/macro';
 import page from './page';
-
-//Redux
-import { AppDispatch, RootState } from '../redux/store';
-import { connect } from 'react-redux';
 import Register from './Register';
 import Login from './Login';
+import logoTwo from '../logo/logoTwo.png'
 
-interface StateProps {
 
-}
-
-interface DispatchProps {
-
-}
-
-const Entry = (props: StateProps & DispatchProps) => {
+const Entry = () => {
 
   return (
-    <>
-      <Register></Register>
-      <Login></Login>
-   </>
+    <Container>
+      <img src={logoTwo} alt="logo" />
+      <div className="form-container-wrapper">
+        <div className="form-container">
+          <Login></Login>
+        </div>
+        <div className="form-container">
+          <Register></Register>
+        </div>
+      </div>
+
+   </Container>
   );
 }
 
-const mapStateToProps = (state: RootState): StateProps => ({
+export default page("entry")(Entry);
 
-});
+const Container = styled.div`  
+  img {
+    height: 200px;
+    width: 200px;
+    margin-left: 20px;
+  }
 
-const mapDispatchToProps = (dispatch: AppDispatch): DispatchProps => ({
+  .form-container {
+    display: inline-block;
+    margin: 10px;
 
+    @media (max-width: 500px) {
+      width: 90%;
+    }
+  }
 
-});
-export default page("entry")(connect(mapStateToProps, mapDispatchToProps)(Entry));
-
-const Container = styled.div`
-
+  .form-container-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+  }
 `

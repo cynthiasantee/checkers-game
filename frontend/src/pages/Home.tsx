@@ -3,6 +3,8 @@ import { FetchStatus } from '../redux/util/fetchStatus';
 import page from './page';
 import { Redirect } from "react-router-dom";
 import { getSocket } from '../websocket';
+import { homeButtonStyle } from "../styles/homeButtonStyle"
+import styled from 'styled-components/macro';
 //Redux
 import { AppDispatch, RootState } from '../redux/store';
 import { connect } from 'react-redux';
@@ -99,13 +101,15 @@ const Home = (props: StateProps & DispatchProps) => {
   const emptyGames = props.allGames.filter(g => g.player_one_id === player.player_id && g.player_two_id === null && g.winner_id === null)
 
   return (
-    <div>
+    <Container>
       <p>Welcome, {player.player_username}!</p>
       <p>Wins: {props.playerWins || 0}</p>
       <p>Losses: {props.playerLosses}</p>
       <button onClick={() => props.createGame(props.player?.player_id || 0)}>Start a new game?</button>
       
-      <p>Open Games:{openGames.map(game => {
+      {openGames.length && <h3>Join?</h3>}
+      
+      {openGames.map(game => {
         const onGameClick = () => {
           setGameId(game.id);
           props.addSecondPlayer({player_two_id: player.player_id}, game.id);
@@ -113,34 +117,50 @@ const Home = (props: StateProps & DispatchProps) => {
         return(
           <button onClick={onGameClick} key={game.id}>Game started by {game.player_one_username}</button>
         )
-      })}</p>
+      })}
 
-      <p>My Games:{myGames.map(game => {
+      {myGames.length && <h3>My ongoing games</h3>}
+      
+      
+      {myGames.map(game => {
         const onGameClick = () => {
           setGoToGame(game.id);
         }
         return(
           <button onClick={onGameClick} key={game.id}>Game against {game.player_one_id === player.player_id ? game.player_two_username : game.player_one_username}</button>
         )
-      })}</p>
+      })}
 
-      <p>My Empty Games:{emptyGames.map((game, i) => {
+      <h3>My Empty Games:</h3>
+      
+      {emptyGames.map((game, i) => {
         const onGameClick = () => {
           setGoToGame(game.id);
         }
         return(
-          <button onClick={onGameClick} key={game.id}>My game {i+1}</button>
+          <button onClick={onGameClick} key={game.id}>My game #{i+1}</button>
         )
-      })}</p>
+      })}
 
 
-      Users: {userIds.map(id => <div>User {id}</div>)} 
+      {/* Users: {userIds.map(id => <div>User {id}</div>)}  */}
       {props.fetchStatusCreateGame === "success" && <Redirect to={`/game/${props.newGame?.new_game_id}`} /> }
       {props.fetchStatusSecondPlayer === "success" && <Redirect to={`/game/${gameId}`} /> }
       {goToGame && <Redirect to={`/game/${goToGame}`} />}
-    </div>
+    </Container>
   );
 }
+
+const Container = styled.div`
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+
+button {
+  ${homeButtonStyle};
+}
+`
 
 const mapStateToProps = (state: RootState): StateProps => ({
   player: SelectPlayer.data(state),

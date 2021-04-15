@@ -7,6 +7,7 @@ import { SelectLogout } from '../redux/selector/logoutSelector';
 import { AppDispatch, RootState } from '../redux/store';
 import { navBarHeight } from '../util/navBarHeight';
 import { logout } from "../redux/thunk/logoutThunk";
+import logoOne from '../logo/logoOne.png'
 
 interface StateProps {
   page: Page;
@@ -27,7 +28,8 @@ const NavBar = (props: StateProps & DispatchProps) => {
   ) : (
     <Nav>
       <ul>
-        <li>
+        <img src={logoOne} alt="logo" />
+        <li className="first">
           <Link to="/home">Home</Link>
         </li>
         <li className="last">
@@ -51,30 +53,52 @@ const mapDispatchToProps = (dispatch: AppDispatch): DispatchProps => ({
 export default connect(mapStateToProps, mapDispatchToProps)(NavBar);
 
 const Nav = styled.nav`
+  display: flex;
+  align-items: center;
   position: fixed;
   top: 0;
   width: 100%;
   min-height: ${navBarHeight};
-  background-color: gray;
+  background-color: #555555;
+  z-index: 99;
+
+  img {
+    height: 50px;
+    width: 50px;
+  }
 
   ul {
     display: flex;
     flex-direction: row;
-    margin: 10px;
+    width: 100%;
+    margin: 0;
     
 
-    li {
+  li {
       list-style-type: none;
-      font-size: 1.8rem;
+      font-size: 1.7rem;
+      display: flex;
+      align-items: center;
+
+      @media (max-width: 500px) {
+        margin-top: 8px;
+        font-size: 1.2rem;
+      }
 
       a {
+        color: white;
         text-decoration: none;
+        font-weight: bold;
       }
-    }
+  }
 
     .last {
-      margin-left: auto;
       margin-right: 40px;
+      margin-left: auto;
+    }
+
+    .first {
+      margin-left: 20px;
     }
   }
 `

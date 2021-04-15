@@ -3,7 +3,7 @@ import styled from 'styled-components/macro';
 import page from '../pages/page';
 import { Redirect, useParams } from "react-router-dom";
 import { getSocket } from '../websocket';
-
+import { buttonStyle } from "../styles/buttonStyle"
 //Redux
 import { AppDispatch, RootState } from '../redux/store';
 import { connect, useSelector } from 'react-redux';
@@ -125,7 +125,7 @@ const Game = (props: StateProps & DispatchProps) => {
 
     socket.on('winner_set', () => {
       setGameInfoChanged(true);
-      alert('there was a winner')
+      alert(`The game is over! Someone gave up!`);
     })
 
       return () => {
@@ -166,14 +166,19 @@ const Game = (props: StateProps & DispatchProps) => {
       </div>
       }   
 
-      <div className="players-container">
+      { game.player_one_color !== null && 
+        <div className="players-container">
         <p>{game.turn === player.player_id ? "It is your turn" : "It is not your turn"}</p>
         {otherPlayerId && <button disabled={game.turn !== player.player_id} onClick={changeTurnHandler}>Change Turn</button>}
-      </div>
+    </div>
+      }
 
-      <div className="players-container">
-        {otherPlayerId && <button disabled={game.winner_id !== null} onClick={() => props.setWinner(parseInt(id), {winner_id: otherPlayerId}) }>Give Up?</button>}
-      </div>
+      {game.player_one_color !== null && 
+            <div className="players-container">
+            {otherPlayerId && <button disabled={game.winner_id !== null} onClick={() => props.setWinner(parseInt(id), {winner_id: otherPlayerId}) }>Give Up?</button>}
+          </div>
+      }
+
       
     { yourColor && <div className="board" style={{transform: `${yourColor === "black" ? "rotateX(0)" : "rotateX(180deg)"}`}}>
       {props.currBoard.map(row => row.map(square => {
@@ -216,7 +221,7 @@ const Game = (props: StateProps & DispatchProps) => {
     </div>
     }
     {game.player_one_id && game.player_one_id !== player.player_id && game.player_two_id && game.player_two_id !== player.player_id && <Redirect to={'/home'} /> }
-    {players.map(id => <div>Player {id}</div>)}
+    {/* {players.map(id => <div>Player {id}</div>)} */}
     </Container>
   );
 }
@@ -263,5 +268,9 @@ justify-content: center;
   width: 100%;
   align-items: center;
   justify-content: center;
+}
+
+button {
+  ${buttonStyle};
 }
 `

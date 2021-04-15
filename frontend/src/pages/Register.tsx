@@ -3,6 +3,8 @@ import page from './page';
 import { MyKnownError } from '../redux/util/myKnownError';
 import { FetchStatus } from '../redux/util/fetchStatus';
 import { useForm } from "react-hook-form";
+import styled from 'styled-components/macro';
+import { formStyle } from "../styles/formStyle"
 //Register fetch
 import { SelectRegister } from '../redux/selector/registerSelector';
 import { register as registerFetch} from "../redux/thunk/registerThunk";
@@ -10,6 +12,7 @@ import { Register as RegisterType} from '../redux/api/registerApi';
 //Redux
 import { connect } from 'react-redux';
 import { AppDispatch, RootState } from '../redux/store';
+import { Link } from 'react-router-dom';
 
 interface StateProps {
     //register
@@ -37,17 +40,33 @@ const Register = (props: StateProps & DispatchProps) => {
       }, [fetchStatusRegister]);
 
     return(
-        <form onSubmit={onSubmit}>
-            <label>Username</label>
-            <input name="username" ref={register} />
-            <label>Email</label>
-            <input name="email" ref={register} />
-            <label>Password</label>
-            <input name="password" ref={register} />
-            <input type="submit"></input>
-        </form>
+        <Form onSubmit={onSubmit}>
+            <h3>Register</h3>
+            <ul>
+                <li>
+                    <label>Username</label>
+                    <input name="username" type="text" ref={register} />
+                </li>
+                <li>
+                    <label>Email</label>
+                    <input name="email" type="text" ref={register} />
+                </li>
+                <li>
+                    <label>Password</label>
+                    <input name="password" type="password" ref={register} />
+                </li>
+                <li className="button">
+                    <input type="submit"></input>
+                </li>
+            </ul>
+        </Form>
     )
 }
+
+const Form = styled.form`
+    ${formStyle};
+`;
+
 const mapStateToProps = (state: RootState): StateProps => ({
     //Register fetch
     register: SelectRegister.data(state),
