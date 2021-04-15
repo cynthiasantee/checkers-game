@@ -121,7 +121,7 @@ app.post('/login',
   passport.authenticate('local'),
   function(req, res) {
     var origin = req.get('Origin')
-    res.send(origin + '/home/' + req.user.id);
+    res.send(origin + '/home');
 });
 
 //create player

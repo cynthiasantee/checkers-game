@@ -76,8 +76,8 @@ const getPlayerWins = async (id) => {
     return wins;
 };
 
-const getPlayerTotalGames = async (id) => {
-    const total = await playerDao.getPlayerTotalGames(id);
+const getPlayerLosses = async (id) => {
+    const total = await playerDao.getPlayerLosses(id);
     if (!total.rows|| !total.rows.length) throw Errors.PLAYER_TOTAL_FAILED;
     return total;
 };
@@ -88,7 +88,7 @@ export const playerService = {
     createPlayer,
     updatePassword,
     getPlayerWins,
-    getPlayerTotalGames,
+    getPlayerLosses,
     getPlayerByEmail,
     getPlayerInfo
 };

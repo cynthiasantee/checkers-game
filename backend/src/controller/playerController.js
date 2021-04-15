@@ -24,7 +24,7 @@ router.get('/all', async (_, res) => {
 //get player wins
 router.get('/wins/:id', async (req, res) => {
     try {
-        const wins = await playerService.getPlayerWins(req.body.id);
+        const wins = await playerService.getPlayerWins(req.params.id);
         res.status(200).send(wins.rows[0].count).end();
     } catch(err) {
         return res.errorHandler(err);
@@ -34,7 +34,7 @@ router.get('/wins/:id', async (req, res) => {
 //get player total
 router.get('/total/:id', async (req, res) => {
     try {
-        const total = await playerService.getPlayerTotalGames(req.body.id);
+        const total = await playerService.getPlayerLosses(req.params.id);
         res.status(200).send(total.rows[0].count).end();
     } catch(err) {
         return res.errorHandler(err);

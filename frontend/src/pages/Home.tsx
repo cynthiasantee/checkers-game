@@ -13,8 +13,8 @@ import { SelectPlayer } from '../redux/selector/getPlayerSelector';
 import { SelectPlayerWins } from '../redux/selector/getPlayerWinsSelector';
 import { fetchPlayerWins } from "../redux/thunk/getPlayerWinsThunk";
 //Player total games
-import { SelectPlayerTotalGames } from '../redux/selector/getPlayerTotalGamesSelector';
-import { fetchPlayerTotalGames } from "../redux/thunk/getPlayerTotalGamesThunk";
+import { SelectPlayerLosses } from '../redux/selector/getPlayerLossesSelector';
+import { fetchPlayerLosses } from "../redux/thunk/getPlayerLossesThunk";
 //Create game
 import { NewGameId } from '../redux/api/createGameApi';
 import { SelectCreateGame } from '../redux/selector/createGameSelector';
@@ -31,7 +31,7 @@ import { SecondPlayer } from '../redux/api/addSecondPlayerApi';
 interface StateProps {
   player?: Player;
   playerWins?: number;
-  playerTotalGames?: number;
+  playerLosses?: number;
   newGame?: NewGameId;
   fetchStatusCreateGame: FetchStatus;
   allGames?: Game[];
@@ -40,21 +40,21 @@ interface StateProps {
 
 interface DispatchProps {
   getPlayerWins: (id: number) => void;
-  getPlayerTotalGames: (id: number) => void;
+  getPlayerLosses: (id: number) => void;
   createGame: (id: number) => void;
   getGames: () => void;
   addSecondPlayer: (player: SecondPlayer, id: number) => void;
 }
 
 const Home = (props: StateProps & DispatchProps) => {
-    const { getPlayerWins, getPlayerTotalGames, getGames, player } = props;
+    const { getPlayerWins, getPlayerLosses, getGames, player } = props;
     const [userIds, setUserIds] = useState([] as string[]);
     const [newGame, setNewGame] = useState(true);
 
   useEffect(() => {
     getPlayerWins(player?.player_id || 0);
-    getPlayerTotalGames(player?.player_id || 0);
-  }, [ getPlayerWins, getPlayerTotalGames, player]);
+    getPlayerLosses(player?.player_id || 0);
+  }, [ getPlayerWins, getPlayerLosses, player]);
 
   useEffect(() => {
     if (newGame) {
@@ -86,9 +86,9 @@ const Home = (props: StateProps & DispatchProps) => {
   const [gameId, setGameId] = useState(undefined as undefined | number);
   const [goToGame, setGoToGame] = useState(undefined as undefined | number);
 
-//   if (props.error === "400") {
-//     return <Redirect to="/bad-request" />;
-//   }
+  // if (props.error === "400") {
+  //   return <Redirect to="/bad-request" />;
+  // }
 
   if (!props.allGames || !player) {
     return <></>;
@@ -102,7 +102,7 @@ const Home = (props: StateProps & DispatchProps) => {
     <div>
       <p>Welcome, {player.player_username}!</p>
       <p>Wins: {props.playerWins || 0}</p>
-      <p>Losses: {(props.playerTotalGames || 0) - (props.playerWins || 0)}</p>
+      <p>Losses: {props.playerLosses}</p>
       <button onClick={() => props.createGame(props.player?.player_id || 0)}>Start a new game?</button>
       
       <p>Open Games:{openGames.map(game => {
@@ -145,7 +145,7 @@ const Home = (props: StateProps & DispatchProps) => {
 const mapStateToProps = (state: RootState): StateProps => ({
   player: SelectPlayer.data(state),
   playerWins: SelectPlayerWins.data(state),
-  playerTotalGames: SelectPlayerTotalGames.data(state),
+  playerLosses: SelectPlayerLosses.data(state),
   newGame: SelectCreateGame.data(state),
   fetchStatusCreateGame: SelectCreateGame.status(state),
   allGames: SelectGames.data(state),
@@ -154,7 +154,7 @@ const mapStateToProps = (state: RootState): StateProps => ({
 
 const mapDispatchToProps = (dispatch: AppDispatch): DispatchProps => ({
   getPlayerWins: (id) => dispatch(fetchPlayerWins(id)),
-  getPlayerTotalGames: (id) => dispatch(fetchPlayerTotalGames(id)),
+  getPlayerLosses: (id) => dispatch(fetchPlayerLosses(id)),
   createGame: (id) => dispatch(createGame(id)),
   getGames: () => dispatch(fetchGames()),
   addSecondPlayer: (player, id) => dispatch(addSecondPlayer({player_two_id: player.player_two_id}, id))

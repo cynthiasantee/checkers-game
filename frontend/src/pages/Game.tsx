@@ -33,6 +33,10 @@ import { SelectSetWinner } from '../redux/selector/setWinnerSelector';
 import { setWinnerReset } from "../redux/reducer/setWinnerReducer"
 import { setWinner } from "../redux/thunk/setWinnerThunk";
 import { Winner } from "../redux/api/setWinnerApi";
+//create game
+import { createGameReset } from "../redux/reducer/createGameReducer"
+//add second player
+import { addSecondPlayerReset } from "../redux/reducer/addSecondPlayerReducer"
 
 interface StateProps {
   player?: Player;
@@ -49,11 +53,13 @@ interface DispatchProps {
   setColors: (colorInfo: SetColor, game_id: number) => void;
   resetSetWinner: () => void;
   setWinner: (id: number, winner_id: Winner) => void;
+  resetCreateGame: () => void;
+  resetAddSecondPlayer: () => void;
 }
 
 const Game = (props: StateProps & DispatchProps) => {
     const { id } = useParams<{ id: string }>();
-    const { getGame, getCurrBoard, game, player } = props;
+    const { getGame, getCurrBoard, game, player, resetCreateGame, resetAddSecondPlayer } = props;
     const [players, setPlayers] = useState([] as number[]);
     const [gameChanged, setGameChanged] = useState(true);
     const [gameInfoChanged, setGameInfoChanged] = useState(false);
@@ -61,7 +67,13 @@ const Game = (props: StateProps & DispatchProps) => {
     const winnerWasSet = useSelector(SelectSetWinner.status);
 
     useEffect(() => {
+      resetCreateGame();
+      resetAddSecondPlayer();
+    });
+
+    useEffect(() => {
       if (gameChanged) {
+        debugger;
         getGame(parseInt(id));
         getCurrBoard(parseInt(id));
         setGameChanged(false);
@@ -211,7 +223,9 @@ const mapDispatchToProps = (dispatch: AppDispatch): DispatchProps => ({
   changeTurn: (other_player_id, game_id) => dispatch(changeTurn(other_player_id, game_id)),
   setColors: (colorInfo, game_id) => dispatch(setColors(colorInfo, game_id)),
   resetSetWinner: () => dispatch(setWinnerReset()),
-  setWinner: (id, winner_id) => dispatch(setWinner(id, winner_id))
+  setWinner: (id, winner_id) => dispatch(setWinner(id, winner_id)),
+  resetCreateGame: () => dispatch(createGameReset()),
+  resetAddSecondPlayer: () => dispatch(addSecondPlayerReset())
 
 });
 export default page("game")(connect(mapStateToProps, mapDispatchToProps)(Game));

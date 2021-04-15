@@ -56,9 +56,9 @@ const getPlayerWins = async (id) => {
   );
 };
 
-const getPlayerTotalGames = async (id) => {
+const getPlayerLosses = async (id) => {
   return await pgClient.query(
-    `SELECT COUNT(id) FROM game WHERE player_one_id = $1 OR player_two_id = $1`,
+    `SELECT COUNT(id) FROM game WHERE winner_id IS NOT NULL AND (player_one_id = $1 OR player_two_id = $1) AND id != winner_id`,
       [id]
   );
 };
@@ -71,6 +71,6 @@ export const playerDao = {
   usernameCheck,
   updatePassword,
   getPlayerWins,
-  getPlayerTotalGames,
+  getPlayerLosses,
   getPlayerByEmail
 };

@@ -9,6 +9,7 @@ export type Page =
   | "home"
   | "entry"
   | "reset-password"
+  | "bad-request"
   | "game";
 
 interface StateProps {}
@@ -30,7 +31,7 @@ const page = (page: Page) => (Comp: React.ComponentType) => {
     }, [changePage]);
 
     // if the "page" being loaded shows a nav bar, add margin to the page, so the navbar does not overlap the page's content
-    return page === "entry"  || page === "reset-password" ? (
+    return page === "entry"  || page === "reset-password" || page === "bad-request"? (
       <Comp></Comp>
     ) : (
       <Margin>

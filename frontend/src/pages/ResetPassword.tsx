@@ -13,7 +13,6 @@ import { AppDispatch, RootState } from '../redux/store';
 
 interface StateProps {
     //reset password
-    resetPassword?: string;
     errorResetPassword?: MyKnownError;
     fetchStatusResetPassword: FetchStatus;
 }
@@ -41,7 +40,6 @@ const ResetPassword = (props: StateProps & DispatchProps) => {
 }
 const mapStateToProps = (state: RootState): StateProps => ({
     //ResetPassword fetch
-    resetPassword: SelectResetPassword.data(state),
     errorResetPassword: SelectResetPassword.error(state),
     fetchStatusResetPassword: SelectResetPassword.status(state),
   });

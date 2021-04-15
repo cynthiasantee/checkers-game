@@ -3,7 +3,7 @@ import page from "./reducer/page";
 import selectPiece from "./reducer/selectPiece";
 import player from "./reducer/getPlayerReducer";
 import playerWins from "./reducer/getPlayerWinsReducer";
-import playerTotalGames from "./reducer/getPlayerTotalGamesReducer";
+import playerLosses from "./reducer/getPlayerLossesReducer";
 import createGame from "./reducer/createGameReducer";
 import addMove from "./reducer/addMoveReducer";
 import getGame from "./reducer/getGameReducer";
@@ -23,7 +23,7 @@ export default combineReducers({
   page,
   player,
   playerWins,
-  playerTotalGames,
+  playerLosses,
   createGame,
   addMove,
   selectPiece,
