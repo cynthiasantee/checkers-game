@@ -3,7 +3,7 @@ import styled from 'styled-components/macro';
 import page from '../pages/page';
 import { Redirect, useParams } from "react-router-dom";
 import { getSocket } from '../websocket';
-import { buttonStyle } from "../styles/buttonStyle"
+import { homeButtonStyle } from "../styles/homeButtonStyle";
 //Redux
 import { AppDispatch, RootState } from '../redux/store';
 import { connect, useSelector } from 'react-redux';
@@ -39,6 +39,7 @@ import { createGameReset } from "../redux/reducer/createGameReducer"
 import { addSecondPlayerReset } from "../redux/reducer/addSecondPlayerReducer"
 //Box
 import Box from '../components/Box';
+import Color from '../components/Color';
 
 interface StateProps {
   player?: Player;
@@ -148,78 +149,84 @@ const Game = (props: StateProps & DispatchProps) => {
 
   return (
     <Container>
-      <div className="players-container">
+      <div className="players-info-container">
         <Box>{game.player_one_username}</Box>&nbsp; VS &nbsp;<Box>{game.player_two_username ? game.player_two_username : "???"}</Box>
       </div>
 
-      {pickYourColor && 
-      <div className="players-container">
-        <p>Pick your color:</p>
-        {otherPlayerId && <button disabled={game.player_one_color !== null} onClick={() => props.setColors({ player_one_id: game.player_one_id, player_id: player.player_id || 0, color: "black"}, parseInt(id))}>Black</button>}
-        {otherPlayerId && <button disabled={game.player_one_color !== null} onClick={() => props.setColors({ player_one_id: game.player_one_id, player_id: player.player_id || 0, color: "white"}, parseInt(id))}>White</button>}
-      </div>
-      }
-
-      {yourColor !== null && 
-      <div className="players-container">
-        <p>Your color is: {yourColor}</p>
-      </div>
-      }   
-
-      { game.player_one_color !== null && 
-        <div className="players-container">
-        <p>{game.turn === player.player_id ? "It is your turn" : "It is not your turn"}</p>
-        {otherPlayerId && <button disabled={game.turn !== player.player_id} onClick={changeTurnHandler}>Change Turn</button>}
-    </div>
-      }
-
-      {game.player_one_color !== null && 
-            <div className="players-container">
-            {otherPlayerId && <button disabled={game.winner_id !== null} onClick={() => props.setWinner(parseInt(id), {winner_id: otherPlayerId}) }>Give Up?</button>}
+      <div className="game-info-and-game-container">
+        {otherPlayerId !== null && 
+        <div className="game-info-container">
+        {pickYourColor && 
+          <div className="flex" style={{flexDirection: "column"}}>
+            <p>Pick your color:</p>
+            {otherPlayerId && <button disabled={game.player_one_color !== null} onClick={() => props.setColors({ player_one_id: game.player_one_id, player_id: player.player_id || 0, color: "black"}, parseInt(id))}>Black</button>}
+            {otherPlayerId && <button disabled={game.player_one_color !== null} onClick={() => props.setColors({ player_one_id: game.player_one_id, player_id: player.player_id || 0, color: "white"}, parseInt(id))}>White</button>}
           </div>
-      }
-
-      
-    { yourColor && <div className="board" style={{transform: `${yourColor === "black" ? "rotateX(0)" : "rotateX(180deg)"}`}}>
-      {props.currBoard.map(row => row.map(square => {
-        if (square.squareColor === 'black') {
-          if (square.piece === null) {
-            return <Square color="black" location={square.location} hasPiece={square.piece === null ? false : true} key={square.location.toString()}></Square>
-          } else if (square.piece.color === 'white' && square.piece.isDouble === false) {
-            return(
-            <Square color="black" location={square.location} hasPiece={square.piece === null ? false : true} key={square.location.toString()}>
-              <Piece color="white" id={square.piece.id} isDouble={square.piece.isDouble} squareLocation={square.location}></Piece>
-            </Square>
-            )
-          } else if (square.piece.color === 'black' && square.piece.isDouble === false) {
-            return(
-            <Square color="black" location={square.location} hasPiece={square.piece === null ? false : true} key={square.location.toString()}>
-              <Piece color="black" id={square.piece.id} isDouble={square.piece.isDouble} squareLocation={square.location}></Piece>
-            </Square>
-            )
-          } else if (square.piece.color === 'white' && square.piece.isDouble === true) {
-            return(
-            <Square color="black" location={square.location} hasPiece={square.piece === null ? false : true} key={square.location.toString()}>
-              <Piece color="white" id={square.piece.id} isDouble={square.piece.isDouble} squareLocation={square.location}>
-                <Double color="white"></Double>
-              </Piece>
-            </Square>
-            )
-          } else if (square.piece.color === 'black' && square.piece.isDouble === true) {
-            return(
-            <Square color="black" location={square.location} hasPiece={square.piece === null ? false : true} key={square.location.toString()}>
-              <Piece color="black" id={square.piece.id} isDouble={square.piece.isDouble} squareLocation={square.location}>
-                <Double color="black"></Double>
-              </Piece>
-            </Square>
-            )
-          }
-        } else if (square.squareColor === 'white') {
-          return <Square color="white" location={square.location} hasPiece={square.piece === null ? false : true} key={square.location.toString()}></Square>
         }
-      }))}
-    </div>
-    }
+
+        {yourColor !== null && 
+          <div className="flex">
+            <p>Your color:</p> <Color color={yourColor}></Color>
+          </div>
+        }   
+
+        {game.player_one_color !== null && 
+          <div className="flex">
+          {otherPlayerId && <button disabled={game.winner_id !== null} onClick={() => props.setWinner(parseInt(id), {winner_id: otherPlayerId}) }>Give Up?</button>}
+         </div>
+        }
+
+        { game.player_one_color !== null && 
+          <div className="change-turn-container">
+            {otherPlayerId && <button disabled={game.turn !== player.player_id} onClick={changeTurnHandler}>{game.turn === player.player_id ? "Change turn" : "Not your turn"}</button>}
+        </div>
+        }
+      </div>
+
+        }
+        
+      { yourColor && <div className="board" style={{transform: `${yourColor === "black" ? "rotateX(0)" : "rotateX(180deg)"}`}}>
+        {props.currBoard.map(row => row.map(square => {
+          if (square.squareColor === 'black') {
+            if (square.piece === null) {
+              return <Square color="black" location={square.location} hasPiece={square.piece === null ? false : true} key={square.location.toString()}></Square>
+            } else if (square.piece.color === 'white' && square.piece.isDouble === false) {
+              return(
+              <Square color="black" location={square.location} hasPiece={square.piece === null ? false : true} key={square.location.toString()}>
+                <Piece color="white" id={square.piece.id} isDouble={square.piece.isDouble} squareLocation={square.location}></Piece>
+              </Square>
+              )
+            } else if (square.piece.color === 'black' && square.piece.isDouble === false) {
+              return(
+              <Square color="black" location={square.location} hasPiece={square.piece === null ? false : true} key={square.location.toString()}>
+                <Piece color="black" id={square.piece.id} isDouble={square.piece.isDouble} squareLocation={square.location}></Piece>
+              </Square>
+              )
+            } else if (square.piece.color === 'white' && square.piece.isDouble === true) {
+              return(
+              <Square color="black" location={square.location} hasPiece={square.piece === null ? false : true} key={square.location.toString()}>
+                <Piece color="white" id={square.piece.id} isDouble={square.piece.isDouble} squareLocation={square.location}>
+                  <Double color="white"></Double>
+                </Piece>
+              </Square>
+              )
+            } else if (square.piece.color === 'black' && square.piece.isDouble === true) {
+              return(
+              <Square color="black" location={square.location} hasPiece={square.piece === null ? false : true} key={square.location.toString()}>
+                <Piece color="black" id={square.piece.id} isDouble={square.piece.isDouble} squareLocation={square.location}>
+                  <Double color="black"></Double>
+                </Piece>
+              </Square>
+              )
+            }
+          } else if (square.squareColor === 'white') {
+            return <Square color="white" location={square.location} hasPiece={square.piece === null ? false : true} key={square.location.toString()}></Square>
+          }
+        }))}
+        </div>
+      }
+      </div>
+        
     {game.player_one_id && game.player_one_id !== player.player_id && game.player_two_id && game.player_two_id !== player.player_id && <Redirect to={'/home'} /> }
     {/* {players.map(id => <div>Player {id}</div>)} */}
     </Container>
@@ -253,24 +260,102 @@ width: 100%;
 flex-direction: column;
 align-items: center;
 justify-content: center;
+font-weight: bold;
+font-size: 20px;
+overflow: scroll;
 
 .board {
   height: 640px;
   width: 640px;
+  min-width: 642px;
   display: flex;
   flex: direction: row;
   flex-wrap: wrap;
   border: 1px solid black;
+  margin-bottom: 20px;
+
+  @media (max-width: 670px) {
+    align-self: flex-start;
+    margin-left: 20px;
+  }
+  
 }
 
-.players-container {
+.flex {
   display: flex;
   width: 100%;
   align-items: center;
   justify-content: center;
+
+}
+
+.players-info-container {
+    display: flex;
+    width: 95%;
+    max-width: 1010px;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid gray;
+    background-color: #F0F0F0;
+    border-radius: 5px;
+    margin: 20px 0;
+
+    @media (max-width: 500px) {
+      flex-direction: column;
+    }
+}
+
+.game-info-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 1px solid gray;
+  background-color: #F0F0F0;
+  border-radius: 5px;
+  width: 350px;
+  height: 640px;
+  margin-right: 20px;
+
+  @media (max-width: 1070px) {
+    width: 95%;
+    height: 200px;
+    margin-right: 0;
+    margin-bottom: 20px;
+  }
+
+  @media (max-width: 670px) {
+    position: static;
+  }
 }
 
 button {
-  ${buttonStyle};
+  ${homeButtonStyle};
+}
+
+.game-info-and-game-container{
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  overflow: scroll;
+
+  @media (max-width: 1070px) {
+    flex-direction: column;
+    
+  }
+}
+
+.change-turn-container {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  bottom: 0;
+
+  @media (max-width: 670px) {
+    position: static;
+  }
 }
 `

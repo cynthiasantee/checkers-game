@@ -7,7 +7,7 @@ import { SelectLogout } from '../redux/selector/logoutSelector';
 import { AppDispatch, RootState } from '../redux/store';
 import { navBarHeight } from '../util/navBarHeight';
 import { logout } from "../redux/thunk/logoutThunk";
-import logoOne from '../logo/logoOne.png'
+import logoFour from '../logo/logoFour.png'
 
 interface StateProps {
   page: Page;
@@ -28,7 +28,7 @@ const NavBar = (props: StateProps & DispatchProps) => {
   ) : (
     <Nav>
       <ul>
-        <img src={logoOne} alt="logo" />
+        <img src={logoFour} alt="logo" />
         <li className="first">
           <Link to="/home">Home</Link>
         </li>
@@ -64,7 +64,7 @@ const Nav = styled.nav`
 
   img {
     height: 50px;
-    width: 50px;
+    width: auto;
   }
 
   ul {
@@ -85,6 +85,10 @@ const Nav = styled.nav`
         font-size: 1.2rem;
       }
 
+      @media (max-width: 380px) {
+        font-size: 1.0rem;
+      }
+
       a {
         color: white;
         text-decoration: none;
@@ -95,10 +99,17 @@ const Nav = styled.nav`
     .last {
       margin-right: 40px;
       margin-left: auto;
+
+      @media (max-width: 380px) {
+        margin-right: 20px;
+      }
     }
 
     .first {
-      margin-left: 20px;
+      margin-left: 50px;
+      @media (max-width: 380px) {
+        margin-left: 10px;
+      }
     }
   }
 `

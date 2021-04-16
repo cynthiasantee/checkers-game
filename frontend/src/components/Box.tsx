@@ -18,13 +18,15 @@ const Box: React.FC<OwnProps> = (props) => {
 const Container = styled.div`
     height: 50px;
     width: auto;
-    border: 1px solid black;
     display: flex;
     align-items: center;
     justify-content: center;
+    font-weight: bold;
+    font-size: 30px;
 
     p{
         margin: 16px;
+
     }
 `
 

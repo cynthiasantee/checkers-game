@@ -2,6 +2,7 @@ import { css } from "styled-components/macro";
 
 export const homeButtonStyle = css`
   width: 95%;
+  max-width: 1500px;
   margin: 5px 0;
   border-radius: 5px;
   height: 60px;

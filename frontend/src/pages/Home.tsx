@@ -103,7 +103,7 @@ const Home = (props: StateProps & DispatchProps) => {
 
   return (
     <Container>
-      <img src={logoTwo} alt="logo" />
+      {/* <img src={logoTwo} alt="logo" /> */}
       <div className="player-info-outer">
         <span className="player-info-inner">
           <p>Welcome,</p>
@@ -174,6 +174,7 @@ const Container = styled.div`
   align-items: center;
   flex-direction: column;
   width: 100%;
+  
 
   img {
     margin: 20px auto 20px 20px;
@@ -182,11 +183,13 @@ const Container = styled.div`
   .player-info-outer{
     display: flex;
     width: 95%;
+    max-width: 1500px;
     justify-content: space-around;
     border: 1px solid gray;
     background-color: #F0F0F0;
     border-radius: 5px;
     margin-bottom: 20px;
+    margin-top: 20px;
 
     @media (max-width: 500px) {
       flex-direction: column;
