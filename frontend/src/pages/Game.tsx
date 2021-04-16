@@ -153,16 +153,22 @@ const Game = (props: StateProps & DispatchProps) => {
         <Box>{game.player_one_username}</Box>&nbsp; VS &nbsp;<Box>{game.player_two_username ? game.player_two_username : "???"}</Box>
       </div>
 
-      <div className="game-info-and-game-container">
-        {otherPlayerId !== null && 
-        <div className="game-info-container">
-        {pickYourColor && 
+      {pickYourColor && 
+      <div className="pick-your-color-container">
           <div className="flex" style={{flexDirection: "column"}}>
             <p>Pick your color:</p>
             {otherPlayerId && <button disabled={game.player_one_color !== null} onClick={() => props.setColors({ player_one_id: game.player_one_id, player_id: player.player_id || 0, color: "black"}, parseInt(id))}>Black</button>}
             {otherPlayerId && <button disabled={game.player_one_color !== null} onClick={() => props.setColors({ player_one_id: game.player_one_id, player_id: player.player_id || 0, color: "white"}, parseInt(id))}>White</button>}
           </div>
+
+      </div>
+
         }
+
+      <div className="game-info-and-game-container">
+        {otherPlayerId !== null && game.player_one_color !== null &&
+        <div className="game-info-container">
+
 
         {yourColor !== null && 
           <div className="flex">
@@ -267,7 +273,7 @@ overflow: scroll;
 .board {
   height: 640px;
   width: 640px;
-  min-width: 642px;
+  min-width: 640px;
   display: flex;
   flex: direction: row;
   flex-wrap: wrap;
@@ -305,6 +311,14 @@ overflow: scroll;
     }
 }
 
+.pick-your-color-container{
+  width: 95%;
+  max-width: 1010px;
+  border: 1px solid gray;
+    background-color: #F0F0F0;
+    border-radius: 5px;
+    padding-bottom: 10px;
+}
 .game-info-container {
   position: relative;
   display: flex;
@@ -316,11 +330,14 @@ overflow: scroll;
   width: 350px;
   height: 640px;
   margin-right: 20px;
+  margin-left: 20px;
+
 
   @media (max-width: 1070px) {
     width: 95%;
-    height: 200px;
+    height: 215px;
     margin-right: 0;
+    
     margin-bottom: 20px;
   }
 
@@ -336,13 +353,13 @@ button {
 .game-info-and-game-container{
   display: flex;
   width: 100%;
-  align-items: center;
   justify-content: center;
   overflow: scroll;
+  margin-right: 20px;
 
   @media (max-width: 1070px) {
     flex-direction: column;
-    
+    align-items: center;
   }
 }
 
@@ -354,7 +371,7 @@ button {
   position: absolute;
   bottom: 0;
 
-  @media (max-width: 670px) {
+  @media (max-width: 1070px) {
     position: static;
   }
 }
