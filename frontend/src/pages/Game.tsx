@@ -337,8 +337,10 @@ overflow: scroll;
     width: 95%;
     height: 215px;
     margin-right: 0;
-    
     margin-bottom: 20px;
+    //new
+    // max-width: 642px;
+    // margin-left: 0;
   }
 
   @media (max-width: 670px) {

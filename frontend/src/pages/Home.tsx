@@ -119,8 +119,11 @@ const Home = (props: StateProps & DispatchProps) => {
         </span>
       </div>
 
-      <button onClick={() => props.createGame(props.player?.player_id || 0)}>Start a new game?</button>
+      <button style={{backgroundColor: "#333333", borderColor: "#333333"}} onClick={() => props.createGame(props.player?.player_id || 0)}>Start a new game?</button>
       
+      {((!myGames.length && !openGames.length) || (!openGames.length)) && <h3 style={{padding: "10px", textAlign: "center"}}>There are no new games for you to join at the moment</h3>}
+
+
       {!!openGames.length && <h3>Join?</h3>}
       
       {openGames.map(game => {
@@ -145,7 +148,6 @@ const Home = (props: StateProps & DispatchProps) => {
         )
       })}
 
-      {!myGames.length && !openGames.length && <h3 style={{padding: "10px", textAlign: "center"}}>There are no games for you to join at the moment</h3>}
 
       {!!emptyGames.length && <h3>Waiting for opponent:</h3>}
       
@@ -157,9 +159,6 @@ const Home = (props: StateProps & DispatchProps) => {
           <button onClick={onGameClick} key={game.id}>My game #{i+1}</button>
         )
       })}
-
-      
-
 
       {/* Users: {userIds.map(id => <div>User {id}</div>)}  */}
       {props.fetchStatusCreateGame === "success" && <Redirect to={`/game/${props.newGame?.new_game_id}`} /> }

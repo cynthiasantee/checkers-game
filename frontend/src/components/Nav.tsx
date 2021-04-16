@@ -61,10 +61,16 @@ const Nav = styled.nav`
   min-height: ${navBarHeight};
   background-color: #555555;
   z-index: 99;
+  box-sizing: border-box;
+  border-bottom: 2px solid gray;
 
   img {
     height: 50px;
     width: auto;
+
+    @media (max-width: 430px) {
+      height: 35px;
+    }
   }
 
   ul {
@@ -108,7 +114,7 @@ const Nav = styled.nav`
     .first {
       margin-left: 50px;
       @media (max-width: 380px) {
-        margin-left: 10px;
+        margin-left: 30px;
       }
     }
   }
