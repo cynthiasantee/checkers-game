@@ -1,23 +1,15 @@
 import React from 'react';
-import { connect, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components/macro';
-import { AppDispatch} from '../redux/store';
 import { navBarHeight } from '../util/navBarHeight';
 import { logout } from "../redux/thunk/logoutThunk";
 import logoFour from '../logo/logoFour.png'
 import { SelectPage } from '../redux/selector/page';
 
-interface DispatchProps {
-  onLogout: () => void;
-}
-
-const NavBar = (props: DispatchProps) => {
+const NavBar = () => {
+  const dispatch = useDispatch();
   const page = useSelector(SelectPage.page);
-
-  const onLogoutHandler = () => {
-    props.onLogout();
-  }
 
   return page === "entry" || page === "reset-password" || page === "bad-request" ? (
     <></>
@@ -29,19 +21,14 @@ const NavBar = (props: DispatchProps) => {
           <Link to="/home">Home</Link>
         </li>
         <li className="last">
-          <Link to="/" onClick={onLogoutHandler}>Log out</Link>
+          <Link to="/" onClick={() => dispatch(logout())}>Log out</Link>
         </li>
       </ul>
     </Nav>
-  );  
-  
+  );   
 }
 
-const mapDispatchToProps = (dispatch: AppDispatch): DispatchProps => ({
-  onLogout: () =>  dispatch(logout()),
-});
-
-export default connect(null, mapDispatchToProps)(NavBar);
+export default NavBar;
 
 const Nav = styled.nav`
   display: flex;
