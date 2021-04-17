@@ -1,29 +1,25 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components/macro';
-import { Page } from '../pages/page';
-import { SelectLogout } from '../redux/selector/logoutSelector';
-import { AppDispatch, RootState } from '../redux/store';
+import { AppDispatch} from '../redux/store';
 import { navBarHeight } from '../util/navBarHeight';
 import { logout } from "../redux/thunk/logoutThunk";
 import logoFour from '../logo/logoFour.png'
-
-interface StateProps {
-  page: Page;
-  logout?: string;
-}
+import { SelectPage } from '../redux/selector/page';
 
 interface DispatchProps {
   onLogout: () => void;
 }
 
-const NavBar = (props: StateProps & DispatchProps) => {
+const NavBar = (props: DispatchProps) => {
+  const page = useSelector(SelectPage.page);
+
   const onLogoutHandler = () => {
     props.onLogout();
   }
 
-  return props.page === "entry" || props.page === "reset-password" || props.page === "bad-request" ? (
+  return page === "entry" || page === "reset-password" || page === "bad-request" ? (
     <></>
   ) : (
     <Nav>
@@ -41,16 +37,11 @@ const NavBar = (props: StateProps & DispatchProps) => {
   
 }
 
-const mapStateToProps = (state: RootState): StateProps => ({
-  page: state.page,
-  logout: SelectLogout.data(state)
-});
-
 const mapDispatchToProps = (dispatch: AppDispatch): DispatchProps => ({
   onLogout: () =>  dispatch(logout()),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(NavBar);
+export default connect(null, mapDispatchToProps)(NavBar);
 
 const Nav = styled.nav`
   display: flex;
