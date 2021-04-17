@@ -8,6 +8,7 @@ passport.use(new LocalStrategy(
      function(username, password, done) {
       playerService.getPlayerByEmail(username)
         .then(user => {
+          debugger;
           const isPasswordValid = bcrypt.compareSync(password, user.password)
           if (isPasswordValid) {
             return done(null, user);
@@ -15,9 +16,9 @@ passport.use(new LocalStrategy(
             return done(null, false, { message: 'Incorrect password.' });
           }
         })
-        .catch(err => {
-          return done(err);
-        })
+        .catch(() => {
+          return done(null, false, { message: 'No player with email found' });
+        });
     }
   ));
   

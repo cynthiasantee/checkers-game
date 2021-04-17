@@ -48,6 +48,7 @@ export const formStyle = css`
   input {
     height: 35px;
     margin: 5px;
+    padding-left: 10px;
   }
 
   input[type="text"],

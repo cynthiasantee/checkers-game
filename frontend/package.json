@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@hookform/resolvers": "^2.0.0-beta.6",
     "@reduxjs/toolkit": "^1.5.0",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
@@ -14,19 +15,21 @@
     "@types/react-dom": "^16.9.11",
     "@types/react-router-dom": "^5.1.7",
     "@types/styled-components": "^4.4.3",
+    "@types/yup": "^0.29.11",
     "axios": "^0.21.1",
     "immer": "^5.3.6",
     "lodash": "^4.17.21",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
-    "react-hook-form": "^6.15.4",
+    "react-hook-form": "^6.15.1",
     "react-redux": "^7.2.2",
     "react-router-dom": "^5.2.0",
     "react-scripts": "^3.4.4",
     "serialize-error": "^8.0.1",
     "socket.io-client": "^4.0.1",
     "styled-components": "^5.2.1",
-    "typescript": "^3.9.9"
+    "typescript": "^3.9.9",
+    "yup": "^0.32.9"
   },
   "scripts": {
     "start": "react-scripts start",

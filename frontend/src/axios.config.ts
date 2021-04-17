@@ -9,7 +9,9 @@ api.interceptors.response.use(undefined, (error) => {
   switch (error.response.status) {
     case 401:
       //clear session cookie
-      window.location.pathname = "/";
+      if (window.location.pathname !== "/") {
+        window.location.pathname = "/";
+      }
       break;
     case 403:
       window.location.pathname = "/bad-request";

@@ -120,6 +120,7 @@ app.use("/move", moveController);
 app.post('/login',
   passport.authenticate('local'),
   function(req, res) {
+    debugger;
     var origin = req.get('Origin')
     res.send(origin + '/home');
 });

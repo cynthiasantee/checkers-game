@@ -5,6 +5,8 @@ import { FetchStatus } from '../redux/util/fetchStatus';
 import { useForm } from "react-hook-form";
 import styled from 'styled-components/macro';
 import { formStyle } from "../styles/formStyle"
+import * as yup from 'yup';
+import { yupResolver } from "@hookform/resolvers/yup";
 //Login fetch
 import { SelectLogin } from '../redux/selector/loginSelector';
 import { login as loginFetch} from "../redux/thunk/loginThunk";
@@ -25,8 +27,23 @@ interface DispatchProps {
     loginFetch: (login: LoginType) => void
 }
 
+const schema = yup.object().shape({
+    username: yup.string().required().email().min(7).max(50),
+    // username: yup.string().required().min(1).max(20).trim(),
+    password: yup
+      .string()
+      .required()
+    //   .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)\S*$/)
+      .min(7)
+      .max(20)
+      .trim(),
+});
+  
+
 const Login = (props: StateProps & DispatchProps) => {
-    const { register, handleSubmit } = useForm<LoginType>();
+    const { register, handleSubmit, errors } = useForm<LoginType>({
+        resolver: yupResolver(schema),
+    });
 
     const onSubmit = handleSubmit(({ username, password }) => {
         props.loginFetch({username, password})
@@ -48,6 +65,10 @@ const Login = (props: StateProps & DispatchProps) => {
                     <input type="submit"></input>
                 </li>
             </ul>
+            
+            {(errors.password || errors.username || props.fetchStatusLogin === "failed") && (
+                <p>Incorrect credentials</p>
+            )}
             <NavLink to="/reset-password">Forgot Password?</NavLink>
         </Form>
     )
