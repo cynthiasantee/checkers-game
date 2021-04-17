@@ -30,6 +30,7 @@ import { SelectAddSecondPlayer } from '../redux/selector/addSecondPlayerSelector
 import { addSecondPlayer } from "../redux/thunk/addSecondPlayerThunk";
 import { SecondPlayer } from '../redux/api/addSecondPlayerApi';
 import logoTwo from '../logo/logoTwo.png'
+import { GameSection } from '../components/GameSection';
 
 interface StateProps {
   player?: Player;
@@ -120,47 +121,42 @@ const Home = (props: StateProps & DispatchProps) => {
       </div>
 
       <button style={{backgroundColor: "#333333", borderColor: "#333333"}} onClick={() => props.createGame(props.player?.player_id || 0)}>Start a new game?</button>
-      
-      {((!myGames.length && !openGames.length) || (!openGames.length)) && <h3 style={{padding: "10px", textAlign: "center"}}>There are no new games for you to join at the moment</h3>}
+      <div className="section-container">
+      < GameSection
+        title="Join?"
+        games={openGames}
+        gameButton={(game) => 
+          <button onClick={() => {
+            setGameId(game.id);
+            props.addSecondPlayer({player_two_id: player.player_id}, game.id);
+          }} key={game.id}>
+            Game started by {game.player_one_username}
+          </button>
+        }/>
 
+        <GameSection
+        title="My ongoing games"
+        games={myGames}
+        gameButton={(game) => 
+          <button onClick={() => {
+            setGoToGame(game.id);
+          }} key={game.id}>
+            Game against {game.player_one_id === player.player_id ? game.player_two_username : game.player_one_username}
+          </button>
+        }/>
 
-      {!!openGames.length && <h3>Join?</h3>}
-      
-      {openGames.map(game => {
-        const onGameClick = () => {
-          setGameId(game.id);
-          props.addSecondPlayer({player_two_id: player.player_id}, game.id);
-        }
-        return(
-          <button onClick={onGameClick} key={game.id}>Game started by {game.player_one_username}</button>
-        )
-      })}
+        <GameSection
+          title="Waiting for opponent"
+          games={emptyGames}
+          gameButton={(game) => 
+            <button onClick={() => {
+              setGoToGame(game.id);
+            }} key={game.id}>
+              My game #{game.id}
+          </button>
+        }/>
+      </div>
 
-      {!!myGames.length && <h3>My ongoing games:</h3>}
-      
-      
-      {myGames.map(game => {
-        const onGameClick = () => {
-          setGoToGame(game.id);
-        }
-        return(
-          <button onClick={onGameClick} key={game.id}>Game against {game.player_one_id === player.player_id ? game.player_two_username : game.player_one_username}</button>
-        )
-      })}
-
-
-      {!!emptyGames.length && <h3>Waiting for opponent:</h3>}
-      
-      {emptyGames.map((game, i) => {
-        const onGameClick = () => {
-          setGoToGame(game.id);
-        }
-        return(
-          <button onClick={onGameClick} key={game.id}>My game #{i+1}</button>
-        )
-      })}
-
-      {/* Users: {userIds.map(id => <div>User {id}</div>)}  */}
       {props.fetchStatusCreateGame === "success" && <Redirect to={`/game/${props.newGame?.new_game_id}`} /> }
       {props.fetchStatusSecondPlayer === "success" && <Redirect to={`/game/${gameId}`} /> }
       {goToGame && <Redirect to={`/game/${goToGame}`} />}
@@ -174,9 +170,10 @@ const Container = styled.div`
   flex-direction: column;
   width: 100%;
   
-
-  img {
-    margin: 20px auto 20px 20px;
+  .section-container {
+    display: flex;
+    width: 95%;
+    max-width: 1500px;
   }
 
   .player-info-outer{
